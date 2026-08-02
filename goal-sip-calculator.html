@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Goal SIP Planner — Prospar Consulting</title>
+<meta name="description" content="Plan any financial goal at its real, inflation-adjusted future cost — the monthly SIP or one-time investment it takes, with a year-by-year growth map.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / Goal SIP Planner</div>
+  <div class="pc-title">
+    <h1>Goal SIP Planner</h1>
+    <p>Every goal has two price tags — today's, and the one inflation writes for the day
+       you actually need the money. This planner targets the second one, live as you move a slider.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inGoal">Goal amount (today's price)</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inGoal" min="100000" max="100000000" step="50000" value="2500000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slGoal" min="100000" max="100000000" step="50000" value="2500000" aria-label="Goal amount in today's prices slider">
+          <div class="pc-range-ends"><span>₹1&nbsp;L</span><span>₹10&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inYears">Years to goal</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inYears" min="1" max="40" step="1" value="10" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slYears" min="1" max="40" step="1" value="10" aria-label="Years to goal slider">
+          <div class="pc-range-ends"><span>1&nbsp;yr</span><span>40&nbsp;yrs</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inInfl">Goal inflation</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inInfl" min="0" max="12" step="0.5" value="6" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slInfl" min="0" max="12" step="0.5" value="6" aria-label="Goal inflation slider">
+          <div class="pc-range-ends"><span>0%</span><span>12%</span></div>
+          <div class="pc-chips" id="chipsInfl" style="margin-top:10px">
+            <button type="button" class="pc-chip" data-val="10" aria-pressed="false">Education</button>
+            <button type="button" class="pc-chip" data-val="7" aria-pressed="false">Wedding</button>
+            <button type="button" class="pc-chip" data-val="6" aria-pressed="false">Home</button>
+            <button type="button" class="pc-chip" data-val="4" aria-pressed="false">Car</button>
+            <button type="button" class="pc-chip" data-val="5" aria-pressed="false">Travel</button>
+          </div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inRate">Expected annual return</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inRate" min="4" max="20" step="0.5" value="12" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slRate" min="4" max="20" step="0.5" value="12" aria-label="Expected annual return slider">
+          <div class="pc-range-ends"><span>4%</span><span>20%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inExisting">Savings already set aside</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inExisting" min="0" max="100000000" step="50000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slExisting" min="0" max="100000000" step="50000" value="0" aria-label="Existing savings slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹10&nbsp;Cr</span></div>
+        </div>
+
+        <details style="margin-top:4px">
+          <summary style="cursor:pointer;font-size:13.5px;font-weight:700;color:var(--pc-navy);margin-bottom:12px">Advanced assumptions</summary>
+          <div class="pc-field" style="margin-bottom:2px">
+            <div class="pc-field__row"><label class="pc-field__label" for="inStep">Increase SIP yearly by</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inStep" min="0" max="20" step="0.5" value="0" inputmode="decimal">
+              <span class="affix">%</span></div>
+            <input type="range" class="pc-slider" id="slStep" min="0" max="20" step="0.5" value="0" aria-label="Annual SIP step-up slider">
+            <div class="pc-range-ends"><span>0%</span><span>20%</span></div>
+          </div>
+        </details>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout" hidden></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Building your goal corpus</div>
+          <div class="pc-legend" id="legend"></div>
+        </div>
+        <div id="chartWrap"></div>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Year-by-year plan</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This planner is for illustration and education only. Projections assume constant goal
+        inflation and a constant rate of return; actual costs and market-linked returns vary and
+        are not guaranteed. This is not investment advice or an offer of any product.
+        Prospar Consulting LLP — investments are subject to market risks; read all
+        scheme-related documents carefully.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+  var NOW_YEAR = new Date().getFullYear();
+
+  var state = { goal: 2500000, years: 10, inflation: 6, rate: 12, existing: 0, stepUp: 0 };
+  var url = U.urlState({
+    goal: { p: "g", lo: 100000, hi: 100000000, dflt: 2500000 },
+    years: { p: "y", lo: 1, hi: 40, dflt: 10 },
+    inflation: { p: "inf", lo: 0, hi: 12, dflt: 6 },
+    rate: { p: "r", lo: 4, hi: 20, dflt: 12 },
+    existing: { p: "ex", lo: 0, hi: 100000000, dflt: 0 },
+    stepUp: { p: "su", lo: 0, hi: 20, dflt: 0 }
+  });
+
+  var lastRows = [];
+
+  function render() {
+    var s = state, C = U.color();
+    var targetYear = NOW_YEAR + s.years;
+
+    var futureCost = F.inflate(s.goal, s.inflation, s.years);
+    var fvExisting = F.fvLumpsum(s.existing, s.rate, s.years);
+    var gap = Math.max(0, futureCost - fvExisting);
+    var monthly = gap > 0 ? F.requiredStepUpSip(gap, s.rate, s.years, s.stepUp) : 0;
+    var lump = gap > 0 ? F.pvLumpsum(gap, s.rate, s.years) : 0;
+
+    var acc = F.sipSchedule({ monthly: monthly, annualRatePct: s.rate,
+      years: s.years, stepUpPct: s.stepUp, lumpsum: s.existing });
+    var chartRows = [{ x: 0, invested: s.existing, value: s.existing }]
+      .concat(acc.map(function (r) { return { x: r.year, invested: r.cumInvested, value: r.value }; }));
+    lastRows = acc.map(function (r) { return { year: r.year, invested: r.cumInvested, value: r.value }; });
+
+    U.renderStats("statsRow", [
+      { hero: true, label: "Your goal will cost", value: F.formatINRCompact(futureCost),
+        sub: "in " + targetYear + ", at " + F.formatPct(s.inflation, 1) + " goal inflation" },
+      { label: "Required monthly SIP", dot: C.invested, value: F.formatINR(Math.ceil(monthly)),
+        sub: gap > 0
+          ? (s.stepUp > 0 ? "starting SIP, rising " + F.formatPct(s.stepUp, 1) + "/yr" : "flat, for " + s.years + (s.years === 1 ? " year" : " years"))
+          : "existing savings already cover it ✓" },
+      { label: "Or invest today", value: F.formatINR(Math.ceil(lump)),
+        sub: gap > 0 ? "one-time, instead of the SIP" : "nothing more needed" },
+      { label: "In today's prices", value: F.formatINRCompact(s.goal),
+        sub: "the goal as you entered it" }
+    ]);
+
+    var shortPct = futureCost > s.goal ? Math.round((1 - s.goal / futureCost) * 100) : 0;
+    U.callout("callout", shortPct > 0
+      ? "Inflation is the silent goal-mover: your " + F.formatINRCompact(s.goal) + " goal becomes <strong>" +
+        F.formatINRCompact(futureCost) + "</strong> by " + targetYear +
+        ". Planning with today's price would leave you <strong>" + shortPct + "% short</strong>."
+      : "At 0% goal inflation the target stays " + F.formatINRCompact(s.goal) +
+        " — every rupee of growth takes you closer.");
+
+    U.legend("legend", [
+      { color: C.invested, label: "Invested" },
+      { color: C.gains, label: "Total value" },
+      { color: C.target, label: "Goal", dash: true }
+    ]);
+
+    U.mountAreaChart("chartWrap", {
+      rows: chartRows,
+      x: { min: 0, max: s.years, format: function (v) { return v === 0 ? "Now" : "Yr " + v; } },
+      series: [
+        { field: "invested", color: C.invested, width: 2, fillTo: "zero", tint: C.investedTint, gapUnder: true },
+        { field: "value", color: C.gains, width: 2.5, fillTo: "invested", tint: C.gainsTint }
+      ],
+      refY: [{ value: futureCost, color: C.target, label: "Goal " + F.formatINRCompact(futureCost), labelColor: C.goldInk }],
+      endLabels: [{ field: "value", text: function (r) { return F.formatINRCompact(r.value); } }],
+      ariaLabel: "Year-wise growth of the goal corpus against the inflated goal",
+      tooltip: function (r) {
+        return { title: r.x === 0 ? "Start" : "Year " + r.x, rows: [
+          { sw: C.invested, label: "Invested", value: F.formatINRCompact(r.invested) },
+          { sw: C.gains, label: "Value", value: F.formatINRCompact(r.value) },
+          { label: "Gains", value: F.formatINRCompact(r.value - r.invested) }
+        ]};
+      }
+    });
+
+    U.buildTable("schedTable", ["Year", "Invested (cum.)", "Value"],
+      lastRows.map(function (r) {
+        return [r.year, F.formatINR(r.invested), F.formatINR(r.value)];
+      }));
+
+    U.assumptions("assumeChips", [
+      "Goal grows at " + F.formatPct(s.inflation, 1) + " a year until you need it",
+      "Investments assumed to earn " + F.formatPct(s.rate, 1) + " p.a. (SIP at month start)",
+      s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " every year"
+                   : "Flat SIP — add a yearly step-up under Advanced",
+      s.existing > 0 ? "Existing " + F.formatINRCompact(s.existing) + " grows at the same return"
+                     : "No existing savings earmarked for this goal",
+      "Taxes, expense ratios and exit loads not modelled"
+    ]);
+
+    chipsInfl.sync(s.inflation);
+    url.write(s);
+  }
+
+  url.read(state);
+  var pGoal = U.bindPair("inGoal", "slGoal", function (v) { state.goal = v; render(); });
+  var pYears = U.bindPair("inYears", "slYears", function (v) { state.years = v; render(); });
+  var pInfl = U.bindPair("inInfl", "slInfl", function (v) { state.inflation = v; render(); });
+  var pRate = U.bindPair("inRate", "slRate", function (v) { state.rate = v; render(); });
+  var pExisting = U.bindPair("inExisting", "slExisting", function (v) { state.existing = v; render(); });
+  var pStep = U.bindPair("inStep", "slStep", function (v) { state.stepUp = v; render(); });
+  var chipsInfl = U.bindChips("chipsInfl", function (v) { state.inflation = v; pInfl.set(v); render(); });
+
+  pGoal.set(state.goal); pYears.set(state.years); pInfl.set(state.inflation);
+  pRate.set(state.rate); pExisting.set(state.existing); pStep.set(state.stepUp);
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-goal-sip-plan.csv",
+    headers: function () { return ["Year", "Invested (cumulative)", "Value"]; },
+    rows: function () {
+      return lastRows.map(function (r) { return [r.year, Math.round(r.invested), Math.round(r.value)]; });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FIRE Calculator — Prospar Consulting</title>
+<meta name="description" content="Your lean, standard and comfortable FIRE numbers — and the age your investments actually get you there. Every figure on the page, no sign-up.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / FIRE Calculator</div>
+  <div class="pc-title">
+    <h1>FIRE Calculator</h1>
+    <p>Financial independence, retire early: your lean, standard and comfortable targets,
+       and the age your SIP actually crosses them. All of it on this page — no sign-up,
+       no email gate.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inExpense">Monthly expenses today</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inExpense" min="10000" max="500000" step="5000" value="60000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slExpense" min="10000" max="500000" step="5000" value="60000" aria-label="Monthly expenses slider">
+          <div class="pc-range-ends"><span>₹10k</span><span>₹5&nbsp;L</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inAge">Your age today</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inAge" min="18" max="55" step="1" value="30" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slAge" min="18" max="55" step="1" value="30" aria-label="Current age slider">
+          <div class="pc-range-ends"><span>18</span><span>55</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inFireAge">Target FIRE age</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inFireAge" min="35" max="60" step="1" value="45" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slFireAge" min="35" max="60" step="1" value="45" aria-label="Target FIRE age slider">
+          <div class="pc-range-ends"><span>35</span><span>60</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inCorpus">Current investments</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inCorpus" min="0" max="100000000" step="100000" value="2000000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slCorpus" min="0" max="100000000" step="100000" value="2000000" aria-label="Current investments slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹10&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inSip">Monthly SIP</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inSip" min="0" max="500000" step="5000" value="50000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slSip" min="0" max="500000" step="5000" value="50000" aria-label="Monthly SIP slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹5&nbsp;L</span></div>
+        </div>
+
+        <details style="margin-top:4px">
+          <summary style="cursor:pointer;font-size:13.5px;font-weight:700;color:var(--pc-navy);margin-bottom:12px">Advanced assumptions</summary>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inInfl">Inflation</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inInfl" min="3" max="10" step="0.5" value="6" inputmode="decimal">
+              <span class="affix">% p.a.</span></div>
+            <input type="range" class="pc-slider" id="slInfl" min="3" max="10" step="0.5" value="6" aria-label="Inflation slider">
+            <div class="pc-range-ends"><span>3%</span><span>10%</span></div>
+          </div>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inRate">Expected return</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inRate" min="6" max="16" step="0.5" value="12" inputmode="decimal">
+              <span class="affix">% p.a.</span></div>
+            <input type="range" class="pc-slider" id="slRate" min="6" max="16" step="0.5" value="12" aria-label="Expected return slider">
+            <div class="pc-range-ends"><span>6%</span><span>16%</span></div>
+          </div>
+          <div class="pc-field" style="margin-bottom:2px">
+            <div class="pc-field__row"><label class="pc-field__label" for="inStep">Increase SIP yearly by</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inStep" min="0" max="20" step="0.5" value="10" inputmode="decimal">
+              <span class="affix">%</span></div>
+            <input type="range" class="pc-slider" id="slStep" min="0" max="20" step="0.5" value="10" aria-label="Annual SIP step-up slider">
+            <div class="pc-range-ends"><span>0%</span><span>20%</span></div>
+          </div>
+        </details>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout" hidden></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Your wealth vs the FIRE lines</div>
+          <div class="pc-legend" id="legend"></div>
+        </div>
+        <div id="chartWrap"></div>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Age-by-age projection</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This calculator is for illustration and education only. The 25× / 4% rule is a
+        research heuristic, not a guarantee — safe withdrawal rates depend on market
+        sequence, inflation and time horizon. Projections assume constant returns; taxes
+        are ignored. This is not investment advice. Prospar Consulting LLP — investments
+        are subject to market risks.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+
+  var state = { expense: 60000, age: 30, fireAge: 45, corpus: 2000000, sip: 50000,
+    inflation: 6, rate: 12, stepUp: 10 };
+  var url = U.urlState({
+    expense: { p: "e", lo: 10000, hi: 500000, dflt: 60000 },
+    age: { p: "a", lo: 18, hi: 55, dflt: 30 },
+    fireAge: { p: "fa", lo: 35, hi: 60, dflt: 45 },
+    corpus: { p: "c", lo: 0, hi: 100000000, dflt: 2000000 },
+    sip: { p: "s", lo: 0, hi: 500000, dflt: 50000 },
+    inflation: { p: "inf", lo: 3, hi: 10, dflt: 6 },
+    rate: { p: "r", lo: 6, hi: 16, dflt: 12 },
+    stepUp: { p: "su", lo: 0, hi: 20, dflt: 10 }
+  });
+
+  var lastRows = [];
+
+  function freedomYear(mult) {
+    return F.fireFreedomYear({
+      monthlyExpenseToday: state.expense, inflationPct: state.inflation,
+      ratePct: state.rate, currentCorpus: state.corpus, monthlySip: state.sip,
+      stepUpPct: state.stepUp, multiple: mult, maxYears: 60
+    });
+  }
+
+  function render() {
+    var s = state, C = U.color();
+    if (s.fireAge <= s.age) s.fireAge = s.age + 1;
+    var yearsTo = s.fireAge - s.age;
+
+    var t = F.fireTargets(s.expense, s.inflation, yearsTo);
+    var y20 = freedomYear(20), y25 = freedomYear(25), y30 = freedomYear(30);
+    var yearsBanked = s.corpus / (s.expense * 12);
+
+    // chart horizon: far enough to show the last crossing (or 35 yrs if none)
+    var span = 35;
+    if (y30 !== null) span = Math.min(35, Math.max(y30 + 2, yearsTo + 2, 8));
+
+    // wealth path — same loop as fireFreedomYear (monthly compounding, annual step-up)
+    var i = s.rate / 100 / 12;
+    var bal = s.corpus, sip = s.sip;
+    var annual0 = s.expense * 12;
+    var rows = [{ x: s.age, wealth: bal, lean: annual0 * 20, standard: annual0 * 25, comfortable: annual0 * 30 }];
+    for (var y = 1; y <= span; y++) {
+      if (y > 1) sip *= 1 + s.stepUp / 100;
+      for (var m = 0; m < 12; m++) bal = (bal + sip) * (1 + i);
+      var annual = F.inflate(s.expense * 12, s.inflation, y);
+      rows.push({ x: s.age + y, wealth: bal,
+        lean: annual * 20, standard: annual * 25, comfortable: annual * 30 });
+    }
+    lastRows = rows;
+
+    var reachAge = y25 !== null ? s.age + y25 : null;
+    var diff = reachAge !== null ? s.fireAge - reachAge : null;
+
+    U.renderStats("statsRow", [
+      { hero: true, label: "FIRE number at " + s.fireAge, value: F.formatINRCompact(t.standard),
+        sub: "25× your future annual expenses" },
+      { label: "Lean FIRE", dot: C.cat3, value: F.formatINRCompact(t.lean),
+        sub: "20× — essentials covered" },
+      { label: "Comfortable FIRE", dot: C.cat5, value: F.formatINRCompact(t.comfortable),
+        sub: "30× — with headroom" },
+      { label: "You reach FIRE at", value: reachAge !== null ? "Age " + reachAge : "Beyond 60 yrs",
+        sub: reachAge === null ? "target: age " + s.fireAge
+           : diff > 0 ? diff + (diff === 1 ? " year ahead of plan" : " years ahead of plan")
+           : diff < 0 ? (-diff) + (diff === -1 ? " year behind plan" : " years behind plan")
+           : "right on your target" }
+    ]);
+
+    function tierTxt(name, yy) {
+      return name + (yy !== null ? " at age " + (s.age + yy) : " not within this horizon");
+    }
+    var lead;
+    if (y20 === null) {
+      lead = "At " + F.formatINR(s.sip) + "/month" +
+        (s.stepUp > 0 ? " (+" + F.formatPct(s.stepUp, 1) + "/yr)" : "") +
+        " <strong>no FIRE tier arrives within 60 years</strong> — a higher SIP or leaner expenses moves the needle.";
+    } else {
+      lead = "At " + F.formatINR(s.sip) + "/month" +
+        (s.stepUp > 0 ? " (+" + F.formatPct(s.stepUp, 1) + "/yr)" : "") +
+        " you hit <strong>" + tierTxt("Lean", y20) + ", " + tierTxt("FIRE", y25) + ", " +
+        tierTxt("Comfortable", y30) + "</strong>.";
+    }
+    U.callout("callout", lead +
+      " Today you have ~<strong>" + yearsBanked.toFixed(1) + " years</strong> of expenses banked; FIRE ≈ 25." +
+      " The 25× rule assumes ~4% safe withdrawal — treat it as a milestone, not a guarantee; sequence risk and taxes matter.");
+
+    U.legend("legend", [
+      { color: C.invested, label: "Your wealth" },
+      { color: C.cat3, label: "Lean 20×", dash: true },
+      { color: C.cat4, label: "FIRE 25×", dash: true },
+      { color: C.cat5, label: "Comfortable 30×", dash: true }
+    ]);
+
+    U.mountAreaChart("chartWrap", {
+      rows: rows,
+      x: { min: s.age, max: s.age + span, format: function (v) { return v; } },
+      series: [
+        { field: "wealth", color: C.invested, width: 2.5, fillTo: "zero", tint: C.investedTint, gapUnder: true },
+        { field: "lean", color: C.cat3, width: 1.5, dash: "4 3" },
+        { field: "standard", color: C.cat4, width: 2, dash: "6 4" },
+        { field: "comfortable", color: C.cat5, width: 1.5, dash: "4 3" }
+      ],
+      refX: s.fireAge <= s.age + span
+        ? [{ value: s.fireAge, label: "Target", color: C.muted }] : [],
+      marker: (y25 !== null && y25 <= span)
+        ? { x: s.age + y25, y: rows[y25].wealth, label: "FIRE at " + (s.age + y25), color: C.good }
+        : null,
+      ariaLabel: "Projected wealth against lean, standard and comfortable FIRE targets by age",
+      tooltip: function (r) {
+        return { title: "Age " + r.x, rows: [
+          { sw: C.invested, label: "Your wealth", value: F.formatINRCompact(r.wealth) },
+          { sw: C.cat3, label: "Lean 20×", value: F.formatINRCompact(r.lean) },
+          { sw: C.cat4, label: "FIRE 25×", value: F.formatINRCompact(r.standard) },
+          { sw: C.cat5, label: "Comfortable 30×", value: F.formatINRCompact(r.comfortable) }
+        ]};
+      }
+    });
+
+    U.buildTable("schedTable", ["Age", "Your wealth", "FIRE target (25×)", "On track?"],
+      lastRows.slice(1).map(function (r) {
+        return [r.x, F.formatINR(r.wealth), F.formatINR(r.standard),
+          r.wealth >= r.standard ? "✓" : "–"];
+      }));
+
+    U.assumptions("assumeChips", [
+      "25× / 4% rule is a heuristic, not a guarantee",
+      "Expenses inflate at " + F.formatPct(s.inflation, 1) + " p.a.",
+      "Returns constant at " + F.formatPct(s.rate, 1) + " p.a.",
+      s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " every year" : "Flat SIP",
+      "Taxes ignored"
+    ]);
+    url.write(s);
+  }
+
+  url.read(state);
+  var binds = [
+    ["inExpense", "slExpense", "expense"], ["inAge", "slAge", "age"],
+    ["inFireAge", "slFireAge", "fireAge"], ["inCorpus", "slCorpus", "corpus"],
+    ["inSip", "slSip", "sip"], ["inInfl", "slInfl", "inflation"],
+    ["inRate", "slRate", "rate"], ["inStep", "slStep", "stepUp"]
+  ];
+  binds.forEach(function (b) {
+    var pair = U.bindPair(b[0], b[1], function (v) { state[b[2]] = v; render(); });
+    pair.set(state[b[2]]);
+  });
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-fire-projection.csv",
+    headers: function () { return ["Age", "Your wealth", "FIRE target (25x)", "On track"]; },
+    rows: function () {
+      return lastRows.slice(1).map(function (r) {
+        return [r.x, Math.round(r.wealth), Math.round(r.standard),
+          r.wealth >= r.standard ? "yes" : "no"];
+      });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+</body>
+</html>

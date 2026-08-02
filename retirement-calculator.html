@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retirement Planner — Prospar Consulting</title>
+<meta name="description" content="How much corpus you need, the SIP that builds it, and how long your money lasts — one interactive picture of your retirement.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / Retirement Planner</div>
+  <div class="pc-title">
+    <h1>Retirement Planner</h1>
+    <p>One picture of your whole retirement: the corpus you build till you retire,
+       and how long it lasts after. Move any slider and watch the mountain change.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inAge">Your age today</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inAge" min="18" max="60" step="1" value="30" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slAge" min="18" max="60" step="1" value="30" aria-label="Current age slider">
+          <div class="pc-range-ends"><span>18</span><span>60</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inRetAge">Retirement age</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inRetAge" min="40" max="70" step="1" value="60" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slRetAge" min="40" max="70" step="1" value="60" aria-label="Retirement age slider">
+          <div class="pc-range-ends"><span>40</span><span>70</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inLife">Plan until age</label>
+            <span class="pc-field__hint">life expectancy</span></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inLife" min="70" max="100" step="1" value="85" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slLife" min="70" max="100" step="1" value="85" aria-label="Life expectancy slider">
+          <div class="pc-range-ends"><span>70</span><span>100</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inExpense">Monthly expenses today</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inExpense" min="10000" max="500000" step="5000" value="50000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slExpense" min="10000" max="500000" step="5000" value="50000" aria-label="Monthly expense slider">
+          <div class="pc-range-ends"><span>₹10k</span><span>₹5&nbsp;L</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inSip">Monthly SIP you can invest</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inSip" min="0" max="500000" step="1000" value="25000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slSip" min="0" max="500000" step="1000" value="25000" aria-label="Monthly SIP slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹5&nbsp;L</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inCorpus">Savings already set aside</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inCorpus" min="0" max="50000000" step="100000" value="1000000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slCorpus" min="0" max="50000000" step="100000" value="1000000" aria-label="Existing savings slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹5&nbsp;Cr</span></div>
+        </div>
+
+        <details style="margin-top:4px">
+          <summary style="cursor:pointer;font-size:13.5px;font-weight:700;color:var(--pc-navy);margin-bottom:12px">Advanced assumptions</summary>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inInfl">Inflation</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inInfl" min="3" max="10" step="0.5" value="6" inputmode="decimal">
+              <span class="affix">% p.a.</span></div>
+            <input type="range" class="pc-slider" id="slInfl" min="3" max="10" step="0.5" value="6" aria-label="Inflation slider">
+            <div class="pc-range-ends"><span>3%</span><span>10%</span></div>
+          </div>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inPre">Returns before retirement</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inPre" min="6" max="16" step="0.5" value="12" inputmode="decimal">
+              <span class="affix">% p.a.</span></div>
+            <input type="range" class="pc-slider" id="slPre" min="6" max="16" step="0.5" value="12" aria-label="Pre-retirement return slider">
+            <div class="pc-range-ends"><span>6%</span><span>16%</span></div>
+          </div>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inPost">Returns after retirement</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inPost" min="5" max="12" step="0.5" value="8" inputmode="decimal">
+              <span class="affix">% p.a.</span></div>
+            <input type="range" class="pc-slider" id="slPost" min="5" max="12" step="0.5" value="8" aria-label="Post-retirement return slider">
+            <div class="pc-range-ends"><span>5%</span><span>12%</span></div>
+          </div>
+          <div class="pc-field" style="margin-bottom:2px">
+            <div class="pc-field__row"><label class="pc-field__label" for="inStep">Increase SIP yearly by</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inStep" min="0" max="15" step="0.5" value="0" inputmode="decimal">
+              <span class="affix">%</span></div>
+            <input type="range" class="pc-slider" id="slStep" min="0" max="15" step="0.5" value="0" aria-label="Annual SIP step-up slider">
+            <div class="pc-range-ends"><span>0%</span><span>15%</span></div>
+          </div>
+        </details>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout" hidden></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Your retirement mountain</div>
+          <div class="pc-legend" id="legend"></div>
+        </div>
+        <div id="chartWrap"></div>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Age-by-age projection</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This planner is for illustration and education only. It assumes constant returns and
+        inflation; real markets vary year to year, and withdrawals early in retirement carry
+        sequence-of-returns risk. Taxes are not modelled. This is not investment advice.
+        Prospar Consulting LLP — investments are subject to market risks.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+
+  var state = { age: 30, retAge: 60, life: 85, expense: 50000, sip: 25000,
+    corpus: 1000000, inflation: 6, pre: 12, post: 8, stepUp: 0 };
+  var url = U.urlState({
+    age: { p: "a", lo: 18, hi: 60, dflt: 30 },
+    retAge: { p: "ra", lo: 40, hi: 70, dflt: 60 },
+    life: { p: "le", lo: 70, hi: 100, dflt: 85 },
+    expense: { p: "e", lo: 10000, hi: 500000, dflt: 50000 },
+    sip: { p: "s", lo: 0, hi: 500000, dflt: 25000 },
+    corpus: { p: "c", lo: 0, hi: 50000000, dflt: 1000000 },
+    inflation: { p: "inf", lo: 3, hi: 10, dflt: 6 },
+    pre: { p: "pre", lo: 6, hi: 16, dflt: 12 },
+    post: { p: "post", lo: 5, hi: 12, dflt: 8 },
+    stepUp: { p: "su", lo: 0, hi: 15, dflt: 0 }
+  });
+
+  var lastTable = [];
+
+  function render() {
+    var s = state, C = U.color();
+    if (s.retAge <= s.age) s.retAge = s.age + 1;
+    if (s.life <= s.retAge) s.life = s.retAge + 1;
+
+    var plan = F.retirementPlan({
+      currentAge: s.age, retireAge: s.retAge, lifeExpectancy: s.life,
+      annualExpenseToday: s.expense * 12, inflationPct: s.inflation,
+      preRetRatePct: s.pre, postRetRatePct: s.post,
+      existingCorpus: s.corpus, stepUpPct: s.stepUp
+    });
+
+    // your own path
+    var acc = F.sipSchedule({ monthly: s.sip, annualRatePct: s.pre,
+      years: plan.yearsToRet, stepUpPct: s.stepUp, lumpsum: s.corpus });
+    var corpusAtRet = acc.length ? acc[acc.length - 1].value : s.corpus;
+    var dep = F.depletionSchedule({
+      corpus: corpusAtRet, retireAge: s.retAge, lifeExpectancy: s.life,
+      firstYearAnnualExpense: plan.expenseAtRet,
+      inflationPct: s.inflation, postRetRatePct: s.post
+    });
+
+    var chartRows = [{ x: s.age, corpus: s.corpus }];
+    acc.forEach(function (r) { chartRows.push({ x: s.age + r.year, corpus: r.value }); });
+    dep.rows.forEach(function (r) { chartRows.push({ x: r.age, corpus: r.closing }); });
+
+    lastTable = [];
+    acc.forEach(function (r) {
+      lastTable.push({ age: s.age + r.year, phase: "Saving", inOut: r.investedThisYear, corpus: r.value });
+    });
+    dep.rows.forEach(function (r) {
+      lastTable.push({ age: r.age, phase: "Retired", inOut: -r.withdrawal, corpus: r.closing });
+    });
+
+    var funded = corpusAtRet >= plan.corpusNeeded;
+    var lastsTill = dep.runsOutAge === null ? s.life : dep.runsOutAge;
+    var reqSip = s.stepUp > 0 ? plan.requiredSipStepUp : plan.requiredSipFlat;
+
+    U.renderStats("statsRow", [
+      { hero: true, label: "Corpus needed at " + s.retAge, value: F.formatINRCompact(plan.corpusNeeded),
+        sub: "monthly expense then: " + F.formatINRCompact(plan.expenseAtRet / 12) },
+      { label: "Your corpus at " + s.retAge, dot: C.invested, value: F.formatINRCompact(corpusAtRet),
+        sub: funded ? "surplus " + F.formatINRCompact(corpusAtRet - plan.corpusNeeded)
+                    : "short by " + F.formatINRCompact(plan.corpusNeeded - corpusAtRet) },
+      { label: "SIP needed", dot: C.gains, value: F.formatINR(Math.ceil((reqSip || 0) / 500) * 500),
+        sub: s.stepUp > 0 ? "starting, +" + F.formatPct(s.stepUp, 1) + "/yr (you plan " + F.formatINR(s.sip) + ")" : "flat (you plan " + F.formatINR(s.sip) + ")" },
+      { label: "Money lasts till", value: "Age " + lastsTill,
+        sub: dep.runsOutAge === null ? "covers your full plan ✓" : (s.life - lastsTill) + " years unfunded" }
+    ]);
+
+    U.callout("callout", funded
+      ? "You're <strong>on track</strong>. Your plan builds " + F.formatINRCompact(corpusAtRet) +
+        " by age " + s.retAge + " against a need of " + F.formatINRCompact(plan.corpusNeeded) +
+        ", and sustains you past age " + s.life + "."
+      : "At " + F.formatINR(s.sip) + "/month your money runs out around <strong>age " + lastsTill +
+        "</strong>. Raising your SIP to <strong>" + F.formatINR(Math.ceil((reqSip || 0) / 500) * 500) +
+        "</strong>" + (s.stepUp > 0 ? " (with " + F.formatPct(s.stepUp, 1) + " yearly increases)" : "") +
+        " — or retiring a little later — closes the gap.");
+
+    U.legend("legend", [
+      { color: C.invested, label: "Corpus" },
+      { color: C.target, label: "Corpus needed", dash: true }
+    ]);
+
+    U.mountAreaChart("chartWrap", {
+      rows: chartRows,
+      x: { min: s.age, max: s.life, format: function (v) { return v; } },
+      series: [{ field: "corpus", color: C.invested, width: 2.5, fillTo: "zero", tint: C.investedTint }],
+      refY: [{ value: plan.corpusNeeded, color: C.target, label: "Needed " + F.formatINRCompact(plan.corpusNeeded), labelColor: C.goldInk }],
+      refX: [{ value: s.retAge, label: "Retire", color: C.muted }],
+      marker: dep.runsOutAge !== null ? { x: dep.runsOutAge, y: 0, label: "Runs out at " + dep.runsOutAge, color: C.bad } : null,
+      ariaLabel: "Corpus growth till retirement and depletion after",
+      tooltip: function (r) {
+        return { title: "Age " + r.x, rows: [
+          { sw: C.invested, label: r.x <= state.retAge ? "Corpus (saving)" : "Corpus (retired)",
+            value: F.formatINRCompact(r.corpus) }
+        ]};
+      }
+    });
+
+    U.buildTable("schedTable", ["Age", "Phase", "Invested / Withdrawn", "Corpus at year end"],
+      lastTable.map(function (r) {
+        return [r.age, r.phase,
+          (r.inOut >= 0 ? "+" : "−") + F.formatINR(Math.abs(r.inOut)).slice(1),
+          F.formatINR(r.corpus)];
+      }));
+
+    U.assumptions("assumeChips", [
+      "Expenses grow at " + F.formatPct(s.inflation, 1) + " inflation, before and after retirement",
+      "Returns: " + F.formatPct(s.pre, 1) + " while saving, " + F.formatPct(s.post, 1) + " after retirement",
+      "Withdrawals at the start of each retirement year",
+      s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " every year" : "Flat SIP",
+      "No pension or rental income modelled (coming in the After-Retirement tool)",
+      "Taxes not modelled"
+    ]);
+    url.write(s);
+  }
+
+  url.read(state);
+  var binds = [
+    ["inAge", "slAge", "age"], ["inRetAge", "slRetAge", "retAge"], ["inLife", "slLife", "life"],
+    ["inExpense", "slExpense", "expense"], ["inSip", "slSip", "sip"], ["inCorpus", "slCorpus", "corpus"],
+    ["inInfl", "slInfl", "inflation"], ["inPre", "slPre", "pre"], ["inPost", "slPost", "post"],
+    ["inStep", "slStep", "stepUp"]
+  ];
+  binds.forEach(function (b) {
+    var pair = U.bindPair(b[0], b[1], function (v) { state[b[2]] = v; render(); });
+    pair.set(state[b[2]]);
+  });
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-retirement-projection.csv",
+    headers: function () { return ["Age", "Phase", "Invested(+)/Withdrawn(-)", "Corpus at year end"]; },
+    rows: function () {
+      return lastTable.map(function (r) { return [r.age, r.phase, Math.round(r.inOut), Math.round(r.corpus)]; });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+</body>
+</html>

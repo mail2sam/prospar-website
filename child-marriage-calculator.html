@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Child Marriage Planner — Prospar Consulting</title>
+<meta name="description" content="Plan your child's wedding fund at its future cost — with wedding-cost inflation, an optional separate gold plan, and the monthly SIP that gets you there.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / Child Marriage Planner</div>
+  <div class="pc-title">
+    <h1>Child Marriage Planner</h1>
+    <p>Set the budget in today's prices, let wedding-cost inflation do its thing, and see the
+       SIP that has the corpus ready on the day — with gold planned on its own track if you like.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inChildAge">Child's age today</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inChildAge" min="0" max="25" step="1" value="5" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slChildAge" min="0" max="25" step="1" value="5" aria-label="Child's current age slider">
+          <div class="pc-range-ends"><span>0</span><span>25</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inMarAge">Expected marriage age</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inMarAge" min="21" max="35" step="1" value="26" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slMarAge" min="21" max="35" step="1" value="26" aria-label="Expected marriage age slider">
+          <div class="pc-range-ends"><span>21</span><span>35</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inBudget">Wedding budget today</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inBudget" min="500000" max="50000000" step="100000" value="3000000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slBudget" min="500000" max="50000000" step="100000" value="3000000" aria-label="Wedding budget in today's prices slider">
+          <div class="pc-range-ends"><span>₹5&nbsp;L</span><span>₹5&nbsp;Cr</span></div>
+          <div class="pc-chips" id="chipsBudget" style="margin-top:10px">
+            <button type="button" class="pc-chip" data-val="1500000" aria-pressed="false">Intimate</button>
+            <button type="button" class="pc-chip" data-val="3000000" aria-pressed="false">Traditional</button>
+            <button type="button" class="pc-chip" data-val="7500000" aria-pressed="false">Grand</button>
+          </div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inInfl">Wedding-cost inflation</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inInfl" min="4" max="12" step="0.5" value="7" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slInfl" min="4" max="12" step="0.5" value="7" aria-label="Wedding cost inflation slider">
+          <div class="pc-range-ends"><span>4%</span><span>12%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inRate">Expected annual return</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inRate" min="4" max="20" step="0.5" value="12" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slRate" min="4" max="20" step="0.5" value="12" aria-label="Expected annual return slider">
+          <div class="pc-range-ends"><span>4%</span><span>20%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inExisting">Savings already set aside</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inExisting" min="0" max="100000000" step="50000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slExisting" min="0" max="100000000" step="50000" value="0" aria-label="Existing savings slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹10&nbsp;Cr</span></div>
+        </div>
+
+        <details style="margin-top:4px">
+          <summary style="cursor:pointer;font-size:13.5px;font-weight:700;color:var(--pc-navy);margin-bottom:12px">Advanced: step-up &amp; gold</summary>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inStep">Increase SIP yearly by</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inStep" min="0" max="20" step="0.5" value="0" inputmode="decimal">
+              <span class="affix">%</span></div>
+            <input type="range" class="pc-slider" id="slStep" min="0" max="20" step="0.5" value="0" aria-label="Annual SIP step-up slider">
+            <div class="pc-range-ends"><span>0%</span><span>20%</span></div>
+          </div>
+
+          <div class="pc-field" style="margin-bottom:2px">
+            <label class="pc-toggle">
+              <input type="checkbox" id="tgGold">
+              <span class="knob"></span>
+              <span>Plan gold separately</span>
+            </label>
+            <div id="goldBlock" hidden style="margin-top:12px">
+              <div class="pc-field__row"><label class="pc-field__label" for="inGold">Gold to buy (today's price)</label></div>
+              <div class="pc-numwrap"><span class="affix">₹</span>
+                <input type="number" id="inGold" min="0" max="10000000" step="50000" value="800000" inputmode="numeric"></div>
+              <input type="range" class="pc-slider" id="slGold" min="0" max="10000000" step="50000" value="800000" aria-label="Gold amount in today's prices slider">
+              <div class="pc-range-ends"><span>₹0</span><span>₹1&nbsp;Cr</span></div>
+              <div class="pc-field__row" style="margin-top:12px"><label class="pc-field__label" for="inGoldRate">Gold appreciation</label></div>
+              <div class="pc-numwrap">
+                <input type="number" id="inGoldRate" min="5" max="12" step="0.5" value="8" inputmode="decimal">
+                <span class="affix">% p.a.</span></div>
+              <input type="range" class="pc-slider" id="slGoldRate" min="5" max="12" step="0.5" value="8" aria-label="Gold appreciation rate slider">
+              <div class="pc-range-ends"><span>5%</span><span>12%</span></div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout" hidden></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Building the wedding corpus</div>
+          <div class="pc-legend" id="legend"></div>
+        </div>
+        <div id="chartWrap"></div>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Year-by-year plan</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This planner is for illustration and education only. Wedding costs vary widely by city,
+        season and scale, and gold prices fluctuate; projections assume constant rates, and
+        market-linked returns are not guaranteed. This is not investment advice or an offer of
+        any product. Prospar Consulting LLP — investments are subject to market risks; read all
+        scheme-related documents carefully.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+  var NOW_YEAR = new Date().getFullYear();
+
+  var state = { childAge: 5, marAge: 26, budget: 3000000, inflation: 7, rate: 12,
+    existing: 0, stepUp: 0, gold: false, goldAmt: 800000, goldRate: 8 };
+  var url = U.urlState({
+    childAge: { p: "ca", lo: 0, hi: 25, dflt: 5 },
+    marAge: { p: "ma", lo: 21, hi: 35, dflt: 26 },
+    budget: { p: "b", lo: 500000, hi: 50000000, dflt: 3000000 },
+    inflation: { p: "inf", lo: 4, hi: 12, dflt: 7 },
+    rate: { p: "r", lo: 4, hi: 20, dflt: 12 },
+    existing: { p: "ex", lo: 0, hi: 100000000, dflt: 0 },
+    stepUp: { p: "su", lo: 0, hi: 20, dflt: 0 },
+    gold: { p: "g", bool: true, dflt: false },
+    goldAmt: { p: "ga", lo: 0, hi: 10000000, dflt: 800000 },
+    goldRate: { p: "gr", lo: 5, hi: 12, dflt: 8 }
+  });
+
+  var lastRows = [];
+
+  function render() {
+    var s = state, C = U.color();
+    if (s.marAge <= s.childAge) { s.marAge = s.childAge + 1; pMarAge.set(s.marAge); }
+    var years = s.marAge - s.childAge;
+    var weddingYear = NOW_YEAR + years;
+
+    var goldAmt = s.gold ? Math.min(s.goldAmt, s.budget) : 0;
+    var futureGold = s.gold ? F.inflate(goldAmt, s.goldRate, years) : 0;
+    var futureCost = s.gold
+      ? F.inflate(s.budget - goldAmt, s.inflation, years) + futureGold
+      : F.inflate(s.budget, s.inflation, years);
+    var fvExisting = F.fvLumpsum(s.existing, s.rate, years);
+    var gap = Math.max(0, futureCost - fvExisting);
+    var monthly = gap > 0 ? F.requiredStepUpSip(gap, s.rate, years, s.stepUp) : 0;
+    var lump = gap > 0 ? F.pvLumpsum(gap, s.rate, years) : 0;
+
+    var acc = F.sipSchedule({ monthly: monthly, annualRatePct: s.rate,
+      years: years, stepUpPct: s.stepUp, lumpsum: s.existing });
+    var chartRows = [{ x: 0, invested: s.existing, value: s.existing }]
+      .concat(acc.map(function (r) { return { x: r.year, invested: r.cumInvested, value: r.value }; }));
+    lastRows = acc.map(function (r) { return { year: r.year, invested: r.cumInvested, value: r.value }; });
+
+    var cards = [
+      { hero: true, label: "Wedding will cost", value: F.formatINRCompact(futureCost),
+        sub: F.formatINRCompact(s.budget) + " today → " + weddingYear },
+      { label: "Required monthly SIP", dot: C.invested, value: F.formatINR(Math.ceil(monthly)),
+        sub: gap > 0
+          ? (s.stepUp > 0 ? "starting SIP, rising " + F.formatPct(s.stepUp, 1) + "/yr" : "flat, for " + years + (years === 1 ? " year" : " years"))
+          : "existing savings already cover it ✓" },
+      { label: "Or invest today", value: F.formatINR(Math.ceil(lump)),
+        sub: gap > 0 ? "one-time, instead of the SIP" : "nothing more needed" }
+    ];
+    if (s.gold) {
+      cards.push({ label: "of which gold", value: F.formatINRCompact(futureGold),
+        sub: "growing at " + F.formatPct(s.goldRate, 1) });
+    } else {
+      cards.push({ label: "Years to go", value: years + (years === 1 ? " year" : " years"),
+        sub: "wedding around " + weddingYear });
+    }
+    U.renderStats("statsRow", cards);
+
+    U.callout("callout",
+      (gap > 0
+        ? "A wedding planned for " + weddingYear + " needs <strong>" + F.formatINRCompact(futureCost) +
+          "</strong> — start with " + F.formatINR(Math.ceil(monthly)) + "/month now."
+        : "A wedding planned for " + weddingYear + " needs <strong>" + F.formatINRCompact(futureCost) +
+          "</strong> — your existing savings already grow to cover it.") +
+      (s.gold ? " Gold alone accounts for " + F.formatINRCompact(futureGold) + " of the future budget." : ""));
+
+    U.legend("legend", [
+      { color: C.invested, label: "Invested" },
+      { color: C.gains, label: "Total value" },
+      { color: C.target, label: "Goal", dash: true }
+    ]);
+
+    U.mountAreaChart("chartWrap", {
+      rows: chartRows,
+      x: { min: 0, max: years, format: function (v) { return v === 0 ? "Now" : "Yr " + v; } },
+      series: [
+        { field: "invested", color: C.invested, width: 2, fillTo: "zero", tint: C.investedTint, gapUnder: true },
+        { field: "value", color: C.gains, width: 2.5, fillTo: "invested", tint: C.gainsTint }
+      ],
+      refY: [{ value: futureCost, color: C.target, label: "Goal " + F.formatINRCompact(futureCost), labelColor: C.goldInk }],
+      endLabels: [{ field: "value", text: function (r) { return F.formatINRCompact(r.value); } }],
+      ariaLabel: "Year-wise growth of the wedding corpus against the future wedding cost",
+      tooltip: function (r) {
+        return { title: r.x === 0 ? "Start" : "Year " + r.x, rows: [
+          { sw: C.invested, label: "Invested", value: F.formatINRCompact(r.invested) },
+          { sw: C.gains, label: "Value", value: F.formatINRCompact(r.value) },
+          { label: "Gains", value: F.formatINRCompact(r.value - r.invested) }
+        ]};
+      }
+    });
+
+    U.buildTable("schedTable", ["Year", "Invested (cum.)", "Value"],
+      lastRows.map(function (r) {
+        return [r.year, F.formatINR(r.invested), F.formatINR(r.value)];
+      }));
+
+    U.assumptions("assumeChips", [
+      "Whole budget treated as a single outlay on the wedding date",
+      "Venue, catering and services inflate at ≈ " + F.formatPct(s.inflation, 1),
+      s.gold ? "Gold (" + F.formatINRCompact(goldAmt) + " today) tracked at its own " +
+               F.formatPct(s.goldRate, 1) + " appreciation"
+             : "Gold not planned separately — enable it under Advanced",
+      "Investments assumed to earn " + F.formatPct(s.rate, 1) + " p.a. (SIP at month start)",
+      s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " every year" : "Flat SIP",
+      "Taxes and expense ratios not modelled"
+    ]);
+
+    chipsBudget.sync(s.budget);
+    url.write(s);
+  }
+
+  url.read(state);
+  var pChildAge = U.bindPair("inChildAge", "slChildAge", function (v) { state.childAge = v; render(); });
+  var pMarAge = U.bindPair("inMarAge", "slMarAge", function (v) { state.marAge = v; render(); });
+  var pBudget = U.bindPair("inBudget", "slBudget", function (v) { state.budget = v; render(); });
+  var pInfl = U.bindPair("inInfl", "slInfl", function (v) { state.inflation = v; render(); });
+  var pRate = U.bindPair("inRate", "slRate", function (v) { state.rate = v; render(); });
+  var pExisting = U.bindPair("inExisting", "slExisting", function (v) { state.existing = v; render(); });
+  var pStep = U.bindPair("inStep", "slStep", function (v) { state.stepUp = v; render(); });
+  var pGold = U.bindPair("inGold", "slGold", function (v) { state.goldAmt = v; render(); });
+  var pGoldRate = U.bindPair("inGoldRate", "slGoldRate", function (v) { state.goldRate = v; render(); });
+  var chipsBudget = U.bindChips("chipsBudget", function (v) { state.budget = v; pBudget.set(v); render(); });
+  U.bindToggle("tgGold", function (v) { state.gold = v; $("goldBlock").hidden = !v; render(); });
+
+  pChildAge.set(state.childAge); pMarAge.set(state.marAge); pBudget.set(state.budget);
+  pInfl.set(state.inflation); pRate.set(state.rate); pExisting.set(state.existing);
+  pStep.set(state.stepUp); pGold.set(state.goldAmt); pGoldRate.set(state.goldRate);
+  $("tgGold").checked = state.gold; $("goldBlock").hidden = !state.gold;
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-child-marriage-plan.csv",
+    headers: function () { return ["Year", "Invested (cumulative)", "Value"]; },
+    rows: function () {
+      return lastRows.map(function (r) { return [r.year, Math.round(r.invested), Math.round(r.value)]; });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+</body>
+</html>

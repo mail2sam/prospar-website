@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SWP Calculator (Retirement Income) — Prospar Consulting</title>
+<meta name="description" content="Plan a systematic withdrawal: how long your corpus lasts, the maximum safe monthly amount, yearly step-ups and inflation-adjusted values.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / SWP Calculator</div>
+  <div class="pc-title">
+    <h1>SWP Calculator</h1>
+    <p>Turn a corpus into a monthly income. See how long the money lasts, what a yearly
+       increase does to it, and the maximum you can safely draw. Updates as you move a slider.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inCorpus">Your corpus</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inCorpus" min="1000000" max="500000000" step="1000000" value="10000000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slCorpus" min="1000000" max="500000000" step="1000000" value="10000000" aria-label="Corpus slider">
+          <div class="pc-range-ends"><span>₹10&nbsp;L</span><span>₹50&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field" style="margin-bottom:12px">
+          <div class="pc-field__row"><label class="pc-field__label" for="inWd">Starting monthly withdrawal</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inWd" min="5000" max="1000000" step="2500" value="50000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slWd" min="5000" max="1000000" step="2500" value="50000" aria-label="Starting monthly withdrawal slider">
+          <div class="pc-range-ends"><span>₹5k</span><span>₹10&nbsp;L</span></div>
+        </div>
+        <button type="button" class="pc-btn pc-btn--ghost" id="btnMax"
+          style="width:100%;justify-content:center;margin-bottom:20px">Set to max safe amount</button>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inStep">Increase withdrawal yearly by</label></div>
+          <div class="pc-chips" id="suChips" style="margin-bottom:10px" role="group" aria-label="Yearly increase presets">
+            <button type="button" class="pc-chip" data-val="0">0%</button>
+            <button type="button" class="pc-chip" data-val="5">5%</button>
+            <button type="button" class="pc-chip" data-val="6">Match inflation</button>
+          </div>
+          <div class="pc-numwrap">
+            <input type="number" id="inStep" min="0" max="15" step="0.5" value="5" inputmode="decimal">
+            <span class="affix">% /yr</span></div>
+          <input type="range" class="pc-slider" id="slStep" min="0" max="15" step="0.5" value="5" aria-label="Yearly withdrawal increase slider">
+          <div class="pc-range-ends"><span>0%</span><span>15%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inYears">For how many years</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inYears" min="5" max="40" step="1" value="25" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slYears" min="5" max="40" step="1" value="25" aria-label="Withdrawal period slider">
+          <div class="pc-range-ends"><span>5&nbsp;yrs</span><span>40&nbsp;yrs</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inRate">Expected return</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inRate" min="5" max="14" step="0.5" value="9" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slRate" min="5" max="14" step="0.5" value="9" aria-label="Expected return slider">
+          <div class="pc-range-ends"><span>5%</span><span>14%</span></div>
+        </div>
+
+        <div class="pc-field" style="margin-bottom:6px">
+          <label class="pc-toggle">
+            <input type="checkbox" id="tgInflation">
+            <span class="knob"></span>
+            <span>Show values in today's money</span>
+          </label>
+          <div id="inflationBlock" hidden style="margin-top:12px">
+            <div class="pc-field__row"><label class="pc-field__label" for="inInfl">Assumed inflation</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inInfl" min="3" max="10" step="0.5" value="6" inputmode="decimal">
+              <span class="affix">% p.a.</span></div>
+            <input type="range" class="pc-slider" id="slInfl" min="3" max="10" step="0.5" value="6" aria-label="Assumed inflation slider">
+            <div class="pc-range-ends"><span>3%</span><span>10%</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout" hidden></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Corpus vs money taken out</div>
+          <div class="pc-legend" id="legend"></div>
+        </div>
+        <div id="chartWrap"></div>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Year-by-year withdrawals</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This calculator is for illustration and education only. It assumes a constant rate
+        of return; market-linked corpora move with markets, and poor early returns (sequence
+        risk) can exhaust a corpus sooner than a constant-return projection suggests. Taxes
+        on redemptions are not modelled. This is not investment advice. Prospar Consulting
+        LLP — investments are subject to market risks; read all scheme-related documents
+        carefully.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+
+  var state = { corpus: 10000000, wd: 50000, stepUp: 5, years: 25, rate: 9,
+    adjust: false, inflation: 6 };
+  var url = U.urlState({
+    corpus: { p: "c", lo: 1000000, hi: 500000000, dflt: 10000000 },
+    wd: { p: "w", lo: 5000, hi: 1000000, dflt: 50000 },
+    stepUp: { p: "su", lo: 0, hi: 15, dflt: 5 },
+    years: { p: "y", lo: 5, hi: 40, dflt: 25 },
+    rate: { p: "r", lo: 5, hi: 14, dflt: 9 },
+    adjust: { p: "adj", bool: true, dflt: false },
+    inflation: { p: "inf", lo: 3, hi: 10, dflt: 6 }
+  });
+
+  var lastRows = [];
+
+  function render() {
+    var s = state, C = U.color();
+
+    var sim = F.swpSimulate({ corpus: s.corpus, monthlyWithdrawal: s.wd,
+      annualRatePct: s.rate, stepUpPct: s.stepUp, years: s.years });
+    var msw = F.maxSustainableWithdrawal({ corpus: s.corpus,
+      annualRatePct: s.rate, stepUpPct: s.stepUp, years: s.years });
+    var safe = Math.floor(msw / 500) * 500;
+
+    var depleted = sim.depletedAtMonth !== null;
+    var depYear = depleted ? Math.ceil(sim.depletedAtMonth / 12) : null;
+    var finalMonthly = sim.rows.length ? sim.rows[sim.rows.length - 1].monthlyWithdrawal : s.wd;
+    lastRows = sim.rows;
+
+    U.renderStats("statsRow", [
+      { hero: true, label: "Money lasts",
+        value: depleted ? "Runs out in year " + depYear : "Full " + s.years + " years ✓",
+        sub: "withdrawing " + F.formatINR(s.wd) + "/month to start" },
+      { label: "Total withdrawn", dot: C.gains, value: F.formatINRCompact(sim.totalWithdrawn),
+        sub: (sim.totalWithdrawn / s.corpus).toFixed(1) + "× of your corpus" },
+      { label: "Corpus left after " + s.years + " yrs", dot: C.invested,
+        value: F.formatINRCompact(sim.finalBalance),
+        sub: s.adjust
+          ? "≈ " + F.formatINRCompact(F.todaysValue(sim.finalBalance, s.inflation, s.years)) + " in today's money"
+          : F.formatINR(sim.finalBalance) },
+      { label: "Max safe start", value: F.formatINR(safe),
+        sub: s.stepUp > 0 ? "rising " + F.formatPct(s.stepUp, 1) + "/yr" : "with flat withdrawals" }
+    ]);
+
+    var msg;
+    if (depleted) {
+      msg = "At " + F.formatINR(s.wd) + "/month" +
+        (s.stepUp > 0 ? " rising " + F.formatPct(s.stepUp, 1) + "/yr" : "") +
+        ", withdrawals stop in <strong>year " + depYear + "</strong>.";
+    } else if (s.stepUp > 0) {
+      msg = "Your " + F.formatINR(s.wd) + " grows to <strong>" +
+        F.formatINR(Math.round(finalMonthly)) + "/month by year " + s.years + "</strong>";
+      if (s.adjust) {
+        var real = F.todaysValue(finalMonthly, s.inflation, s.years);
+        var rel = s.stepUp > s.inflation ? "beats" : s.stepUp < s.inflation ? "lags" : "matches";
+        msg += " — worth ≈ <strong>" + F.formatINRCompact(real) + "</strong> in today's money; a " +
+          F.formatPct(s.stepUp, 1) + " step-up " + rel + " " + F.formatPct(s.inflation, 1) + " inflation.";
+      } else msg += ".";
+    } else {
+      msg = "Your withdrawal stays <strong>" + F.formatINR(s.wd) + "/month</strong> for all " +
+        s.years + " years";
+      if (s.adjust) {
+        msg += " — worth only ≈ <strong>" +
+          F.formatINRCompact(F.todaysValue(s.wd, s.inflation, s.years)) +
+          "</strong> in today's money by the end; flat withdrawals lag " +
+          F.formatPct(s.inflation, 1) + " inflation.";
+      } else msg += ".";
+    }
+    if (s.wd > msw) {
+      msg += " You're drawing " + ((s.wd * 12 / s.corpus) * 100).toFixed(1) +
+        "% of your corpus in year 1; the sustainable start is <strong>" + F.formatINR(safe) + "</strong>.";
+    }
+    U.callout("callout", msg);
+
+    U.legend("legend", [
+      { color: C.invested, label: "Corpus left" },
+      { color: C.gains, label: "Total withdrawn" }
+    ]);
+
+    var chartRows = [{ x: 0, corpus: s.corpus, withdrawn: 0 }];
+    sim.rows.forEach(function (r) {
+      chartRows.push({ x: r.year, corpus: r.closing, withdrawn: r.cumWithdrawn,
+        wd: r.monthlyWithdrawal });
+    });
+
+    U.mountAreaChart("chartWrap", {
+      rows: chartRows,
+      x: { min: 0, max: s.years, format: function (v) { return v === 0 ? "Now" : "Yr " + v; } },
+      series: [
+        { field: "corpus", color: C.invested, width: 2.5, fillTo: "zero", tint: C.investedTint, gapUnder: true },
+        { field: "withdrawn", color: C.gains, width: 2 }
+      ],
+      marker: depleted ? { x: depYear, y: 0, label: "Runs out", color: C.bad } : null,
+      ariaLabel: "Corpus remaining and cumulative withdrawals year by year",
+      tooltip: function (r) {
+        var rows = [
+          { sw: C.invested, label: "Corpus left", value: F.formatINRCompact(r.corpus) },
+          { sw: C.gains, label: "Total withdrawn", value: F.formatINRCompact(r.withdrawn) }
+        ];
+        if (r.wd !== undefined)
+          rows.push({ label: "Monthly withdrawal", value: F.formatINR(Math.round(r.wd)) });
+        if (state.adjust)
+          rows.push({ label: "Corpus in today's ₹",
+            value: F.formatINRCompact(F.todaysValue(r.corpus, state.inflation, r.x)) });
+        return { title: r.x === 0 ? "Start" : "Year " + r.x, rows: rows };
+      }
+    });
+
+    U.buildTable("schedTable",
+      ["Year", "Monthly withdrawal", "Withdrawn in the year", "Corpus at year end"],
+      lastRows.map(function (r) {
+        return [r.year, F.formatINR(r.monthlyWithdrawal), F.formatINR(r.withdrawnThisYear),
+          F.formatINR(r.closing)];
+      }));
+
+    U.assumptions("assumeChips", [
+      "Withdrawal at the start of each month; the rest keeps growing",
+      "Returns constant at " + F.formatPct(s.rate, 1) + " — real sequence risk is not modelled",
+      s.stepUp > 0 ? "Withdrawal rises " + F.formatPct(s.stepUp, 1) + " once a year" : "Flat withdrawal (no yearly increase)",
+      s.adjust ? "Today's-money figures use " + F.formatPct(s.inflation, 1) + " inflation" : "Figures are nominal (not inflation-adjusted)",
+      "Taxes on redemptions not modelled"
+    ]);
+    url.write(s);
+  }
+
+  url.read(state);
+
+  var pCorpus = U.bindPair("inCorpus", "slCorpus", function (v) { state.corpus = v; render(); });
+  var pWd = U.bindPair("inWd", "slWd", function (v) { state.wd = v; render(); });
+  var chips = U.bindChips("suChips", function (v) { state.stepUp = v; pStep.set(v); render(); });
+  var pStep = U.bindPair("inStep", "slStep", function (v) { state.stepUp = v; chips.sync(v); render(); });
+  var pYears = U.bindPair("inYears", "slYears", function (v) { state.years = v; render(); });
+  var pRate = U.bindPair("inRate", "slRate", function (v) { state.rate = v; render(); });
+  var pInfl = U.bindPair("inInfl", "slInfl", function (v) { state.inflation = v; render(); });
+  U.bindToggle("tgInflation", function (v) { state.adjust = v; $("inflationBlock").hidden = !v; render(); });
+
+  pCorpus.set(state.corpus); pWd.set(state.wd); pStep.set(state.stepUp);
+  pYears.set(state.years); pRate.set(state.rate); pInfl.set(state.inflation);
+  chips.sync(state.stepUp);
+  $("tgInflation").checked = state.adjust; $("inflationBlock").hidden = !state.adjust;
+
+  $("btnMax").addEventListener("click", function () {
+    var msw = F.maxSustainableWithdrawal({ corpus: state.corpus,
+      annualRatePct: state.rate, stepUpPct: state.stepUp, years: state.years });
+    var v = Math.min(1000000, Math.max(5000, Math.floor(msw / 500) * 500));
+    state.wd = v; pWd.set(v); render();
+  });
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-swp-schedule.csv",
+    headers: function () {
+      return ["Year", "Monthly withdrawal", "Withdrawn in the year", "Corpus at year end"];
+    },
+    rows: function () {
+      return lastRows.map(function (r) {
+        return [r.year, Math.round(r.monthlyWithdrawal), Math.round(r.withdrawnThisYear),
+          Math.round(r.closing)];
+      });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+</body>
+</html>

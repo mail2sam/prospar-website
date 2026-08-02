@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Net Worth Calculator — Prospar Consulting</title>
+<meta name="description" content="A private balance sheet: what you own minus what you owe, your liquid net worth and debt health. Everything stays in your browser — nothing is uploaded.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+<style>
+  .nw-sec { border-top: 1px solid var(--pc-line); padding: 10px 0 4px; }
+  .nw-sec:first-of-type { border-top: 0; padding-top: 0; }
+  .nw-sec summary {
+    cursor: pointer; list-style: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    font-size: 13.5px; font-weight: 700; color: var(--pc-navy);
+    padding: 4px 0 10px;
+  }
+  .nw-sec summary::-webkit-details-marker { display: none; }
+  .nw-sec__sum {
+    font-size: 13px; font-weight: 700; color: var(--pc-ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .nw-f { margin-bottom: 12px; }
+  .nw-f .pc-field__label { display: block; margin-bottom: 6px; }
+  .pc-btn[disabled] { opacity: .45; cursor: default; pointer-events: none; }
+  #itemTable th:nth-child(2), #itemTable td:nth-child(2) { text-align: left; }
+</style>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / Net Worth Calculator</div>
+  <div class="pc-title">
+    <h1>Net Worth Calculator</h1>
+    <p>Your personal balance sheet: everything you own minus everything you owe.
+       Nothing you type leaves your browser — there is no server, no account, no tracking.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <details class="nw-sec" open>
+          <summary><span>Cash &amp; Bank</span><span class="nw-sec__sum" id="sumCash">₹0</span></summary>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwCash">Cash in hand</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwCash" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwSavings">Savings accounts</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwSavings" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwFd">Fixed deposits</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwFd" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+        </details>
+
+        <details class="nw-sec" open>
+          <summary><span>Investments</span><span class="nw-sec__sum" id="sumInvest">₹0</span></summary>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwStocks">Stocks</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwStocks" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwMf">Mutual funds</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwMf" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwOtherInv">Other investments</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwOtherInv" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+        </details>
+
+        <details class="nw-sec" open>
+          <summary><span>Retirement</span><span class="nw-sec__sum" id="sumRetire">₹0</span></summary>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwEpf">EPF</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwEpf" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwPpf">PPF</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwPpf" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwNps">NPS</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwNps" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+        </details>
+
+        <details class="nw-sec" open>
+          <summary><span>Property &amp; Gold</span><span class="nw-sec__sum" id="sumProp">₹0</span></summary>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwProperty">Real estate (market value)</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwProperty" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwGold">Gold &amp; jewellery</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwGold" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+        </details>
+
+        <details class="nw-sec" open>
+          <summary><span>Other assets</span><span class="nw-sec__sum" id="sumOtherA">₹0</span></summary>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwVehicles">Vehicles (resale value)</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwVehicles" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwOtherAsset">Other</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwOtherAsset" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+        </details>
+
+        <details class="nw-sec" open>
+          <summary><span>Liabilities</span><span class="nw-sec__sum" id="sumLiab">₹0</span></summary>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwHomeLoan">Home loan balance</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwHomeLoan" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwVehicleLoan">Vehicle loan balance</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwVehicleLoan" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwPersonal">Personal loans &amp; credit cards</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwPersonal" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+          <div class="nw-f">
+            <label class="pc-field__label" for="nwDues">Other dues</label>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="nwDues" min="0" placeholder="0" inputmode="numeric"></div>
+          </div>
+        </details>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card">
+        <div class="pc-card__title">Where your assets sit</div>
+        <div id="donutWrap"></div>
+      </div>
+
+      <div class="pc-callout" id="debtCallout" hidden></div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> All line items</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="itemTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card">
+        <div class="pc-card__title">Your data stays with you</div>
+        <div class="pc-actions">
+          <button type="button" class="pc-btn" id="btnSave">Save in this browser</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnLoad">Load saved</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnClear">Clear saved</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+        <div class="pc-chips" style="margin-top:14px">
+          <span class="pc-chip pc-chip--static">🔒 Nothing you type leaves your browser</span>
+        </div>
+        <p style="margin:12px 0 0;font-size:12.5px;color:var(--pc-muted)">
+          There is deliberately no share link on this page — a shareable URL would embed
+          your finances in it. Saving uses this browser's local storage only.
+        </p>
+      </div>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This tool is for personal tracking and education only. Values you enter are your own
+        estimates; market prices change and lenders assess assets differently. Nothing you
+        type is uploaded or stored anywhere except this browser (and only if you choose
+        Save). This is not investment advice or a certified statement of net worth.
+        Prospar Consulting LLP.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+  var KEY = "prospar-networth";
+
+  var ITEMS = [
+    { id: "nwCash", section: "Cash & Bank", label: "Cash in hand" },
+    { id: "nwSavings", section: "Cash & Bank", label: "Savings accounts" },
+    { id: "nwFd", section: "Cash & Bank", label: "Fixed deposits" },
+    { id: "nwStocks", section: "Investments", label: "Stocks" },
+    { id: "nwMf", section: "Investments", label: "Mutual funds" },
+    { id: "nwOtherInv", section: "Investments", label: "Other investments" },
+    { id: "nwEpf", section: "Retirement", label: "EPF" },
+    { id: "nwPpf", section: "Retirement", label: "PPF" },
+    { id: "nwNps", section: "Retirement", label: "NPS" },
+    { id: "nwProperty", section: "Property & Gold", label: "Real estate (market value)" },
+    { id: "nwGold", section: "Property & Gold", label: "Gold & jewellery" },
+    { id: "nwVehicles", section: "Other assets", label: "Vehicles (resale value)" },
+    { id: "nwOtherAsset", section: "Other assets", label: "Other" },
+    { id: "nwHomeLoan", section: "Liabilities", label: "Home loan balance" },
+    { id: "nwVehicleLoan", section: "Liabilities", label: "Vehicle loan balance" },
+    { id: "nwPersonal", section: "Liabilities", label: "Personal loans & credit cards" },
+    { id: "nwDues", section: "Liabilities", label: "Other dues" }
+  ];
+
+  function val(id) {
+    var v = parseFloat($(id).value);
+    return isFinite(v) && v > 0 ? v : 0;
+  }
+
+  function recalc() {
+    var C = U.color();
+    var cash = val("nwCash") + val("nwSavings") + val("nwFd");
+    var invest = val("nwStocks") + val("nwMf") + val("nwOtherInv");
+    var retire = val("nwEpf") + val("nwPpf") + val("nwNps");
+    var prop = val("nwProperty") + val("nwGold");
+    var otherA = val("nwVehicles") + val("nwOtherAsset");
+    var liab = val("nwHomeLoan") + val("nwVehicleLoan") + val("nwPersonal") + val("nwDues");
+    var assets = cash + invest + retire + prop + otherA;
+    var net = assets - liab;
+    var liquid = cash + invest - val("nwPersonal") - val("nwDues");
+
+    $("sumCash").textContent = F.formatINRCompact(cash);
+    $("sumInvest").textContent = F.formatINRCompact(invest);
+    $("sumRetire").textContent = F.formatINRCompact(retire);
+    $("sumProp").textContent = F.formatINRCompact(prop);
+    $("sumOtherA").textContent = F.formatINRCompact(otherA);
+    $("sumLiab").textContent = F.formatINRCompact(liab);
+
+    U.renderStats("statsRow", [
+      { label: "Total assets", dot: C.invested, value: F.formatINRCompact(assets),
+        sub: F.formatINR(assets) },
+      { label: "Total liabilities", dot: C.cat4, value: F.formatINRCompact(liab),
+        sub: F.formatINR(liab) },
+      { hero: true, label: "Net worth", value: F.formatINRCompact(net),
+        sub: F.formatINR(net) },
+      { label: "Liquid net worth", value: F.formatINRCompact(liquid),
+        sub: "what you could raise this month" }
+    ]);
+
+    U.mountDonut("donutWrap", {
+      slices: [
+        { label: "Cash & Bank", value: cash, color: C.invested },
+        { label: "Investments", value: invest, color: C.gains },
+        { label: "Retirement", value: retire, color: C.cat3 },
+        { label: "Property & Gold", value: prop, color: C.cat4 },
+        { label: "Other assets", value: otherA, color: C.cat5 }
+      ],
+      centerLabel: "Total assets",
+      centerValue: F.formatINRCompact(assets),
+      ariaLabel: "Composition of your total assets by category"
+    });
+
+    if (assets === 0 && liab === 0) {
+      U.callout("debtCallout", "");
+    } else if (liab === 0) {
+      U.callout("debtCallout",
+        "You carry <strong>no debt</strong> — your net worth equals your assets. " +
+        "Any new loan is worth weighing against this clean slate.");
+    } else if (assets === 0) {
+      U.callout("debtCallout",
+        "You have liabilities but no recorded assets — <strong>high — prioritise repayment</strong>. " +
+        "Clearing personal loans and credit cards comes before fresh investing.");
+    } else {
+      var ratio = liab / assets * 100;
+      var p = Math.round(ratio);
+      if (ratio < 30) {
+        U.callout("debtCallout",
+          "Your liabilities are <strong>" + p + "%</strong> of your assets — <strong>healthy</strong>. " +
+          "Keeping this under 30% leaves room for emergencies and goals.");
+      } else if (ratio <= 50) {
+        U.callout("debtCallout",
+          "Your liabilities are <strong>" + p + "%</strong> of your assets — <strong>manageable — watch it</strong>. " +
+          "Between 30–50%, aim to clear the costliest loans first.");
+      } else {
+        U.callout("debtCallout",
+          "Your liabilities are <strong>" + p + "%</strong> of your assets — <strong>high — prioritise repayment</strong>. " +
+          "Above 50%, clearing personal loans and credit cards beats fresh investing.");
+      }
+    }
+
+    var tableRows = ITEMS.map(function (it) {
+      return [it.section, it.label, F.formatINR(val(it.id))];
+    });
+    tableRows.push(["", "<strong>Total assets</strong>", "<strong>" + F.formatINR(assets) + "</strong>"]);
+    tableRows.push(["", "<strong>Total liabilities</strong>", "<strong>" + F.formatINR(liab) + "</strong>"]);
+    tableRows.push(["", "<strong>Net worth</strong>", "<strong>" + F.formatINR(net) + "</strong>"]);
+    U.buildTable("itemTable", ["Section", "Item", "Amount"], tableRows);
+
+    lastTotals = { assets: assets, liab: liab, net: net };
+  }
+  var lastTotals = { assets: 0, liab: 0, net: 0 };
+
+  /* ---------- save / load / clear (localStorage only) ---------- */
+  function store() { try { return window.localStorage; } catch (e) { return null; } }
+  function hasSaved() {
+    var ls = store();
+    return !!(ls && ls.getItem(KEY));
+  }
+  function updateSavedButtons() {
+    var ok = hasSaved();
+    $("btnLoad").disabled = !ok;
+    $("btnClear").disabled = !ok;
+  }
+  function flash(btn, txt) {
+    var orig = btn.textContent;
+    btn.textContent = txt;
+    setTimeout(function () { btn.textContent = orig; }, 1800);
+  }
+
+  $("btnSave").addEventListener("click", function () {
+    var ls = store();
+    if (!ls) { flash(this, "Storage unavailable"); return; }
+    var obj = {};
+    ITEMS.forEach(function (it) { obj[it.id] = val(it.id); });
+    try {
+      ls.setItem(KEY, JSON.stringify(obj));
+      flash(this, "Saved ✓");
+    } catch (e) { flash(this, "Could not save"); }
+    updateSavedButtons();
+  });
+
+  $("btnLoad").addEventListener("click", function () {
+    var ls = store();
+    if (!ls) return;
+    var raw = ls.getItem(KEY);
+    if (!raw) return;
+    var obj;
+    try { obj = JSON.parse(raw); } catch (e) { return; }
+    ITEMS.forEach(function (it) {
+      var v = obj && isFinite(obj[it.id]) ? +obj[it.id] : 0;
+      $(it.id).value = v > 0 ? v : "";
+    });
+    recalc();
+    flash(this, "Loaded ✓");
+  });
+
+  $("btnClear").addEventListener("click", function () {
+    var ls = store();
+    if (ls) { try { ls.removeItem(KEY); } catch (e) {} }
+    updateSavedButtons();
+    flash(this, "Cleared");
+  });
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-net-worth.csv",
+    headers: function () { return ["Section", "Item", "Amount"]; },
+    rows: function () {
+      var rows = ITEMS.map(function (it) {
+        return [it.section, it.label, Math.round(val(it.id))];
+      });
+      rows.push(["", "Total assets", Math.round(lastTotals.assets)]);
+      rows.push(["", "Total liabilities", Math.round(lastTotals.liab)]);
+      rows.push(["", "Net worth", Math.round(lastTotals.net)]);
+      return rows;
+    }
+  });
+  U.printButton("btnPrint", "tableCard");
+
+  U.assumptions("assumeChips", [
+    "Insurance: use surrender value (add under Other investments)",
+    "Property at market value, not purchase price",
+    "Vehicles at resale value",
+    "Loans at outstanding balance, not EMI",
+    "No share link on this page — your numbers never enter a URL"
+  ]);
+
+  ITEMS.forEach(function (it) {
+    $(it.id).addEventListener("input", recalc);
+  });
+  updateSavedButtons();
+  recalc();
+})();
+</script>
+</body>
+</html>

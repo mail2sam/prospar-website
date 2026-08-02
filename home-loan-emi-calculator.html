@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home Loan EMI Calculator — Prospar Consulting</title>
+<meta name="description" content="Home loan EMI with total interest, a full amortization schedule, and prepayment savings — all live and interactive.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / Home Loan EMI Calculator</div>
+  <div class="pc-title">
+    <h1>Home Loan EMI Calculator</h1>
+    <p>Your EMI is only half the story — see the total interest, the year-by-year
+       amortization, and how much a small monthly prepayment saves.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inAmount">Loan amount</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inAmount" min="500000" max="50000000" step="100000" value="5000000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slAmount" min="500000" max="50000000" step="100000" value="5000000" aria-label="Loan amount slider">
+          <div class="pc-range-ends"><span>₹5&nbsp;L</span><span>₹5&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inRate">Interest rate</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inRate" min="6" max="15" step="0.05" value="8.5" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slRate" min="6" max="15" step="0.05" value="8.5" aria-label="Interest rate slider">
+          <div class="pc-range-ends"><span>6%</span><span>15%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inYears">Loan tenure</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inYears" min="1" max="30" step="1" value="20" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slYears" min="1" max="30" step="1" value="20" aria-label="Loan tenure slider">
+          <div class="pc-range-ends"><span>1&nbsp;yr</span><span>30&nbsp;yrs</span></div>
+        </div>
+
+        <div class="pc-field" style="margin-bottom:6px">
+          <div class="pc-field__row">
+            <label class="pc-field__label" for="inExtra">Extra payment every month</label>
+            <span class="pc-field__hint">prepayment</span>
+          </div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inExtra" min="0" max="100000" step="1000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slExtra" min="0" max="100000" step="1000" value="0" aria-label="Extra monthly prepayment slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹1&nbsp;L</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout" hidden></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Yearly payments &amp; outstanding balance</div>
+          <div class="pc-legend" id="legend"></div>
+        </div>
+        <div id="chartWrap"></div>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Amortization schedule (year-wise)</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This calculator is for illustration and education only. Actual EMIs, rates and
+        schedules depend on your lender's terms, fees and rate resets (floating-rate loans
+        reprice with the repo rate). This is not financial advice. Prospar Consulting LLP.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+
+  var state = { amount: 5000000, rate: 8.5, years: 20, extra: 0 };
+  var url = U.urlState({
+    amount: { p: "a", lo: 500000, hi: 50000000, dflt: 5000000 },
+    rate: { p: "r", lo: 6, hi: 15, dflt: 8.5 },
+    years: { p: "y", lo: 1, hi: 30, dflt: 20 },
+    extra: { p: "x", lo: 0, hi: 100000, dflt: 0 }
+  });
+
+  var lastYearly = [];
+
+  function fmtTenure(months) {
+    var y = Math.floor(months / 12), m = months % 12;
+    return y + " yr" + (m ? " " + m + " mo" : "");
+  }
+
+  function render() {
+    var s = state, C = U.color();
+    var base = F.amortize(s.amount, s.rate, s.years * 12);
+    var plan = s.extra > 0 ? F.amortize(s.amount, s.rate, s.years * 12, { extraMonthly: s.extra }) : base;
+    lastYearly = plan.yearly;
+
+    U.renderStats("statsRow", [
+      { hero: true, label: "Monthly EMI", value: F.formatINR(Math.round(base.emi)),
+        sub: s.extra > 0 ? "+ " + F.formatINR(s.extra) + " extra = " + F.formatINR(Math.round(base.emi + s.extra)) + "/month" : "for " + s.years + " years" },
+      { label: "Total interest", dot: C.cat4, value: F.formatINRCompact(plan.totalInterest), sub: F.formatINR(plan.totalInterest) },
+      { label: "Total payment", value: F.formatINRCompact(plan.totalPaid),
+        sub: "principal " + F.formatINRCompact(s.amount) + " + interest" }
+    ]);
+
+    if (s.extra > 0) {
+      var saved = base.totalInterest - plan.totalInterest;
+      U.callout("callout",
+        "Paying <strong>" + F.formatINR(s.extra) + " extra each month</strong> clears the loan in <strong>" +
+        fmtTenure(plan.months) + "</strong> instead of " + fmtTenure(base.months) +
+        " — saving <strong>" + F.formatINRCompact(saved) + "</strong> in interest.");
+    } else {
+      var ratio = plan.totalInterest / s.amount;
+      U.callout("callout",
+        "Over " + s.years + " years you pay <strong>" + F.formatINRCompact(plan.totalInterest) +
+        " as interest</strong> — that's <strong>" + Math.round(ratio * 100) +
+        "%</strong> of the amount you borrowed. Try the prepayment slider to see how fast that shrinks.");
+    }
+
+    U.legend("legend", [
+      { color: C.invested, label: "Principal paid" },
+      { color: C.cat4, label: "Interest paid" },
+      { color: C.ink2, label: "Outstanding balance" }
+    ]);
+
+    U.mountBarChart("chartWrap", {
+      rows: plan.yearly.map(function (r) {
+        return {
+          x: r.year,
+          segments: [
+            { label: "Principal", color: C.invested, value: r.principalPaid },
+            { label: "Interest", color: C.cat4, value: r.interestPaid }
+          ],
+          line: r.balance,
+          _r: r
+        };
+      }),
+      lineColor: C.ink2,
+      x: { format: function (v) { return "Yr " + v; } },
+      ariaLabel: "Yearly principal and interest payments with outstanding balance",
+      tooltip: function (row) {
+        var r = row._r;
+        return { title: "Year " + r.year, rows: [
+          { sw: C.invested, label: "Principal", value: F.formatINRCompact(r.principalPaid) },
+          { sw: C.cat4, label: "Interest", value: F.formatINRCompact(r.interestPaid) },
+          { label: "Balance left", value: F.formatINRCompact(r.balance) }
+        ]};
+      }
+    });
+
+    U.buildTable("schedTable",
+      ["Year", "Principal paid", "Interest paid", "Total paid", "Outstanding"],
+      plan.yearly.map(function (r) {
+        return [r.year, F.formatINR(r.principalPaid), F.formatINR(r.interestPaid),
+          F.formatINR(r.principalPaid + r.interestPaid), F.formatINR(r.balance)];
+      }));
+
+    U.assumptions("assumeChips", [
+      "Reducing-balance interest, monthly rests",
+      "Fixed " + F.formatPct(s.rate, 2) + " rate for the full tenure",
+      s.extra > 0 ? "Extra " + F.formatINR(s.extra) + "/month goes straight to principal (EMI unchanged, tenure shrinks)" : "No prepayments",
+      "Processing fees & insurance not included",
+      "Interest may qualify under Sec 24(b), principal under 80C (old regime)"
+    ]);
+    url.write(s);
+  }
+
+  url.read(state);
+  var pA = U.bindPair("inAmount", "slAmount", function (v) { state.amount = v; render(); });
+  var pR = U.bindPair("inRate", "slRate", function (v) { state.rate = v; render(); });
+  var pY = U.bindPair("inYears", "slYears", function (v) { state.years = v; render(); });
+  var pX = U.bindPair("inExtra", "slExtra", function (v) { state.extra = v; render(); });
+  pA.set(state.amount); pR.set(state.rate); pY.set(state.years); pX.set(state.extra);
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-home-loan-schedule.csv",
+    headers: function () { return ["Year", "Principal Paid", "Interest Paid", "Total Paid", "Outstanding Balance"]; },
+    rows: function () {
+      return lastYearly.map(function (r) {
+        return [r.year, Math.round(r.principalPaid), Math.round(r.interestPaid),
+          Math.round(r.principalPaid + r.interestPaid), Math.round(r.balance)];
+      });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+</body>
+</html>

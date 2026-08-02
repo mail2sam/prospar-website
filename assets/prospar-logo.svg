@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 214 120" role="img" aria-label="Prospar Consulting mark">
+  <!-- Prospar Consulting "PC" mark — bars growing into P, C with growth arrow -->
+  <defs>
+    <mask id="pc-swoosh-cut">
+      <rect x="0" y="0" width="214" height="120" fill="#fff"/>
+      <!-- the swoosh cuts a clean channel through the bars -->
+      <path d="M3 103 C 28 103 32 82 62 75" fill="none" stroke="#000" stroke-width="17" stroke-linecap="round"/>
+    </mask>
+  </defs>
+  <g fill="#ffffff" mask="url(#pc-swoosh-cut)">
+    <!-- ascending bars -->
+    <rect x="6"  y="66" width="13" height="30"/>
+    <rect x="25" y="44" width="13" height="52"/>
+    <rect x="44" y="14" width="13" height="82"/>
+    <!-- P stem -->
+    <rect x="63" y="14" width="16" height="82"/>
+  </g>
+  <!-- P bowl -->
+  <path d="M79 21 a20 20 0 0 1 0 40" fill="none" stroke="#ffffff" stroke-width="14"/>
+  <!-- swoosh under the bars -->
+  <path d="M3 103 C 28 103 32 82 62 75" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+  <!-- C -->
+  <path d="M175.7 27.4 A40 40 0 1 0 180.6 83.7" fill="none" stroke="#ffffff" stroke-width="17" stroke-linecap="round"/>
+  <!-- growth zig-zag arrow -->
+  <path d="M122 84 L140 60 L151 69 L179 35" fill="none" stroke="#ffffff" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="196,15 170,22 189,41" fill="#ffffff"/>
+</svg>

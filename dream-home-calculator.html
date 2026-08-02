@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dream Home Planner — Prospar Consulting</title>
+<meta name="description" content="Plan the down payment, not the whole price: the future cost of your home, the SIP that builds your down payment plus transaction costs, and the EMI that follows.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / Dream Home Planner</div>
+  <div class="pc-title">
+    <h1>Dream Home Planner</h1>
+    <p>You don't need the full price in cash — you need the down payment and the transaction
+       costs on possession day, and a loan does the rest. This planner works the way real buyers buy.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inPrice">Home price today</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inPrice" min="1000000" max="200000000" step="500000" value="8000000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slPrice" min="1000000" max="200000000" step="500000" value="8000000" aria-label="Home price in today's prices slider">
+          <div class="pc-range-ends"><span>₹10&nbsp;L</span><span>₹20&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inYears">Years to purchase</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inYears" min="1" max="20" step="1" value="7" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slYears" min="1" max="20" step="1" value="7" aria-label="Years to purchase slider">
+          <div class="pc-range-ends"><span>1&nbsp;yr</span><span>20&nbsp;yrs</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inAppr">Property appreciation</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inAppr" min="0" max="12" step="0.5" value="6" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slAppr" min="0" max="12" step="0.5" value="6" aria-label="Property appreciation slider">
+          <div class="pc-range-ends"><span>0%</span><span>12%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inDp">Down payment</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inDp" min="10" max="100" step="5" value="25" inputmode="numeric">
+            <span class="affix">%</span></div>
+          <input type="range" class="pc-slider" id="slDp" min="10" max="100" step="5" value="25" aria-label="Down payment percentage slider">
+          <div class="pc-range-ends"><span>10%</span><span>100%</span></div>
+          <div class="pc-chips" id="chipsDp" style="margin-top:10px">
+            <button type="button" class="pc-chip" data-val="20" aria-pressed="false">20%</button>
+            <button type="button" class="pc-chip" data-val="25" aria-pressed="false">25%</button>
+            <button type="button" class="pc-chip" data-val="30" aria-pressed="false">30%</button>
+            <button type="button" class="pc-chip" data-val="100" aria-pressed="false">Full cash</button>
+          </div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inOther">Other costs</label>
+            <span class="pc-field__hint">stamp duty, registration, interiors</span></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inOther" min="5" max="20" step="0.5" value="12" inputmode="decimal">
+            <span class="affix">%</span></div>
+          <input type="range" class="pc-slider" id="slOther" min="5" max="20" step="0.5" value="12" aria-label="Other purchase costs percentage slider">
+          <div class="pc-range-ends"><span>5%</span><span>20%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inRate">Expected return on savings</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inRate" min="4" max="20" step="0.5" value="12" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slRate" min="4" max="20" step="0.5" value="12" aria-label="Expected return on savings slider">
+          <div class="pc-range-ends"><span>4%</span><span>20%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inExisting">Savings already set aside</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inExisting" min="0" max="100000000" step="50000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slExisting" min="0" max="100000000" step="50000" value="0" aria-label="Existing savings slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹10&nbsp;Cr</span></div>
+        </div>
+
+        <details style="margin-top:4px">
+          <summary style="cursor:pointer;font-size:13.5px;font-weight:700;color:var(--pc-navy);margin-bottom:12px">Advanced: loan &amp; step-up</summary>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inLoanRate">Loan interest rate</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inLoanRate" min="6" max="15" step="0.05" value="8.5" inputmode="decimal">
+              <span class="affix">% p.a.</span></div>
+            <input type="range" class="pc-slider" id="slLoanRate" min="6" max="15" step="0.05" value="8.5" aria-label="Home loan interest rate slider">
+            <div class="pc-range-ends"><span>6%</span><span>15%</span></div>
+          </div>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inTenure">Loan tenure</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inTenure" min="5" max="30" step="1" value="20" inputmode="numeric">
+              <span class="affix">years</span></div>
+            <input type="range" class="pc-slider" id="slTenure" min="5" max="30" step="1" value="20" aria-label="Loan tenure slider">
+            <div class="pc-range-ends"><span>5&nbsp;yrs</span><span>30&nbsp;yrs</span></div>
+          </div>
+          <div class="pc-field" style="margin-bottom:2px">
+            <div class="pc-field__row"><label class="pc-field__label" for="inStep">Increase SIP yearly by</label></div>
+            <div class="pc-numwrap">
+              <input type="number" id="inStep" min="0" max="20" step="0.5" value="0" inputmode="decimal">
+              <span class="affix">%</span></div>
+            <input type="range" class="pc-slider" id="slStep" min="0" max="20" step="0.5" value="0" aria-label="Annual SIP step-up slider">
+            <div class="pc-range-ends"><span>0%</span><span>20%</span></div>
+          </div>
+        </details>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout" hidden></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Building the down-payment corpus</div>
+          <div class="pc-legend" id="legend"></div>
+        </div>
+        <div id="chartWrap"></div>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Year-by-year plan</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This planner is for illustration and education only. Property prices, appreciation and
+        loan rates vary by city, project and lender; EMI figures are indicative and not a loan
+        offer, and market-linked returns are not guaranteed. This is not investment advice or an
+        offer of any product. Prospar Consulting LLP — investments are subject to market risks;
+        read all scheme-related documents carefully.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+  var NOW_YEAR = new Date().getFullYear();
+
+  var state = { price: 8000000, years: 7, appr: 6, dp: 25, oc: 12, rate: 12,
+    existing: 0, loanRate: 8.5, tenure: 20, stepUp: 0 };
+  var url = U.urlState({
+    price: { p: "pr", lo: 1000000, hi: 200000000, dflt: 8000000 },
+    years: { p: "y", lo: 1, hi: 20, dflt: 7 },
+    appr: { p: "ap", lo: 0, hi: 12, dflt: 6 },
+    dp: { p: "dp", lo: 10, hi: 100, dflt: 25 },
+    oc: { p: "oc", lo: 5, hi: 20, dflt: 12 },
+    rate: { p: "r", lo: 4, hi: 20, dflt: 12 },
+    existing: { p: "ex", lo: 0, hi: 100000000, dflt: 0 },
+    loanRate: { p: "lr", lo: 6, hi: 15, dflt: 8.5 },
+    tenure: { p: "lt", lo: 5, hi: 30, dflt: 20 },
+    stepUp: { p: "su", lo: 0, hi: 20, dflt: 0 }
+  });
+
+  var lastRows = [];
+
+  function render() {
+    var s = state, C = U.color();
+    var buyYear = NOW_YEAR + s.years;
+
+    var futurePrice = F.inflate(s.price, s.appr, s.years);
+    var downPay = futurePrice * s.dp / 100;
+    var otherCosts = futurePrice * s.oc / 100;
+    var savingsGoal = downPay + otherCosts;
+    var loanAmt = s.dp >= 100 ? 0 : futurePrice - downPay;
+    var emiAfter = loanAmt > 0 ? F.emi(loanAmt, s.loanRate, s.tenure * 12) : 0;
+
+    var fvExisting = F.fvLumpsum(s.existing, s.rate, s.years);
+    var gap = Math.max(0, savingsGoal - fvExisting);
+    var monthly = gap > 0 ? F.requiredStepUpSip(gap, s.rate, s.years, s.stepUp) : 0;
+    var lump = gap > 0 ? F.pvLumpsum(gap, s.rate, s.years) : 0;
+
+    var acc = F.sipSchedule({ monthly: monthly, annualRatePct: s.rate,
+      years: s.years, stepUpPct: s.stepUp, lumpsum: s.existing });
+    var chartRows = [{ x: 0, invested: s.existing, value: s.existing }]
+      .concat(acc.map(function (r) { return { x: r.year, invested: r.cumInvested, value: r.value }; }));
+    lastRows = acc.map(function (r) { return { year: r.year, invested: r.cumInvested, value: r.value }; });
+
+    U.renderStats("statsRow", [
+      { hero: true, label: "Home will cost", value: F.formatINRCompact(futurePrice),
+        sub: F.formatINRCompact(s.price) + " today → " + buyYear },
+      { label: "You need to save", dot: C.target, value: F.formatINRCompact(savingsGoal),
+        sub: F.formatPct(s.dp, 0) + " down + " + F.formatPct(s.oc, 1) + " costs" },
+      { label: "Required monthly SIP", dot: C.invested, value: F.formatINR(Math.ceil(monthly)),
+        sub: gap > 0 ? "or " + F.formatINRCompact(lump) + " invested once today"
+                     : "existing savings already cover it ✓" },
+      { label: "EMI after purchase", value: F.formatINR(Math.ceil(emiAfter)),
+        sub: loanAmt > 0 ? "loan " + F.formatINRCompact(loanAmt) + " for " + s.tenure + " yrs"
+                         : "no loan — full cash" }
+    ]);
+
+    if (s.dp >= 100) {
+      U.callout("callout",
+        "You're planning a <strong>loan-free purchase</strong> — the SIP funds the full price " +
+        "plus costs, so there's no EMI at all after you get the keys.");
+    } else {
+      var income = Math.ceil((emiAfter / 0.45) / 1000) * 1000;
+      U.callout("callout",
+        "Banks cap EMIs near 40–50% of take-home pay. This " + F.formatINR(Math.ceil(emiAfter)) +
+        " EMI comfortably needs a household income around <strong>" +
+        F.formatINRCompact(income) + "/month</strong>.");
+    }
+
+    U.legend("legend", [
+      { color: C.invested, label: "Invested" },
+      { color: C.gains, label: "Total value" },
+      { color: C.target, label: "Savings goal", dash: true }
+    ]);
+
+    U.mountAreaChart("chartWrap", {
+      rows: chartRows,
+      x: { min: 0, max: s.years, format: function (v) { return v === 0 ? "Now" : "Yr " + v; } },
+      series: [
+        { field: "invested", color: C.invested, width: 2, fillTo: "zero", tint: C.investedTint, gapUnder: true },
+        { field: "value", color: C.gains, width: 2.5, fillTo: "invested", tint: C.gainsTint }
+      ],
+      refY: [{ value: savingsGoal, color: C.target,
+        label: "Down payment + costs " + F.formatINRCompact(savingsGoal), labelColor: C.goldInk }],
+      endLabels: [{ field: "value", text: function (r) { return F.formatINRCompact(r.value); } }],
+      ariaLabel: "Year-wise growth of savings against the down payment plus costs goal",
+      tooltip: function (r) {
+        return { title: r.x === 0 ? "Start" : "Year " + r.x, rows: [
+          { sw: C.invested, label: "Invested", value: F.formatINRCompact(r.invested) },
+          { sw: C.gains, label: "Value", value: F.formatINRCompact(r.value) },
+          { label: "Gains", value: F.formatINRCompact(r.value - r.invested) }
+        ]};
+      }
+    });
+
+    U.buildTable("schedTable", ["Year", "Invested (cum.)", "Value"],
+      lastRows.map(function (r) {
+        return [r.year, F.formatINR(r.invested), F.formatINR(r.value)];
+      }));
+
+    U.assumptions("assumeChips", [
+      s.dp >= 100 ? "Full-cash purchase — the SIP funds the entire price plus costs"
+                  : "Savings goal = down payment + transaction costs; a home loan covers the rest",
+      "Property appreciates at " + F.formatPct(s.appr, 1) + " — varies widely by city and locality",
+      s.dp >= 100 ? "No loan assumed, so no EMI after purchase"
+                  : "Loan figures indicative: " + F.formatPct(s.loanRate, 2) + " for " + s.tenure + " yrs",
+      "Stamp duty, registration and interiors held at " + F.formatPct(s.oc, 1) + " of the future price",
+      "Savings assumed to earn " + F.formatPct(s.rate, 1) + " p.a. (SIP at month start)",
+      s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " every year" : "Flat SIP",
+      "Taxes not modelled"
+    ]);
+
+    chipsDp.sync(s.dp);
+    url.write(s);
+  }
+
+  url.read(state);
+  var pPrice = U.bindPair("inPrice", "slPrice", function (v) { state.price = v; render(); });
+  var pYears = U.bindPair("inYears", "slYears", function (v) { state.years = v; render(); });
+  var pAppr = U.bindPair("inAppr", "slAppr", function (v) { state.appr = v; render(); });
+  var pDp = U.bindPair("inDp", "slDp", function (v) { state.dp = v; render(); });
+  var pOther = U.bindPair("inOther", "slOther", function (v) { state.oc = v; render(); });
+  var pRate = U.bindPair("inRate", "slRate", function (v) { state.rate = v; render(); });
+  var pExisting = U.bindPair("inExisting", "slExisting", function (v) { state.existing = v; render(); });
+  var pLoanRate = U.bindPair("inLoanRate", "slLoanRate", function (v) { state.loanRate = v; render(); });
+  var pTenure = U.bindPair("inTenure", "slTenure", function (v) { state.tenure = v; render(); });
+  var pStep = U.bindPair("inStep", "slStep", function (v) { state.stepUp = v; render(); });
+  var chipsDp = U.bindChips("chipsDp", function (v) { state.dp = v; pDp.set(v); render(); });
+
+  pPrice.set(state.price); pYears.set(state.years); pAppr.set(state.appr);
+  pDp.set(state.dp); pOther.set(state.oc); pRate.set(state.rate);
+  pExisting.set(state.existing); pLoanRate.set(state.loanRate);
+  pTenure.set(state.tenure); pStep.set(state.stepUp);
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-dream-home-plan.csv",
+    headers: function () { return ["Year", "Invested (cumulative)", "Value"]; },
+    rows: function () {
+      return lastRows.map(function (r) { return [r.year, Math.round(r.invested), Math.round(r.value)]; });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+</body>
+</html>

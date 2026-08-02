@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIP Calculator — Prospar Consulting</title>
+<meta name="description" content="Plan your mutual fund SIP: live projections, annual step-up, inflation-adjusted values and a year-by-year schedule.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / SIP Calculator</div>
+  <div class="pc-title">
+    <h1>SIP Calculator</h1>
+    <p>See what a disciplined monthly investment grows into — or start from a goal
+       and find the SIP that gets you there. Every figure updates as you move a slider.</p>
+  </div>
+
+  <div class="pc-tool">
+
+    <!-- ================= INPUTS ================= -->
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-modes" role="tablist" aria-label="Calculator mode">
+          <button type="button" id="modeInvest" aria-pressed="true">I want to invest</button>
+          <button type="button" id="modeGoal" aria-pressed="false">I have a goal</button>
+        </div>
+
+        <div class="pc-field" id="fieldMonthly">
+          <div class="pc-field__row">
+            <label class="pc-field__label" for="inMonthly">Monthly investment</label>
+          </div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inMonthly" min="500" max="500000" step="500" value="25000" inputmode="numeric">
+          </div>
+          <input type="range" class="pc-slider" id="slMonthly" min="500" max="500000" step="500" value="25000" aria-label="Monthly investment slider">
+          <div class="pc-range-ends"><span>₹500</span><span>₹5&nbsp;L</span></div>
+        </div>
+
+        <div class="pc-field" id="fieldTarget" hidden>
+          <div class="pc-field__row">
+            <label class="pc-field__label" for="inTarget">Goal amount</label>
+            <span class="pc-field__hint" id="targetHint"></span>
+          </div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inTarget" min="100000" max="100000000" step="100000" value="10000000" inputmode="numeric">
+          </div>
+          <input type="range" class="pc-slider" id="slTarget" min="100000" max="100000000" step="100000" value="10000000" aria-label="Goal amount slider">
+          <div class="pc-range-ends"><span>₹1&nbsp;L</span><span>₹10&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row">
+            <label class="pc-field__label" for="inRate">Expected annual return</label>
+          </div>
+          <div class="pc-numwrap">
+            <input type="number" id="inRate" min="4" max="20" step="0.5" value="12" inputmode="decimal">
+            <span class="affix">% p.a.</span>
+          </div>
+          <input type="range" class="pc-slider" id="slRate" min="4" max="20" step="0.5" value="12" aria-label="Expected annual return slider">
+          <div class="pc-range-ends"><span>4%</span><span>20%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row">
+            <label class="pc-field__label" for="inYears">Investment period</label>
+          </div>
+          <div class="pc-numwrap">
+            <input type="number" id="inYears" min="1" max="40" step="1" value="15" inputmode="numeric">
+            <span class="affix">years</span>
+          </div>
+          <input type="range" class="pc-slider" id="slYears" min="1" max="40" step="1" value="15" aria-label="Investment period slider">
+          <div class="pc-range-ends"><span>1&nbsp;yr</span><span>40&nbsp;yrs</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row">
+            <span class="pc-field__label">Increase SIP every year by</span>
+            <span class="pc-field__hint">step-up</span>
+          </div>
+          <div class="pc-chips" id="stepChips" style="margin-bottom:10px">
+            <button type="button" class="pc-chip" data-step="0">None</button>
+            <button type="button" class="pc-chip" data-step="5">5%</button>
+            <button type="button" class="pc-chip" data-step="10">10%</button>
+            <button type="button" class="pc-chip" data-step="15">15%</button>
+          </div>
+          <input type="range" class="pc-slider" id="slStep" min="0" max="20" step="0.5" value="0" aria-label="Annual SIP step-up percentage">
+          <div class="pc-range-ends"><span>0%</span><span id="stepNow">20%</span></div>
+        </div>
+
+        <div class="pc-field" style="margin-bottom:6px">
+          <label class="pc-toggle">
+            <input type="checkbox" id="tgInflation">
+            <span class="knob"></span>
+            <span>Show values in today's money</span>
+          </label>
+          <div id="inflationBlock" hidden style="margin-top:12px">
+            <div class="pc-field__row">
+              <label class="pc-field__label" for="inInfl">Assumed inflation</label>
+            </div>
+            <div class="pc-numwrap">
+              <input type="number" id="inInfl" min="2" max="12" step="0.5" value="6" inputmode="decimal">
+              <span class="affix">% p.a.</span>
+            </div>
+            <input type="range" class="pc-slider" id="slInfl" min="2" max="12" step="0.5" value="6" aria-label="Assumed inflation slider">
+            <div class="pc-range-ends"><span>2%</span><span>12%</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= HEADLINE RESULTS ================= -->
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout" hidden></div>
+    </section>
+
+    <!-- ================= DETAIL ================= -->
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Growth of your investment</div>
+          <div class="pc-legend" id="legend"></div>
+        </div>
+        <div class="pc-chart-wrap" id="chartWrap">
+          <svg id="chart" role="img" aria-label="Year-wise growth of invested amount and total value"></svg>
+          <div class="pc-tip" id="tip"></div>
+        </div>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Year-by-year schedule</summary>
+        <div class="pc-tablescroll">
+          <table class="pc-table" id="schedTable"></table>
+        </div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This calculator is for illustration and education only. Projections assume a constant
+        rate of return; mutual fund returns vary with markets and are not guaranteed.
+        This is not investment advice or an offer of any product. Prospar Consulting LLP —
+        investments are subject to market risks; read all scheme-related documents carefully.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = window.ProFin;
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ------------------------ state ------------------------ */
+  var state = {
+    mode: "invest",          // invest | goal
+    monthly: 25000,
+    target: 10000000,
+    rate: 12,
+    years: 15,
+    stepUp: 0,
+    adjust: false,
+    inflation: 6
+  };
+
+  /* ---------------- URL state (shareable links) ---------------- */
+  function readURL() {
+    var p = new URLSearchParams(location.search);
+    var num = function (k, lo, hi, dflt) {
+      var v = parseFloat(p.get(k));
+      return isFinite(v) ? Math.min(hi, Math.max(lo, v)) : dflt;
+    };
+    if (p.get("mode") === "goal") state.mode = "goal";
+    state.monthly = num("m", 500, 500000, state.monthly);
+    state.target = num("t", 100000, 100000000, state.target);
+    state.rate = num("r", 4, 20, state.rate);
+    state.years = num("y", 1, 40, state.years);
+    state.stepUp = num("su", 0, 20, state.stepUp);
+    state.inflation = num("inf", 2, 12, state.inflation);
+    state.adjust = p.get("adj") === "1";
+  }
+  var urlTimer = null;
+  function writeURL() {
+    clearTimeout(urlTimer);
+    urlTimer = setTimeout(function () {
+      var p = new URLSearchParams();
+      p.set("mode", state.mode);
+      if (state.mode === "invest") p.set("m", state.monthly);
+      else p.set("t", state.target);
+      p.set("r", state.rate); p.set("y", state.years);
+      if (state.stepUp > 0) p.set("su", state.stepUp);
+      if (state.adjust) { p.set("adj", "1"); p.set("inf", state.inflation); }
+      history.replaceState(null, "", location.pathname + "?" + p.toString());
+    }, 250);
+  }
+
+  /* ---------------- input bindings ---------------- */
+  function paintSlider(sl) {
+    var min = +sl.min, max = +sl.max, v = +sl.value;
+    sl.style.setProperty("--fill", ((v - min) / (max - min) * 100) + "%");
+  }
+  function bindPair(numId, slId, key) {
+    var num = $(numId), sl = $(slId);
+    function commit(v, fromSlider) {
+      var lo = +sl.min, hi = +sl.max;
+      v = Math.min(hi, Math.max(lo, v));
+      state[key] = v;
+      if (!fromSlider || document.activeElement !== num) num.value = v;
+      sl.value = v;
+      paintSlider(sl);
+      render();
+    }
+    sl.addEventListener("input", function () { commit(+sl.value, true); });
+    num.addEventListener("input", function () {
+      var v = parseFloat(num.value);
+      if (isFinite(v)) { state[key] = Math.min(+sl.max, Math.max(+sl.min, v));
+        sl.value = state[key]; paintSlider(sl); render(); }
+    });
+    num.addEventListener("blur", function () {
+      var v = parseFloat(num.value);
+      commit(isFinite(v) ? v : state[key], false);
+    });
+    paintSlider(sl);
+  }
+
+  /* ---------------- rendering ---------------- */
+  var INV = getCss("--pc-invested"), GAIN = getCss("--pc-gains"),
+      TGT = getCss("--pc-target"), LINE = getCss("--pc-line"),
+      MUT = getCss("--pc-muted"), INK2 = getCss("--pc-ink-2");
+  function getCss(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+  var lastRows = [];
+
+  function render() {
+    var s = state, rows, startSip, flatEquivalent = null;
+
+    if (s.mode === "invest") {
+      startSip = s.monthly;
+    } else {
+      startSip = F.requiredStepUpSip(s.target, s.rate, s.years, s.stepUp);
+      if (s.stepUp > 0) flatEquivalent = F.requiredSip(s.target, s.rate, s.years);
+    }
+    rows = F.sipSchedule({ monthly: startSip, annualRatePct: s.rate, years: s.years, stepUpPct: s.stepUp });
+    lastRows = rows;
+
+    var last = rows[rows.length - 1];
+    var invested = last.cumInvested, value = last.value, gains = last.gains;
+    var realValue = F.todaysValue(value, s.inflation, s.years);
+
+    /* ---- stat cards ---- */
+    var html = "";
+    if (s.mode === "goal") {
+      html += statCard({
+        hero: true, label: "Required monthly SIP",
+        value: F.formatINR(Math.ceil(startSip / 100) * 100),
+        sub: s.stepUp > 0
+          ? "starting amount, rising " + F.formatPct(s.stepUp, 1) + " every year"
+          : "flat, for " + s.years + " years"
+      });
+    }
+    html += statCard({ label: "Invested", dot: INV, value: F.formatINRCompact(invested),
+      sub: F.formatINR(invested) });
+    html += statCard({ label: "Estimated gains", dot: GAIN, value: F.formatINRCompact(gains),
+      sub: F.formatINR(gains) });
+    if (s.mode === "invest") {
+      html += statCard({ hero: true, label: "Total value in " + s.years + " yrs",
+        value: F.formatINRCompact(value),
+        sub: s.adjust ? "≈ " + F.formatINRCompact(realValue) + " in today's money" : F.formatINR(value) });
+    } else {
+      html += statCard({ label: "Goal value", dot: TGT, value: F.formatINRCompact(s.target),
+        sub: s.adjust ? "≈ " + F.formatINRCompact(F.todaysValue(s.target, s.inflation, s.years)) + " in today's money" : "in " + s.years + " years" });
+    }
+    $("statsRow").innerHTML = html;
+
+    /* ---- callout ---- */
+    var co = $("callout");
+    if (s.mode === "invest" && s.stepUp > 0) {
+      var flatFV = F.sipFV(s.monthly, s.rate, s.years);
+      var extra = value - flatFV;
+      co.hidden = false;
+      co.innerHTML = "Stepping up " + F.formatPct(s.stepUp, 1) + " a year adds <strong>" +
+        F.formatINRCompact(extra) + "</strong> over a flat SIP (" +
+        F.formatINRCompact(flatFV) + " → " + F.formatINRCompact(value) +
+        "). Final-year instalment: <strong>" + F.formatINR(last.monthlySip) + "/month</strong>.";
+    } else if (s.mode === "goal" && flatEquivalent !== null) {
+      co.hidden = false;
+      co.innerHTML = "Without a step-up you would need <strong>" +
+        F.formatINR(Math.ceil(flatEquivalent / 100) * 100) + "/month flat</strong>. " +
+        "With " + F.formatPct(s.stepUp, 1) + " yearly increases you start at <strong>" +
+        F.formatINR(Math.ceil(startSip / 100) * 100) + "</strong> and reach " +
+        F.formatINR(last.monthlySip) + " in year " + s.years + ".";
+    } else if (s.mode === "goal") {
+      var pctInvested = invested / s.target * 100;
+      co.hidden = false;
+      co.innerHTML = "You invest <strong>" + F.formatINRCompact(invested) + "</strong> (" +
+        Math.round(pctInvested) + "% of the goal); compounding contributes the remaining <strong>" +
+        F.formatINRCompact(gains) + "</strong>.";
+    } else {
+      co.hidden = true;
+    }
+
+    /* ---- legend ---- */
+    var lg = '<span><i style="background:' + INV + '"></i>Invested</span>' +
+             '<span><i style="background:' + GAIN + '"></i>Total value</span>';
+    if (s.mode === "goal")
+      lg += '<span><i style="background:transparent;border-top:3px dashed ' + TGT + ';border-radius:0;height:0;margin-top:5px"></i>Goal</span>';
+    $("legend").innerHTML = lg;
+
+    drawChart(rows);
+    buildTable(rows);
+    buildAssumptions();
+    writeURL();
+  }
+
+  function statCard(o) {
+    return '<div class="pc-stat' + (o.hero ? " pc-stat--hero" : "") + '">' +
+      '<div class="pc-stat__label">' +
+      (o.dot ? '<span class="pc-stat__dot" style="background:' + o.dot + '"></span>' : "") +
+      o.label + '</div>' +
+      '<div class="pc-stat__value">' + o.value + '</div>' +
+      (o.sub ? '<div class="pc-stat__sub">' + o.sub + '</div>' : "") + '</div>';
+  }
+
+  /* ---------------- chart ---------------- */
+  var W = 820, H = 330, ML = 62, MR = 14, MT = 16, MB = 32;
+
+  function niceTop(maxV) {
+    if (maxV <= 0) return 1;
+    var raw = maxV / 4, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    var norm = raw / mag, step;
+    if (norm <= 1) step = 1; else if (norm <= 2) step = 2;
+    else if (norm <= 2.5) step = 2.5; else if (norm <= 5) step = 5; else step = 10;
+    step *= mag;
+    return { top: Math.ceil(maxV / step) * step, step: step };
+  }
+
+  function drawChart(rows) {
+    var s = state;
+    var pts = [{ year: 0, cumInvested: 0, value: 0 }].concat(rows);
+    var maxV = Math.max(pts[pts.length - 1].value, s.mode === "goal" ? s.target : 0);
+    var nt = niceTop(maxV), top = nt.top, step = nt.step;
+
+    var x = function (yr) { return ML + (W - ML - MR) * (yr / s.years); };
+    var y = function (v) { return MT + (H - MT - MB) * (1 - v / top); };
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+    svg = ""; // built as inner content; outer <svg> element already exists
+    // gridlines + y labels
+    for (var v = 0; v <= top + 1; v += step) {
+      var yy = y(v);
+      svg += '<line x1="' + ML + '" x2="' + (W - MR) + '" y1="' + yy + '" y2="' + yy +
+        '" stroke="' + LINE + '" stroke-width="1"/>' +
+        '<text x="' + (ML - 8) + '" y="' + (yy + 4) + '" text-anchor="end" font-size="11.5" fill="' + MUT + '">' +
+        compactAxis(v) + '</text>';
+    }
+    // x ticks
+    var xstep = Math.max(1, Math.ceil(s.years / 8));
+    for (var yr = 0; yr <= s.years; yr += xstep) {
+      svg += '<text x="' + x(yr) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="11.5" fill="' + MUT + '">' +
+        (yr === 0 ? "Now" : "Yr " + yr) + '</text>';
+    }
+
+    // area paths
+    function pathAlong(key, close) {
+      var d = "";
+      pts.forEach(function (p, i) { d += (i ? "L" : "M") + x(p.year).toFixed(1) + " " + y(p[key]).toFixed(1) + " "; });
+      return d;
+    }
+    var invTopPath = pathAlong("cumInvested");
+    var valTopPath = pathAlong("value");
+
+    // gains band: value line down to invested line (reverse)
+    var gainsArea = valTopPath;
+    for (var i = pts.length - 1; i >= 0; i--)
+      gainsArea += "L" + x(pts[i].year).toFixed(1) + " " + y(pts[i].cumInvested).toFixed(1) + " ";
+    gainsArea += "Z";
+    var invArea = invTopPath + "L" + x(s.years).toFixed(1) + " " + y(0) + " L" + x(0) + " " + y(0) + " Z";
+
+    svg += '<path d="' + invArea + '" fill="' + getCss2("--pc-invested-tint") + '"/>';
+    svg += '<path d="' + gainsArea + '" fill="' + getCss2("--pc-gains-tint") + '"/>';
+    // 2px surface gap along shared boundary, then series strokes
+    svg += '<path d="' + invTopPath + '" fill="none" stroke="#ffffff" stroke-width="4"/>';
+    svg += '<path d="' + invTopPath + '" fill="none" stroke="' + INV + '" stroke-width="2"/>';
+    svg += '<path d="' + valTopPath + '" fill="none" stroke="' + GAIN + '" stroke-width="2.5"/>';
+
+    // goal line
+    if (s.mode === "goal") {
+      var gy = y(s.target);
+      svg += '<line x1="' + ML + '" x2="' + (W - MR) + '" y1="' + gy + '" y2="' + gy +
+        '" stroke="' + TGT + '" stroke-width="2" stroke-dasharray="7 5"/>' +
+        '<text x="' + (W - MR - 4) + '" y="' + (gy - 7) + '" text-anchor="end" font-size="12" font-weight="600" fill="' + getCss2("--pc-gold-ink") + '">Goal ' + F.formatINRCompact(s.target) + '</text>';
+    }
+
+    // direct end labels (skip if they'd collide)
+    var endVal = pts[pts.length - 1], yV = y(endVal.value), yI = y(endVal.cumInvested);
+    var labelX = W - MR - 4;
+    svg += '<text x="' + labelX + '" y="' + Math.max(MT + 12, yV - 8) + '" text-anchor="end" font-size="12" font-weight="700" fill="' + INK2 + '">' + F.formatINRCompact(endVal.value) + '</text>';
+    if (yI - yV > 26) {
+      svg += '<text x="' + labelX + '" y="' + Math.min(H - MB - 6, yI + 16) + '" text-anchor="end" font-size="12" font-weight="600" fill="' + INK2 + '">' + F.formatINRCompact(endVal.cumInvested) + ' invested</text>';
+    }
+
+    // crosshair placeholder + hover overlay
+    svg += '<line id="xline" x1="0" x2="0" y1="' + MT + '" y2="' + (H - MB) + '" stroke="' + MUT + '" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>';
+    svg += '<circle id="xdotV" r="4.5" fill="' + GAIN + '" stroke="#fff" stroke-width="2" opacity="0"/>';
+    svg += '<circle id="xdotI" r="4" fill="' + INV + '" stroke="#fff" stroke-width="2" opacity="0"/>';
+    svg += '<rect id="hover" x="' + ML + '" y="' + MT + '" width="' + (W - ML - MR) + '" height="' + (H - MT - MB) + '" fill="transparent"/>';
+
+    var el = $("chart");
+    el.setAttribute("viewBox", "0 0 " + W + " " + H);
+    el.innerHTML = svg;
+    attachHover(pts, x, y);
+  }
+  function getCss2(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+  function compactAxis(v) {
+    if (v >= 1e7) return "₹" + trim1(v / 1e7) + " Cr";
+    if (v >= 1e5) return "₹" + trim1(v / 1e5) + " L";
+    if (v >= 1e3) return "₹" + trim1(v / 1e3) + "k";
+    return "₹" + v;
+  }
+  function trim1(n) { var s = n.toFixed(1); return s.replace(/\.0$/, ""); }
+
+  function attachHover(pts, x, y) {
+    var hover = $("hover"), xline = $("xline"), dV = $("xdotV"), dI = $("xdotI");
+    var tip = $("tip"), wrap = $("chartWrap"), svgEl = $("chart");
+
+    function show(clientX) {
+      var r = svgEl.getBoundingClientRect();
+      var sx = (clientX - r.left) / r.width * W;
+      var frac = (sx - ML) / (W - ML - MR) * state.years;
+      var idx = Math.round(Math.min(state.years, Math.max(0, frac)));
+      var p = pts[idx];
+      var px = x(p.year);
+      xline.setAttribute("x1", px); xline.setAttribute("x2", px); xline.setAttribute("opacity", "1");
+      dV.setAttribute("cx", px); dV.setAttribute("cy", y(p.value)); dV.setAttribute("opacity", "1");
+      dI.setAttribute("cx", px); dI.setAttribute("cy", y(p.cumInvested)); dI.setAttribute("opacity", "1");
+
+      var html = '<div class="t-year">' + (p.year === 0 ? "Start" : "Year " + p.year) + '</div>' +
+        '<div class="t-row"><span><i style="background:' + INV + '"></i>Invested</span><span>' + F.formatINRCompact(p.cumInvested) + '</span></div>' +
+        '<div class="t-row"><span><i style="background:' + GAIN + '"></i>Value</span><span>' + F.formatINRCompact(p.value) + '</span></div>' +
+        '<div class="t-row"><span style="padding-left:13px">Gains</span><span>' + F.formatINRCompact(p.value - p.cumInvested) + '</span></div>';
+      if (state.adjust)
+        html += '<div class="t-row"><span style="padding-left:13px">Today’s ₹</span><span>' +
+          F.formatINRCompact(F.todaysValue(p.value, state.inflation, p.year)) + '</span></div>';
+      tip.innerHTML = html;
+
+      var wr = wrap.getBoundingClientRect();
+      var left = (px / W) * wr.width;
+      tip.style.opacity = "1";
+      var tw = tip.offsetWidth;
+      tip.style.left = Math.min(wr.width - tw - 4, Math.max(4, left + (left > wr.width / 2 ? -tw - 14 : 14))) + "px";
+      tip.style.top = "18px";
+    }
+    function hide() {
+      tip.style.opacity = "0";
+      ["xline", "xdotV", "xdotI"].forEach(function (id) { $(id).setAttribute("opacity", "0"); });
+    }
+    hover.addEventListener("mousemove", function (e) { show(e.clientX); });
+    hover.addEventListener("mouseleave", hide);
+    hover.addEventListener("touchstart", function (e) { show(e.touches[0].clientX); }, { passive: true });
+    hover.addEventListener("touchmove", function (e) { show(e.touches[0].clientX); }, { passive: true });
+    hover.addEventListener("touchend", hide);
+  }
+
+  /* ---------------- table & CSV ---------------- */
+  function buildTable(rows) {
+    var s = state;
+    var h = "<thead><tr><th>Year</th><th>Monthly SIP</th><th>Invested (cum.)</th><th>Value</th><th>Gains</th>" +
+      (s.adjust ? "<th>Value in today's ₹</th>" : "") + "</tr></thead><tbody>";
+    rows.forEach(function (r) {
+      h += "<tr><td>" + r.year + "</td><td>" + F.formatINR(r.monthlySip) + "</td><td>" +
+        F.formatINR(r.cumInvested) + "</td><td>" + F.formatINR(r.value) + "</td><td>" +
+        F.formatINR(r.gains) + "</td>" +
+        (s.adjust ? "<td>" + F.formatINR(F.todaysValue(r.value, s.inflation, r.year)) + "</td>" : "") +
+        "</tr>";
+    });
+    $("schedTable").innerHTML = h + "</tbody>";
+  }
+
+  $("btnCsv").addEventListener("click", function () {
+    var s = state;
+    var head = ["Year", "Monthly SIP", "Cumulative Invested", "Value", "Gains"];
+    if (s.adjust) head.push("Value in today's rupees (inflation " + s.inflation + "%)");
+    var lines = [head.join(",")];
+    lastRows.forEach(function (r) {
+      var row = [r.year, Math.round(r.monthlySip), Math.round(r.cumInvested),
+        Math.round(r.value), Math.round(r.gains)];
+      if (s.adjust) row.push(Math.round(F.todaysValue(r.value, s.inflation, r.year)));
+      lines.push(row.join(","));
+    });
+    var blob = new Blob([lines.join("\r\n")], { type: "text/csv" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "prospar-sip-schedule.csv";
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+  });
+
+  /* ---------------- assumptions ---------------- */
+  function buildAssumptions() {
+    var s = state;
+    var chips = [
+      "Returns compound monthly at " + F.formatPct(s.rate, 1) + " p.a.",
+      "Instalments at the start of each month",
+      s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " once every year" : "Flat SIP (no yearly increase)",
+      s.adjust ? "Today's-money figures use " + F.formatPct(s.inflation, 1) + " inflation" : "Figures are nominal (not inflation-adjusted)",
+      "Taxes, expense ratios and exit loads not modelled"
+    ];
+    $("assumeChips").innerHTML = chips.map(function (c) {
+      return '<span class="pc-chip pc-chip--static">' + c + "</span>";
+    }).join("");
+  }
+
+  /* ---------------- share & print ---------------- */
+  $("btnShare").addEventListener("click", function () {
+    var btn = this, url = location.href;
+    function done(ok) {
+      btn.textContent = ok ? "Link copied ✓" : "Copy failed — copy from address bar";
+      setTimeout(function () { btn.textContent = "Copy shareable link"; }, 2200);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { done(true); }, function () { done(false); });
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+      ta.remove();
+    }
+  });
+  $("btnPrint").addEventListener("click", function () { window.print(); });
+  window.addEventListener("beforeprint", function () { $("tableCard").open = true; });
+
+  /* ---------------- mode switching ---------------- */
+  function setMode(m) {
+    state.mode = m;
+    $("modeInvest").setAttribute("aria-pressed", m === "invest");
+    $("modeGoal").setAttribute("aria-pressed", m === "goal");
+    $("fieldMonthly").hidden = m !== "invest";
+    $("fieldTarget").hidden = m !== "goal";
+    render();
+  }
+  $("modeInvest").addEventListener("click", function () { setMode("invest"); });
+  $("modeGoal").addEventListener("click", function () { setMode("goal"); });
+
+  /* ---------------- step-up chips ---------------- */
+  function syncStepChips() {
+    var v = state.stepUp;
+    Array.prototype.forEach.call(document.querySelectorAll("#stepChips .pc-chip"), function (c) {
+      c.setAttribute("aria-pressed", parseFloat(c.dataset.step) === v);
+    });
+    $("stepNow").textContent = v > 0 ? v + "%" : "20%";
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("#stepChips .pc-chip"), function (c) {
+    c.addEventListener("click", function () {
+      state.stepUp = parseFloat(c.dataset.step);
+      $("slStep").value = state.stepUp;
+      paintSlider($("slStep"));
+      syncStepChips(); render();
+    });
+  });
+  $("slStep").addEventListener("input", function () {
+    state.stepUp = +this.value; paintSlider(this); syncStepChips(); render();
+  });
+
+  /* ---------------- inflation toggle ---------------- */
+  $("tgInflation").addEventListener("change", function () {
+    state.adjust = this.checked;
+    $("inflationBlock").hidden = !this.checked;
+    render();
+  });
+
+  /* ---------------- init ---------------- */
+  readURL();
+  bindPair("inMonthly", "slMonthly", "monthly");
+  bindPair("inTarget", "slTarget", "target");
+  bindPair("inRate", "slRate", "rate");
+  bindPair("inYears", "slYears", "years");
+  bindPair("inInfl", "slInfl", "inflation");
+
+  // reflect state read from URL into controls
+  $("inMonthly").value = state.monthly; $("slMonthly").value = state.monthly;
+  $("inTarget").value = state.target; $("slTarget").value = state.target;
+  $("inRate").value = state.rate; $("slRate").value = state.rate;
+  $("inYears").value = state.years; $("slYears").value = state.years;
+  $("inInfl").value = state.inflation; $("slInfl").value = state.inflation;
+  $("slStep").value = state.stepUp;
+  $("tgInflation").checked = state.adjust;
+  $("inflationBlock").hidden = !state.adjust;
+  ["slMonthly", "slTarget", "slRate", "slYears", "slInfl", "slStep"].forEach(function (id) { paintSlider($(id)); });
+  syncStepChips();
+  setMode(state.mode);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compound Interest Calculator — Prospar Consulting</title>
+<meta name="description" content="FD-style compound growth at yearly, half-yearly, quarterly or monthly compounding — with the effective annual yield, a simple-interest comparison and a year-by-year table.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="index.html">Financial Tools</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="index.html">Tools</a> / Compound Interest Calculator</div>
+  <div class="pc-title">
+    <h1>Compound Interest Calculator</h1>
+    <p>Deposit-style growth with interest compounded yearly, half-yearly, quarterly or
+       monthly — and what that compounding is really worth as an effective annual yield.
+       Updates live as you move a slider.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inPrincipal">Principal</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inPrincipal" min="1000" max="100000000" step="1000" value="100000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slPrincipal" min="1000" max="100000000" step="1000" value="100000" aria-label="Principal amount slider">
+          <div class="pc-range-ends"><span>₹1k</span><span>₹10&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inRate">Annual interest rate</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inRate" min="1" max="20" step="0.1" value="7.5" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slRate" min="1" max="20" step="0.1" value="7.5" aria-label="Annual interest rate slider">
+          <div class="pc-range-ends"><span>1%</span><span>20%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inYears">Time period</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inYears" min="1" max="40" step="1" value="10" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slYears" min="1" max="40" step="1" value="10" aria-label="Time period slider">
+          <div class="pc-range-ends"><span>1&nbsp;yr</span><span>40&nbsp;yrs</span></div>
+        </div>
+
+        <div class="pc-field" style="margin-bottom:6px">
+          <div class="pc-field__row">
+            <span class="pc-field__label">Compounding frequency</span>
+          </div>
+          <div class="pc-chips" id="freqChips">
+            <button type="button" class="pc-chip" data-val="1">Yearly</button>
+            <button type="button" class="pc-chip" data-val="2">Half-yearly</button>
+            <button type="button" class="pc-chip" data-val="4">Quarterly</button>
+            <button type="button" class="pc-chip" data-val="12">Monthly</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout" hidden></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Growth of your deposit</div>
+          <div class="pc-legend" id="legend"></div>
+        </div>
+        <div id="chartWrap"></div>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Year-by-year growth</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This calculator is for illustration and education only. Deposit rates, payout options
+        and compounding conventions vary by bank and product; confirm exact terms with your
+        institution. This is not investment advice or an offer of any product. Prospar
+        Consulting LLP — investments are subject to market risks; read all scheme-related
+        documents carefully.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+
+  var FREQ_NAMES = { 1: "yearly", 2: "half-yearly", 4: "quarterly", 12: "monthly" };
+
+  var state = { principal: 100000, rate: 7.5, years: 10, freq: 4 };
+  var url = U.urlState({
+    principal: { p: "p", lo: 1000, hi: 100000000, dflt: 100000 },
+    rate: { p: "r", lo: 1, hi: 20, dflt: 7.5 },
+    years: { p: "y", lo: 1, hi: 40, dflt: 10 },
+    freq: { p: "f", lo: 1, hi: 12, dflt: 4 }
+  });
+
+  var lastRows = [];
+
+  function render() {
+    var s = state, C = U.color();
+    var rows = F.lumpsumSchedule(s.principal, s.rate, s.years, s.freq);
+    lastRows = rows;
+    var maturity = F.compoundFV(s.principal, s.rate, s.years, s.freq);
+    var interest = maturity - s.principal;
+    var ear = F.effectiveAnnualRate(s.rate, s.freq);
+    var si = F.simpleInterestFV(s.principal, s.rate, s.years);
+    var freqName = FREQ_NAMES[s.freq] || (s.freq + "× a year");
+
+    var chartRows = [{ x: 0, value: s.principal, invested: s.principal }]
+      .concat(rows.map(function (r) { return { x: r.year, value: r.value, invested: s.principal }; }));
+
+    U.renderStats("statsRow", [
+      { label: "Principal", dot: C.invested, value: F.formatINRCompact(s.principal), sub: F.formatINR(s.principal) },
+      { label: "Interest earned", dot: C.gains, value: F.formatINRCompact(interest), sub: F.formatINR(interest) },
+      { hero: true, label: "Maturity value", value: F.formatINRCompact(maturity),
+        sub: F.formatINR(maturity) + " after " + s.years + (s.years === 1 ? " yr" : " yrs") },
+      { label: "Effective annual yield", value: F.formatPct(ear, 2),
+        sub: F.formatPct(s.rate, 1) + " compounded " + freqName }
+    ]);
+
+    U.callout("callout",
+      "Compounding earned <strong>" + F.formatINRCompact(maturity - si) + " more</strong> than " +
+      "simple interest would (" + F.formatINRCompact(maturity) + " vs " + F.formatINRCompact(si) + "). " +
+      F.formatPct(s.rate, 1) + " compounded " + freqName + " = <strong>" +
+      F.formatPct(ear, 2) + " effective</strong> per year.");
+
+    U.legend("legend", [
+      { color: C.invested, label: "Principal" },
+      { color: C.gains, label: "Value with interest" }
+    ]);
+
+    U.mountAreaChart("chartWrap", {
+      rows: chartRows,
+      x: { min: 0, max: s.years, format: function (v) { return v === 0 ? "Now" : "Yr " + v; } },
+      series: [
+        { field: "invested", color: C.invested, width: 2, fillTo: "zero", tint: C.investedTint, gapUnder: true },
+        { field: "value", color: C.gains, width: 2.5, fillTo: "invested", tint: C.gainsTint }
+      ],
+      endLabels: [{ field: "value", text: function (r) { return F.formatINRCompact(r.value); } }],
+      ariaLabel: "Year-wise compound growth of the deposit",
+      tooltip: function (r) {
+        return { title: r.x === 0 ? "Start" : "Year " + r.x, rows: [
+          { sw: C.invested, label: "Principal", value: F.formatINRCompact(r.invested) },
+          { sw: C.gains, label: "Value", value: F.formatINRCompact(r.value) },
+          { label: "Interest", value: F.formatINRCompact(r.value - r.invested) }
+        ]};
+      }
+    });
+
+    U.buildTable("schedTable", ["Year", "Value", "Interest to date"], rows.map(function (r) {
+      return [r.year, F.formatINR(r.value), F.formatINR(r.gains)];
+    }));
+
+    U.assumptions("assumeChips", [
+      "Interest compounds " + freqName + " (" + s.freq + "× a year)",
+      "Rate stays fixed at " + F.formatPct(s.rate, 1) + " for the full term",
+      "TDS / income tax on interest not modelled",
+      "Premature-withdrawal penalties not modelled"
+    ]);
+    url.write(s);
+  }
+
+  url.read(state);
+  if ([1, 2, 4, 12].indexOf(state.freq) === -1) {
+    var best = 4, bd = Infinity;
+    [1, 2, 4, 12].forEach(function (o) {
+      var d = Math.abs(o - state.freq);
+      if (d < bd) { bd = d; best = o; }
+    });
+    state.freq = best;
+  }
+
+  var pPrincipal = U.bindPair("inPrincipal", "slPrincipal", function (v) { state.principal = v; render(); });
+  var pRate = U.bindPair("inRate", "slRate", function (v) { state.rate = v; render(); });
+  var pYears = U.bindPair("inYears", "slYears", function (v) { state.years = v; render(); });
+  var freqChips = U.bindChips("freqChips", function (v) { state.freq = v; render(); });
+
+  pPrincipal.set(state.principal); pRate.set(state.rate); pYears.set(state.years);
+  freqChips.sync(state.freq);
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-compound-interest.csv",
+    headers: function () { return ["Year", "Value", "Interest to date"]; },
+    rows: function () {
+      return lastRows.map(function (r) { return [r.year, Math.round(r.value), Math.round(r.gains)]; });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+</body>
+</html>
