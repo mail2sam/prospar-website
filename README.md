@@ -64,6 +64,16 @@ lakh/crore formatting · assumptions stated as chips on every page ·
 year-by-year table + CSV download · copy-shareable-link (state in URL) ·
 print/PDF · mobile results-first layout · SEBI-appropriate disclaimer.
 
+## Insights & creatives
+
+- `insights.html` — client-facing Insights hub; each approved creative gets an
+  `insight-<name>.html` page with WhatsApp/LinkedIn share buttons, link-preview
+  (Open Graph) tags showing the creative, and deep links into the calculators.
+- `creatives/` — the LinkedIn creative system (1080×1080 HTML → PNG).
+  **Team guide for producing new creatives: `creatives/GUIDE.md`** — written so any
+  new joinee with Claude Code access can produce on-brand, compliant creatives.
+  Supervised workflow: draft → partner review → approve → publish.
+
 ## Pending / next phase
 
 - Real branding (logo, colors, fonts) — swap in `prospar-theme.css`.

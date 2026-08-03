@@ -1,0 +1,162 @@
+/* ============================================================
+   Prospar Consulting — LinkedIn Creative Frame (1080×1080)
+   Shares brand tokens with the website theme. Export to PNG
+   with export-creatives.ps1 (headless Edge screenshot).
+   ============================================================ */
+
+:root {
+  --pc-navy: #14304d;
+  --pc-navy-deep: #0d2237;
+  --pc-gold: #c9a227;
+  --pc-gold-ink: #8a6d14;
+  --pc-ink: #1c2733;
+  --pc-ink-2: #46586a;
+  --pc-muted: #74849a;
+  --pc-line: #e2e8f0;
+  --pc-invested: #2f6bb3;
+  --pc-gains: #0e9d6e;
+  --pc-good: #1e7f3c;
+  --pc-good-bg: #e7f4ec;
+  --pc-bad: #c0392b;
+  --pc-bad-bg: #faeceb;
+  --pc-font: "Segoe UI", -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; }
+
+html, body { background: #dfe5ec; font-family: var(--pc-font); }
+
+/* The exported square */
+.cr-frame {
+  width: 1080px;
+  height: 1080px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Brand band */
+.cr-head {
+  background: var(--pc-navy);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 48px;
+}
+.cr-head img { height: 62px; display: block; }
+.cr-head .name { font-size: 30px; font-weight: 700; letter-spacing: .4px; }
+.cr-head .name small {
+  display: block;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 3.4px;
+  text-transform: uppercase;
+  color: #c8d4e0;
+}
+.cr-head .tag {
+  margin-left: auto;
+  font-size: 17px;
+  color: #c8d4e0;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+/* Content area */
+.cr-body { flex: 1; padding: 44px 56px 24px; display: flex; flex-direction: column; }
+
+.cr-kicker {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: var(--pc-gold-ink);
+  margin-bottom: 10px;
+}
+.cr-h1 {
+  font-size: 58px;
+  line-height: 1.12;
+  font-weight: 800;
+  color: var(--pc-navy);
+  letter-spacing: -0.5px;
+}
+.cr-h1 .accent { color: var(--pc-gold-ink); }
+.cr-sub { font-size: 27px; color: var(--pc-ink-2); margin-top: 12px; line-height: 1.4; }
+
+/* Verdict strip */
+.cr-verdict {
+  margin-top: auto;
+  border-left: 10px solid var(--pc-gold);
+  background: #fdf9ee;
+  border-radius: 14px;
+  padding: 22px 30px;
+  font-size: 29px;
+  line-height: 1.4;
+  color: #46390d;
+  font-weight: 600;
+}
+
+/* Footer */
+.cr-foot {
+  padding: 20px 56px 26px;
+  border-top: 3px solid var(--pc-line);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.cr-foot .src { font-size: 17px; color: var(--pc-muted); line-height: 1.45; flex: 1; }
+.cr-foot .brand { font-size: 19px; font-weight: 700; color: var(--pc-navy); white-space: nowrap; }
+
+/* ---------- comparison layout ---------- */
+.cr-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 34px; }
+.cr-panel { border-radius: 18px; padding: 30px 32px; border: 3px solid transparent; }
+.cr-panel--bad { background: var(--pc-bad-bg); border-color: #eccfcb; }
+.cr-panel--good { background: var(--pc-good-bg); border-color: #cfe8d8; }
+.cr-panel .p-title { font-size: 25px; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+.cr-panel--bad .p-title { color: var(--pc-bad); }
+.cr-panel--good .p-title { color: var(--pc-good); }
+.cr-panel .p-when { font-size: 20px; color: var(--pc-ink-2); margin-top: 4px; }
+.cr-panel .p-rows { margin-top: 22px; display: flex; flex-direction: column; gap: 14px; }
+.cr-panel .p-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 23px; color: var(--pc-ink-2); }
+.cr-panel .p-row b { font-size: 30px; color: var(--pc-ink); font-weight: 800; }
+.cr-panel .p-big { font-size: 52px; font-weight: 800; letter-spacing: -1px; margin-top: 16px; }
+.cr-panel--bad .p-big { color: var(--pc-bad); }
+.cr-panel--good .p-big { color: var(--pc-good); }
+.cr-panel .p-note { font-size: 19px; color: var(--pc-muted); margin-top: 4px; }
+
+/* mini bars */
+.cr-bars { display: flex; align-items: flex-end; gap: 30px; height: 150px; margin-top: 26px; }
+.cr-bar { flex: 1; border-radius: 10px 10px 4px 4px; position: relative; }
+.cr-bar span {
+  position: absolute; top: -32px; left: 0; right: 0;
+  text-align: center; font-size: 21px; font-weight: 700; color: var(--pc-ink-2);
+}
+
+/* ---------- ladder layout ---------- */
+.cr-ladder { display: flex; flex-direction: column-reverse; gap: 13px; margin-top: 30px; }
+.cr-rung {
+  display: grid;
+  grid-template-columns: 84px 300px 1fr;
+  align-items: center;
+  gap: 20px;
+  border-radius: 14px;
+  padding: 11px 24px;
+  background: #f2f5f9;
+  border: 2px solid var(--pc-line);
+}
+.cr-rung .n {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--pc-navy); color: #fff;
+  font-size: 26px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.cr-rung .t { font-size: 25px; font-weight: 800; color: var(--pc-navy); }
+.cr-rung .d { font-size: 20px; color: var(--pc-ink-2); line-height: 1.3; }
+.cr-rung--top {
+  background: linear-gradient(135deg, #fdf6e0, #faefc8);
+  border-color: var(--pc-gold);
+}
+.cr-rung--top .n { background: var(--pc-gold); color: var(--pc-navy-deep); }
+.cr-rung--base { background: #edf0f4; }
