@@ -134,6 +134,39 @@ html, body { background: #dfe5ec; font-family: var(--pc-font); }
   text-align: center; font-size: 21px; font-weight: 700; color: var(--pc-ink-2);
 }
 
+/* ---------- big stat grid ---------- */
+.cr-statgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 30px; }
+.cr-stat {
+  border: 2px solid var(--pc-line);
+  border-radius: 16px;
+  padding: 24px 28px;
+  background: #f8fafc;
+}
+.cr-stat .s-label { font-size: 21px; font-weight: 700; color: var(--pc-ink-2); }
+.cr-stat .s-value { font-size: 46px; font-weight: 800; color: var(--pc-navy); letter-spacing: -1px; margin-top: 6px; }
+.cr-stat .s-note { font-size: 18px; color: var(--pc-muted); margin-top: 4px; }
+.cr-stat--gold { background: linear-gradient(135deg,#fdf6e0,#faefc8); border-color: var(--pc-gold); }
+.cr-stat--gold .s-value { color: var(--pc-gold-ink); }
+
+/* ---------- compact table ---------- */
+table.cr-table { width: 100%; border-collapse: collapse; margin-top: 26px; }
+.cr-table th, .cr-table td {
+  padding: 14px 18px;
+  font-size: 23px;
+  text-align: right;
+  border-bottom: 2px solid var(--pc-line);
+  font-variant-numeric: tabular-nums;
+}
+.cr-table th:first-child, .cr-table td:first-child { text-align: left; }
+.cr-table thead th {
+  font-size: 18px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--pc-muted); border-bottom: 3px solid var(--pc-line);
+}
+.cr-table td b { color: var(--pc-navy); font-weight: 800; }
+.cr-table tr.hi td { background: #fdf6e0; }
+.cr-table td .neg { color: var(--pc-bad); font-weight: 700; }
+.cr-table td .pos { color: var(--pc-good); font-weight: 700; }
+
 /* ---------- ladder layout ---------- */
 .cr-ladder { display: flex; flex-direction: column-reverse; gap: 13px; margin-top: 30px; }
 .cr-rung {
