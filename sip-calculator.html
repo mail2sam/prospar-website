@@ -557,7 +557,7 @@
       "Instalments at the start of each month",
       s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " once every year" : "Flat SIP (no yearly increase)",
       s.adjust ? "Today's-money figures use " + F.formatPct(s.inflation, 1) + " inflation" : "Figures are nominal (not inflation-adjusted)",
-      "Taxes, expense ratios and exit loads not modelled"
+      "Taxes and exit loads not modelled · fund returns are quoted net of expense ratio"
     ];
     $("assumeChips").innerHTML = chips.map(function (c) {
       return '<span class="pc-chip pc-chip--static">' + c + "</span>";

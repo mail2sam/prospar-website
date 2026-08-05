@@ -689,8 +689,14 @@ a.pc-toolcard:hover {
 /* ---------- Print ---------- */
 @media print {
   body { background: #fff; }
-  .pc-header, .pc-actions, .pc-crumb, .pc-modes,
+  .pc-actions, .pc-crumb, .pc-modes, .pc-header__nav, .pc-footer,
   input[type="range"], .pc-range-ends { display: none !important; }
+  /* the branded header prints on every page output — logo stays on
+     everything a user saves or shares as PDF */
+  .pc-header {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
   .pc-card, .pc-stat { box-shadow: none; }
   .pc-tool { grid-template-columns: 1fr; }
   .pc-tablecard { display: block; }

@@ -251,7 +251,7 @@
     U.assumptions("assumeChips", [
       "Returns compound annually at " + F.formatPct(s.rate, 1) + " p.a.",
       s.adjust ? "Today's-money figures use " + F.formatPct(s.inflation, 1) + " inflation" : "Figures are nominal (not inflation-adjusted)",
-      "Taxes, expense ratios and exit loads not modelled"
+      "Taxes and exit loads not modelled · fund returns are quoted net of expense ratio"
     ]);
     url.write(s);
   }

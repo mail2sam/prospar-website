@@ -306,7 +306,7 @@
              : "Gold not planned separately — enable it under Advanced",
       "Investments assumed to earn " + F.formatPct(s.rate, 1) + " p.a. (SIP at month start)",
       s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " every year" : "Flat SIP",
-      "Taxes and expense ratios not modelled"
+      "Taxes and exit loads not modelled · fund returns are quoted net of expense ratio"
     ]);
 
     chipsBudget.sync(s.budget);
