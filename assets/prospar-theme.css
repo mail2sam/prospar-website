@@ -697,6 +697,22 @@ a.pc-toolcard:hover {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+  /* faint diagonal brand watermark repeated on every printed page */
+  body::after {
+    content: "prospar. \00b7 consultprospar.com";
+    position: fixed;
+    top: 45%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    transform: rotate(-24deg);
+    font-size: 68px;
+    font-weight: 800;
+    letter-spacing: 5px;
+    color: rgba(20, 48, 77, 0.07);
+    z-index: 9999;
+    pointer-events: none;
+  }
   .pc-card, .pc-stat { box-shadow: none; }
   .pc-tool { grid-template-columns: 1fr; }
   .pc-tablecard { display: block; }

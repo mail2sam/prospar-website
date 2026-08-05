@@ -499,9 +499,22 @@
     $(tableId).innerHTML = h + "</tbody>";
   }
 
+  /* Brand header prepended to every CSV download — the data file itself
+     carries provenance and the disclaimer, wherever it travels. */
+  function csvBrand() {
+    return [
+      '"Prospar Consulting LLP — consultprospar.com"',
+      '"' + doc.title.replace(/"/g, "'") + ' — generated ' +
+        new Date().toLocaleDateString("en-IN") + '"',
+      '"For education only — not investment advice. Figures use stated ' +
+        'assumptions; investments are subject to market risks."',
+      ""
+    ];
+  }
+
   function csvButton(btnId, opts) {
     $(btnId).addEventListener("click", function () {
-      var lines = [opts.headers().join(",")];
+      var lines = csvBrand().concat([opts.headers().join(",")]);
       opts.rows().forEach(function (r) { lines.push(r.join(",")); });
       var blob = new Blob([lines.join("\r\n")], { type: "text/csv" });
       var a = doc.createElement("a");
@@ -589,6 +602,7 @@
     mountBarChart: mountBarChart,
     mountDonut: mountDonut,
     buildTable: buildTable,
+    csvBrand: csvBrand,
     csvButton: csvButton,
     shareButton: shareButton,
     printButton: printButton,

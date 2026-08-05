@@ -534,7 +534,15 @@
     var s = state;
     var head = ["Year", "Monthly SIP", "Cumulative Invested", "Value", "Gains"];
     if (s.adjust) head.push("Value in today's rupees (inflation " + s.inflation + "%)");
-    var lines = [head.join(",")];
+    var lines = [
+      '"Prospar Consulting LLP — consultprospar.com"',
+      '"' + document.title.replace(/"/g, "'") + ' — generated ' +
+        new Date().toLocaleDateString("en-IN") + '"',
+      '"For education only — not investment advice. Figures use stated ' +
+        'assumptions; investments are subject to market risks."',
+      "",
+      head.join(",")
+    ];
     lastRows.forEach(function (r) {
       var row = [r.year, Math.round(r.monthlySip), Math.round(r.cumInvested),
         Math.round(r.value), Math.round(r.gains)];
