@@ -603,6 +603,70 @@ a.pc-toolcard:hover {
   .pc-stat__value { font-size: 19px; }
 }
 
+/* ---------- FAQ accordion ---------- */
+.pc-faq details {
+  background: var(--pc-surface);
+  border: 1px solid var(--pc-line);
+  border-radius: var(--pc-radius-sm);
+  box-shadow: var(--pc-shadow);
+  margin-bottom: 10px;
+  padding: 0 18px;
+}
+.pc-faq summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+  font-size: 15.5px;
+  color: var(--pc-navy);
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pc-faq summary::-webkit-details-marker { display: none; }
+.pc-faq summary::before {
+  content: "+";
+  color: var(--pc-gold-ink);
+  font-size: 20px;
+  font-weight: 800;
+  width: 18px;
+  flex: 0 0 auto;
+}
+.pc-faq details[open] summary::before { content: "−"; }
+.pc-faq details[open] summary { border-bottom: 1px dashed var(--pc-line); }
+.pc-faq .a { padding: 12px 0 16px 28px; color: var(--pc-ink-2); line-height: 1.6; }
+.pc-faq .a p { margin: 0 0 10px; }
+.pc-faq .a p:last-child { margin-bottom: 0; }
+
+/* ---------- Process steps ---------- */
+.pc-step {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 4px;
+}
+.pc-step__rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+}
+.pc-step__num {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--pc-navy);
+  color: #fff;
+  font-weight: 800;
+  font-size: 19px;
+  display: flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+}
+.pc-step__line { width: 3px; flex: 1; background: var(--pc-line); margin: 6px 0; }
+.pc-step:last-child .pc-step__line { display: none; }
+.pc-step__body { padding-bottom: 26px; }
+.pc-step__body h3 { margin: 8px 0 6px; color: var(--pc-navy); font-size: 19px; }
+.pc-step__body p { margin: 0 0 8px; color: var(--pc-ink-2); line-height: 1.6; }
+.pc-step--gold .pc-step__num { background: var(--pc-gold); color: var(--pc-navy-deep); }
+
 /* ---------- Site footer ---------- */
 .pc-footer {
   background: var(--pc-navy-deep);
