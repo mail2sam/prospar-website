@@ -1,5 +1,5 @@
 /* ============================================================
-   Prospar Consulting — Shared UI Library (v0.1 prototype)
+   Prospar Consulting: Shared UI Library (v0.1 prototype)
    Input bindings, stat cards, SVG charts (area / stacked bar /
    donut), tables, CSV, URL state, share & print.
    Depends on: finance-engine.js (window.ProFin) + theme CSS vars.
@@ -499,14 +499,14 @@
     $(tableId).innerHTML = h + "</tbody>";
   }
 
-  /* Brand header prepended to every CSV download — the data file itself
+  /* Brand header prepended to every CSV download: the data file itself
      carries provenance and the disclaimer, wherever it travels. */
   function csvBrand() {
     return [
-      '"Prospar Consulting LLP — consultprospar.com"',
-      '"' + doc.title.replace(/"/g, "'") + ' — generated ' +
+      '"Prospar Consulting LLP: consultprospar.com"',
+      '"' + doc.title.replace(/"/g, "'") + ', generated ' +
         new Date().toLocaleDateString("en-IN") + '"',
-      '"For education only — not investment advice. Figures use stated ' +
+      '"For education only, not investment advice. Figures use stated ' +
         'assumptions; investments are subject to market risks."',
       ""
     ];
@@ -533,7 +533,7 @@
       var url = location.href;
       function done(ok) {
         var orig = "Copy shareable link";
-        btn.textContent = ok ? "Link copied ✓" : "Copy failed — use address bar";
+        btn.textContent = ok ? "Link copied ✓" : "Copy failed, use address bar";
         setTimeout(function () { btn.textContent = orig; }, 2200);
       }
       if (navigator.clipboard && navigator.clipboard.writeText)

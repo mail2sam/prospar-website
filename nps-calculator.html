@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NPS Calculator — Prospar Consulting</title>
+<title>NPS Calculator | Prospar Consulting</title>
 <meta name="description" content="Project your NPS corpus with yearly contribution step-ups, split it into tax-free lump sum and annuity, and see the monthly pension in today's money.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -26,8 +26,7 @@
   <div class="pc-crumb"><a href="tools.html">Calculators</a> / NPS Calculator</div>
   <div class="pc-title">
     <h1>NPS Calculator</h1>
-    <p>Project your National Pension System corpus with yearly contribution step-ups —
-       then see the tax-free lump sum, the annuity, and what the pension is really
+    <p>Project your National Pension System corpus with yearly contribution step-ups, then see the tax-free lump sum, the annuity, and what the pension is really
        worth in today's money.</p>
   </div>
 
@@ -160,7 +159,7 @@
         This calculator is for illustration and education only. NPS returns are market-linked
         and not guaranteed; annuity rates depend on the provider and product chosen at
         retirement, and tax treatment reflects current rules which may change. This is not
-        investment or tax advice. Prospar Consulting LLP — investments are subject to market
+        investment or tax advice. Prospar Consulting LLP: investments are subject to market
         risks; read all scheme-related documents carefully.
       </p>
     </section>
@@ -171,7 +170,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -248,7 +247,7 @@
       F.formatINR(Math.round(realPension)) + " in today's money</strong> (at " +
       F.formatPct(s.inflation, 1) + " inflation)" +
       (nps.lumpSum > 0
-        ? " — plan an SWP from the " + F.formatINRCompact(nps.lumpSum) + " lump sum to top it up."
+        ? ": plan an SWP from the " + F.formatINRCompact(nps.lumpSum) + " lump sum to top it up."
         : ".") +
       " Also: contributions up to ₹50,000/yr get an <strong>extra</strong> deduction under Sec 80CCD(1B).");
 
@@ -283,7 +282,7 @@
       }));
 
     U.assumptions("assumeChips", [
-      "Single blended " + F.formatPct(s.ret, 1) + " return — real NPS lifecycle funds cut equity as you age",
+      "Single blended " + F.formatPct(s.ret, 1) + " return, real NPS lifecycle funds cut equity as you age",
       "Annuity pays interest-only at " + F.formatPct(s.annuityRate, 1) + " (actual products vary)",
       "Annuity pension is taxable; the lump sum (up to 60%) is currently tax-free",
       s.adjust ? "Today's-money figures use " + F.formatPct(s.inflation, 1) + " inflation"

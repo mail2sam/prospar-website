@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dream Home Planner — Prospar Consulting</title>
+<title>Dream Home Planner | Prospar Consulting</title>
 <meta name="description" content="Plan the down payment, not the whole price: the future cost of your home, the SIP that builds your down payment plus transaction costs, and the EMI that follows.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -26,7 +26,7 @@
   <div class="pc-crumb"><a href="tools.html">Calculators</a> / Dream Home Planner</div>
   <div class="pc-title">
     <h1>Dream Home Planner</h1>
-    <p>You don't need the full price in cash — you need the down payment and the transaction
+    <p>You don't need the full price in cash: you need the down payment and the transaction
        costs on possession day, and a loan does the rest. This planner works the way real buyers buy.</p>
   </div>
 
@@ -166,7 +166,7 @@
         This planner is for illustration and education only. Property prices, appreciation and
         loan rates vary by city, project and lender; EMI figures are indicative and not a loan
         offer, and market-linked returns are not guaranteed. This is not investment advice or an
-        offer of any product. Prospar Consulting LLP — investments are subject to market risks;
+        offer of any product. Prospar Consulting LLP: investments are subject to market risks;
         read all scheme-related documents carefully.
       </p>
     </section>
@@ -177,7 +177,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -260,12 +260,12 @@
                      : "existing savings already cover it ✓" },
       { label: "EMI after purchase", value: F.formatINR(Math.ceil(emiAfter)),
         sub: loanAmt > 0 ? "loan " + F.formatINRCompact(loanAmt) + " for " + s.tenure + " yrs"
-                         : "no loan — full cash" }
+                         : "no loan, full cash" }
     ]);
 
     if (s.dp >= 100) {
       U.callout("callout",
-        "You're planning a <strong>loan-free purchase</strong> — the SIP funds the full price " +
+        "You're planning a <strong>loan-free purchase</strong>: the SIP funds the full price " +
         "plus costs, so there's no EMI at all after you get the keys.");
     } else {
       var income = Math.ceil((emiAfter / 0.45) / 1000) * 1000;
@@ -307,9 +307,9 @@
       }));
 
     U.assumptions("assumeChips", [
-      s.dp >= 100 ? "Full-cash purchase — the SIP funds the entire price plus costs"
+      s.dp >= 100 ? "Full-cash purchase: the SIP funds the entire price plus costs"
                   : "Savings goal = down payment + transaction costs; a home loan covers the rest",
-      "Property appreciates at " + F.formatPct(s.appr, 1) + " — varies widely by city and locality",
+      "Property appreciates at " + F.formatPct(s.appr, 1) + ", varies widely by city and locality",
       s.dp >= 100 ? "No loan assumed, so no EMI after purchase"
                   : "Loan figures indicative: " + F.formatPct(s.loanRate, 2) + " for " + s.tenure + " yrs",
       "Stamp duty, registration and interiors held at " + F.formatPct(s.oc, 1) + " of the future price",

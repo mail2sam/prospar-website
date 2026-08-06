@@ -1,5 +1,5 @@
 /* ============================================================
-   Prospar Consulting — Shared Finance Engine (v0.1 prototype)
+   Prospar Consulting: Shared Finance Engine (v0.1 prototype)
    Pure functions only. One convention everywhere:
      - returns compound MONTHLY (i = annual/12)
      - SIP instalments are annuity-due (invested at month start)
@@ -352,14 +352,14 @@
     : { format: function (n) { return String(Math.round(n)); } };
 
   function formatINR(n) {
-    if (!isFinite(n)) return "—";
+    if (!isFinite(n)) return "N/A";
     var sign = n < 0 ? "−" : "";
     return sign + "₹" + inrFmt.format(Math.abs(Math.round(n)));
   }
 
   /* ₹1.24 Cr / ₹45.2 L / ₹85,400 */
   function formatINRCompact(n) {
-    if (!isFinite(n)) return "—";
+    if (!isFinite(n)) return "N/A";
     var sign = n < 0 ? "−" : "";
     var a = Math.abs(n);
     if (a >= 1e7) {
@@ -374,7 +374,7 @@
   }
 
   function formatPct(n, dp) {
-    if (!isFinite(n)) return "—";
+    if (!isFinite(n)) return "N/A";
     return n.toFixed(dp === undefined ? 1 : dp) + "%";
   }
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CAGR Calculator — Prospar Consulting</title>
+<title>CAGR Calculator | Prospar Consulting</title>
 <meta name="description" content="Find the annualised (CAGR) return between two values, compare it against FD, inflation and long-run equity benchmarks, and see the implied year-by-year growth path.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -26,7 +26,7 @@
   <div class="pc-crumb"><a href="tools.html">Calculators</a> / CAGR Calculator</div>
   <div class="pc-title">
     <h1>CAGR Calculator</h1>
-    <p>Enter what you invested, what it became and how long it took — get the annualised
+    <p>Enter what you invested, what it became and how long it took: get the annualised
        growth rate, honest benchmark context and the smooth path that return implies.
        Updates live as you move a slider.</p>
   </div>
@@ -96,7 +96,7 @@
         This calculator is for illustration and education only. CAGR is a simplified summary
         of past growth, not a prediction of future returns; benchmark figures are indicative
         long-run averages, not guarantees. This is not investment advice or an offer of any
-        product. Prospar Consulting LLP — investments are subject to market risks; read all
+        product. Prospar Consulting LLP: investments are subject to market risks; read all
         scheme-related documents carefully.
       </p>
     </section>
@@ -107,7 +107,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -165,7 +165,7 @@
 
     U.renderStats("statsRow", [
       { hero: true, label: "CAGR", value: F.formatPct(g, 1) + " p.a.",
-        sub: s.years < 1 ? "under 1 year — see absolute return instead"
+        sub: s.years < 1 ? "under 1 year, see absolute return instead"
                          : "annualised over " + s.years + (s.years === 1 ? " year" : " years") },
       { label: "Absolute return", value: F.formatPct(absPct, 1),
         sub: F.formatINRCompact(s.initial) + " → " + F.formatINRCompact(s.final) },
@@ -174,17 +174,17 @@
 
     var gTxt = "<strong>" + F.formatPct(g, 1) + " p.a.</strong>", msg;
     if (g < 0) {
-      msg = "Your investment lost value — a negative CAGR of <strong>" + F.formatPct(g, 1) +
+      msg = "Your investment lost value: a negative CAGR of <strong>" + F.formatPct(g, 1) +
         "</strong> (" + F.formatINRCompact(s.initial) + " → " + F.formatINRCompact(s.final) + ").";
     } else if (g >= 12) {
       msg = "Your " + gTxt + " beat inflation (~6%), typical FD rates (~7%) and the long-run " +
-        "equity average (~12%) — indicative long-run figures, not guarantees.";
+        "equity average (~12%): indicative long-run figures, not guarantees.";
     } else if (g >= 7) {
       msg = "Your " + gTxt + " beat inflation (~6%) and typical FD rates (~7%), but trailed " +
-        "the long-run equity average (~12%) — indicative long-run figures, not guarantees.";
+        "the long-run equity average (~12%): indicative long-run figures, not guarantees.";
     } else if (g >= 6) {
       msg = "Your " + gTxt + " beat inflation (~6%) but trailed typical FD rates (~7%) and the " +
-        "long-run equity average (~12%) — indicative long-run figures, not guarantees.";
+        "long-run equity average (~12%): indicative long-run figures, not guarantees.";
     } else {
       msg = "Your " + gTxt + " trailed even inflation (~6%), so purchasing power shrank; FD " +
         "(~7%) and equity (~12%) shown as indicative long-run context.";

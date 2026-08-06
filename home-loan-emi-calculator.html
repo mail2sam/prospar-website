@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Home Loan EMI Calculator — Prospar Consulting</title>
-<meta name="description" content="Home loan EMI with total interest, a full amortization schedule, and prepayment savings — all live and interactive.">
+<title>Home Loan EMI Calculator | Prospar Consulting</title>
+<meta name="description" content="Home loan EMI with total interest, a full amortization schedule, and prepayment savings: all live and interactive.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <script src="assets/finance-engine.js"></script>
@@ -26,7 +26,7 @@
   <div class="pc-crumb"><a href="tools.html">Calculators</a> / Home Loan EMI Calculator</div>
   <div class="pc-title">
     <h1>Home Loan EMI Calculator</h1>
-    <p>Your EMI is only half the story — see the total interest, the year-by-year
+    <p>Your EMI is only half the story: see the total interest, the year-by-year
        amortization, and how much a small monthly prepayment saves.</p>
   </div>
 
@@ -116,7 +116,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -183,12 +183,12 @@
       U.callout("callout",
         "Paying <strong>" + F.formatINR(s.extra) + " extra each month</strong> clears the loan in <strong>" +
         fmtTenure(plan.months) + "</strong> instead of " + fmtTenure(base.months) +
-        " — saving <strong>" + F.formatINRCompact(saved) + "</strong> in interest.");
+        ": saving <strong>" + F.formatINRCompact(saved) + "</strong> in interest.");
     } else {
       var ratio = plan.totalInterest / s.amount;
       U.callout("callout",
         "Over " + s.years + " years you pay <strong>" + F.formatINRCompact(plan.totalInterest) +
-        " as interest</strong> — that's <strong>" + Math.round(ratio * 100) +
+        " as interest</strong>: that's <strong>" + Math.round(ratio * 100) +
         "%</strong> of the amount you borrowed. Try the prepayment slider to see how fast that shrinks.");
     }
 

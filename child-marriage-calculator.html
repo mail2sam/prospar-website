@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Child Marriage Planner — Prospar Consulting</title>
-<meta name="description" content="Plan your child's wedding fund at its future cost — with wedding-cost inflation, an optional separate gold plan, and the monthly SIP that gets you there.">
+<title>Child Marriage Planner | Prospar Consulting</title>
+<meta name="description" content="Plan your child's wedding fund at its future cost, with wedding-cost inflation, an optional separate gold plan, and the monthly SIP that gets you there.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <script src="assets/finance-engine.js"></script>
@@ -27,7 +27,7 @@
   <div class="pc-title">
     <h1>Child Marriage Planner</h1>
     <p>Set the budget in today's prices, let wedding-cost inflation do its thing, and see the
-       SIP that has the corpus ready on the day — with gold planned on its own track if you like.</p>
+       SIP that has the corpus ready on the day, with gold planned on its own track if you like.</p>
   </div>
 
   <div class="pc-tool">
@@ -160,7 +160,7 @@
         This planner is for illustration and education only. Wedding costs vary widely by city,
         season and scale, and gold prices fluctuate; projections assume constant rates, and
         market-linked returns are not guaranteed. This is not investment advice or an offer of
-        any product. Prospar Consulting LLP — investments are subject to market risks; read all
+        any product. Prospar Consulting LLP: investments are subject to market risks; read all
         scheme-related documents carefully.
       </p>
     </section>
@@ -171,7 +171,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -266,9 +266,9 @@
     U.callout("callout",
       (gap > 0
         ? "A wedding planned for " + weddingYear + " needs <strong>" + F.formatINRCompact(futureCost) +
-          "</strong> — start with " + F.formatINR(Math.ceil(monthly)) + "/month now."
+          "</strong>: start with " + F.formatINR(Math.ceil(monthly)) + "/month now."
         : "A wedding planned for " + weddingYear + " needs <strong>" + F.formatINRCompact(futureCost) +
-          "</strong> — your existing savings already grow to cover it.") +
+          "</strong>: your existing savings already grow to cover it.") +
       (s.gold ? " Gold alone accounts for " + F.formatINRCompact(futureGold) + " of the future budget." : ""));
 
     U.legend("legend", [
@@ -306,7 +306,7 @@
       "Venue, catering and services inflate at ≈ " + F.formatPct(s.inflation, 1),
       s.gold ? "Gold (" + F.formatINRCompact(goldAmt) + " today) tracked at its own " +
                F.formatPct(s.goldRate, 1) + " appreciation"
-             : "Gold not planned separately — enable it under Advanced",
+             : "Gold not planned separately, enable it under Advanced",
       "Investments assumed to earn " + F.formatPct(s.rate, 1) + " p.a. (SIP at month start)",
       s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " every year" : "Flat SIP",
       "Taxes and exit loads not modelled · fund returns are quoted net of expense ratio"

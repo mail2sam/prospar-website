@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Child Education Planner — Prospar Consulting</title>
+<title>Child Education Planner | Prospar Consulting</title>
 <meta name="description" content="Plan your child's higher-education corpus with education inflation, the monthly SIP it takes, and what every year of delay really costs.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -27,7 +27,7 @@
   <div class="pc-title">
     <h1>Child Education Planner</h1>
     <p>College fees climb faster than everyday inflation. Set the course cost in today's money
-       and see the corpus it really takes when your child starts — and what waiting a year costs.</p>
+       and see the corpus it really takes when your child starts, and what waiting a year costs.</p>
   </div>
 
   <div class="pc-tool">
@@ -144,7 +144,7 @@
         This planner is for illustration and education only. Fee inflation varies widely by
         institute, stream and country; projections assume constant rates, and market-linked
         returns are not guaranteed. This is not investment advice or an offer of any product.
-        Prospar Consulting LLP — investments are subject to market risks; read all
+        Prospar Consulting LLP: investments are subject to market risks; read all
         scheme-related documents carefully.
       </p>
     </section>
@@ -155,7 +155,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -236,15 +236,15 @@
     var calloutMsg;
     if (gap <= 0) {
       calloutMsg = "Your existing savings already grow past the future cost of " +
-        F.formatINRCompact(futureCost) + " by " + startYear + " — no fresh SIP needed for this goal.";
+        F.formatINRCompact(futureCost) + " by " + startYear + ", no fresh SIP needed for this goal.";
     } else if (years > 1) {
       var gapLate = Math.max(0, futureCost - F.fvLumpsum(s.existing, s.rate, years - 1));
       var lateMonthly = F.requiredStepUpSip(gapLate, s.rate, years - 1, s.stepUp);
       calloutMsg = "Starting now costs <strong>" + F.formatINR(Math.ceil(monthly)) +
         "/month</strong>. Waiting one more year raises that to <strong>" +
-        F.formatINR(Math.ceil(lateMonthly)) + "/month</strong> — delay is expensive.";
+        F.formatINR(Math.ceil(lateMonthly)) + "/month</strong>, delay is expensive.";
     } else {
-      calloutMsg = "The course is barely a year away — a one-time <strong>" +
+      calloutMsg = "The course is barely a year away: a one-time <strong>" +
         F.formatINR(Math.ceil(lump)) + "</strong> today is the practical route.";
     }
     U.callout("callout", calloutMsg);
@@ -280,12 +280,12 @@
       }));
 
     U.assumptions("assumeChips", [
-      "Education inflation " + F.formatPct(s.inflation, 1) + " — typically runs hotter than CPI",
+      "Education inflation " + F.formatPct(s.inflation, 1) + ", typically runs hotter than CPI",
       "Fees treated as one amount payable when the course starts",
       "Scholarships and education loans not modelled",
       "Investments assumed to earn " + F.formatPct(s.rate, 1) + " p.a. (SIP at month start)",
       s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " every year"
-                   : "Flat SIP — add a yearly step-up under Advanced",
+                   : "Flat SIP, add a yearly step-up under Advanced",
       "Taxes and exit loads not modelled · fund returns are quoted net of expense ratio"
     ]);
 

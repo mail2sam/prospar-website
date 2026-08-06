@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SIP Calculator — Prospar Consulting</title>
+<title>SIP Calculator | Prospar Consulting</title>
 <meta name="description" content="Plan your mutual fund SIP: live projections, annual step-up, inflation-adjusted values and a year-by-year schedule.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -25,7 +25,7 @@
   <div class="pc-crumb"><a href="tools.html">Calculators</a> / SIP Calculator</div>
   <div class="pc-title">
     <h1>SIP Calculator</h1>
-    <p>See what a disciplined monthly investment grows into — or start from a goal
+    <p>See what a disciplined monthly investment grows into, or start from a goal
        and find the SIP that gets you there. Every figure updates as you move a slider.</p>
   </div>
 
@@ -163,8 +163,7 @@
       <p class="pc-disclaimer">
         This calculator is for illustration and education only. Projections assume a constant
         rate of return; mutual fund returns vary with markets and are not guaranteed.
-        This is not investment advice or an offer of any product. Prospar Consulting LLP —
-        investments are subject to market risks; read all scheme-related documents carefully.
+        This is not investment advice or an offer of any product. Prospar Consulting LLP; investments are subject to market risks; read all scheme-related documents carefully.
       </p>
     </section>
   </div>
@@ -174,7 +173,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -538,10 +537,10 @@
     var head = ["Year", "Monthly SIP", "Cumulative Invested", "Value", "Gains"];
     if (s.adjust) head.push("Value in today's rupees (inflation " + s.inflation + "%)");
     var lines = [
-      '"Prospar Consulting LLP — consultprospar.com"',
-      '"' + document.title.replace(/"/g, "'") + ' — generated ' +
+      '"Prospar Consulting LLP: consultprospar.com"',
+      '"' + document.title.replace(/"/g, "'") + ', generated ' +
         new Date().toLocaleDateString("en-IN") + '"',
-      '"For education only — not investment advice. Figures use stated ' +
+      '"For education only, not investment advice. Figures use stated ' +
         'assumptions; investments are subject to market risks."',
       "",
       head.join(",")
@@ -579,7 +578,7 @@
   $("btnShare").addEventListener("click", function () {
     var btn = this, url = location.href;
     function done(ok) {
-      btn.textContent = ok ? "Link copied ✓" : "Copy failed — copy from address bar";
+      btn.textContent = ok ? "Link copied ✓" : "Copy failed, copy from address bar";
       setTimeout(function () { btn.textContent = "Copy shareable link"; }, 2200);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {

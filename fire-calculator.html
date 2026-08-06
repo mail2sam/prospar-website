@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FIRE Calculator — Prospar Consulting</title>
-<meta name="description" content="Your lean, standard and comfortable FIRE numbers — and the age your investments actually get you there. Every figure on the page, no sign-up.">
+<title>FIRE Calculator | Prospar Consulting</title>
+<meta name="description" content="Your lean, standard and comfortable FIRE numbers, and the age your investments actually get you there. Every figure on the page, no sign-up.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <script src="assets/finance-engine.js"></script>
@@ -27,7 +27,7 @@
   <div class="pc-title">
     <h1>FIRE Calculator</h1>
     <p>Financial independence, retire early: your lean, standard and comfortable targets,
-       and the age your SIP actually crosses them. All of it on this page — no sign-up,
+       and the age your SIP actually crosses them. All of it on this page, no sign-up,
        no email gate.</p>
   </div>
 
@@ -139,9 +139,9 @@
 
       <p class="pc-disclaimer">
         This calculator is for illustration and education only. The 25× / 4% rule is a
-        research heuristic, not a guarantee — safe withdrawal rates depend on market
+        research heuristic, not a guarantee: safe withdrawal rates depend on market
         sequence, inflation and time horizon. Projections assume constant returns; taxes
-        are ignored. This is not investment advice. Prospar Consulting LLP — investments
+        are ignored. This is not investment advice. Prospar Consulting LLP: investments
         are subject to market risks.
       </p>
     </section>
@@ -152,7 +152,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -221,7 +221,7 @@
     var span = 35;
     if (y30 !== null) span = Math.min(35, Math.max(y30 + 2, yearsTo + 2, 8));
 
-    // wealth path — same loop as fireFreedomYear (monthly compounding, annual step-up)
+    // wealth path, same loop as fireFreedomYear (monthly compounding, annual step-up)
     var i = s.rate / 100 / 12;
     var bal = s.corpus, sip = s.sip;
     var annual0 = s.expense * 12;
@@ -242,9 +242,9 @@
       { hero: true, label: "FIRE number at " + s.fireAge, value: F.formatINRCompact(t.standard),
         sub: "25× your future annual expenses" },
       { label: "Lean FIRE", dot: C.cat3, value: F.formatINRCompact(t.lean),
-        sub: "20× — essentials covered" },
+        sub: "20×, essentials covered" },
       { label: "Comfortable FIRE", dot: C.cat5, value: F.formatINRCompact(t.comfortable),
-        sub: "30× — with headroom" },
+        sub: "30×, with headroom" },
       { label: "You reach FIRE at", value: reachAge !== null ? "Age " + reachAge : "Beyond 60 yrs",
         sub: reachAge === null ? "target: age " + s.fireAge
            : diff > 0 ? diff + (diff === 1 ? " year ahead of plan" : " years ahead of plan")
@@ -259,7 +259,7 @@
     if (y20 === null) {
       lead = "At " + F.formatINR(s.sip) + "/month" +
         (s.stepUp > 0 ? " (+" + F.formatPct(s.stepUp, 1) + "/yr)" : "") +
-        " <strong>no FIRE tier arrives within 60 years</strong> — a higher SIP or leaner expenses moves the needle.";
+        " <strong>no FIRE tier arrives within 60 years</strong>: a higher SIP or leaner expenses moves the needle.";
     } else {
       lead = "At " + F.formatINR(s.sip) + "/month" +
         (s.stepUp > 0 ? " (+" + F.formatPct(s.stepUp, 1) + "/yr)" : "") +
@@ -268,7 +268,7 @@
     }
     U.callout("callout", lead +
       " Today you have ~<strong>" + yearsBanked.toFixed(1) + " years</strong> of expenses banked; FIRE ≈ 25." +
-      " The 25× rule assumes ~4% safe withdrawal — treat it as a milestone, not a guarantee; sequence risk and taxes matter.");
+      " The 25× rule assumes ~4% safe withdrawal: treat it as a milestone, not a guarantee; sequence risk and taxes matter.");
 
     U.legend("legend", [
       { color: C.invested, label: "Your wealth" },

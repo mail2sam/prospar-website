@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Net Worth Calculator — Prospar Consulting</title>
-<meta name="description" content="A private balance sheet: what you own minus what you owe, your liquid net worth and debt health. Everything stays in your browser — nothing is uploaded.">
+<title>Net Worth Calculator | Prospar Consulting</title>
+<meta name="description" content="A private balance sheet: what you own minus what you owe, your liquid net worth and debt health. Everything stays in your browser: nothing is uploaded.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <script src="assets/finance-engine.js"></script>
@@ -46,7 +46,7 @@
   <div class="pc-title">
     <h1>Net Worth Calculator</h1>
     <p>Your personal balance sheet: everything you own minus everything you owe.
-       Nothing you type leaves your browser — there is no server, no account, no tracking.</p>
+       Nothing you type leaves your browser, there is no server, no account, no tracking.</p>
   </div>
 
   <div class="pc-tool">
@@ -195,7 +195,7 @@
           <span class="pc-chip pc-chip--static">🔒 Nothing you type leaves your browser</span>
         </div>
         <p style="margin:12px 0 0;font-size:12.5px;color:var(--pc-muted)">
-          There is deliberately no share link on this page — a shareable URL would embed
+          There is deliberately no share link on this page: a shareable URL would embed
           your finances in it. Saving uses this browser's local storage only.
         </p>
       </div>
@@ -220,7 +220,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -326,26 +326,26 @@
       U.callout("debtCallout", "");
     } else if (liab === 0) {
       U.callout("debtCallout",
-        "You carry <strong>no debt</strong> — your net worth equals your assets. " +
+        "You carry <strong>no debt</strong>: your net worth equals your assets. " +
         "Any new loan is worth weighing against this clean slate.");
     } else if (assets === 0) {
       U.callout("debtCallout",
-        "You have liabilities but no recorded assets — <strong>high — prioritise repayment</strong>. " +
+        "You have liabilities but no recorded assets: <strong>high: prioritise repayment</strong>. " +
         "Clearing personal loans and credit cards comes before fresh investing.");
     } else {
       var ratio = liab / assets * 100;
       var p = Math.round(ratio);
       if (ratio < 30) {
         U.callout("debtCallout",
-          "Your liabilities are <strong>" + p + "%</strong> of your assets — <strong>healthy</strong>. " +
+          "Your liabilities are <strong>" + p + "%</strong> of your assets: <strong>healthy</strong>. " +
           "Keeping this under 30% leaves room for emergencies and goals.");
       } else if (ratio <= 50) {
         U.callout("debtCallout",
-          "Your liabilities are <strong>" + p + "%</strong> of your assets — <strong>manageable — watch it</strong>. " +
+          "Your liabilities are <strong>" + p + "%</strong> of your assets: <strong>manageable: watch it</strong>. " +
           "Between 30–50%, aim to clear the costliest loans first.");
       } else {
         U.callout("debtCallout",
-          "Your liabilities are <strong>" + p + "%</strong> of your assets — <strong>high — prioritise repayment</strong>. " +
+          "Your liabilities are <strong>" + p + "%</strong> of your assets: <strong>high: prioritise repayment</strong>. " +
           "Above 50%, clearing personal loans and credit cards beats fresh investing.");
       }
     }
@@ -433,7 +433,7 @@
     "Property at market value, not purchase price",
     "Vehicles at resale value",
     "Loans at outstanding balance, not EMI",
-    "No share link on this page — your numbers never enter a URL"
+    "No share link on this page, your numbers never enter a URL"
   ]);
 
   ITEMS.forEach(function (it) {

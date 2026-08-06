@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Goal SIP Planner — Prospar Consulting</title>
-<meta name="description" content="Plan any financial goal at its real, inflation-adjusted future cost — the monthly SIP or one-time investment it takes, with a year-by-year growth map.">
+<title>Goal SIP Planner | Prospar Consulting</title>
+<meta name="description" content="Plan any financial goal at its real, inflation-adjusted future cost: the monthly SIP or one-time investment it takes, with a year-by-year growth map.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <script src="assets/finance-engine.js"></script>
@@ -26,7 +26,7 @@
   <div class="pc-crumb"><a href="tools.html">Calculators</a> / Goal SIP Planner</div>
   <div class="pc-title">
     <h1>Goal SIP Planner</h1>
-    <p>Every goal has two price tags — today's, and the one inflation writes for the day
+    <p>Every goal has two price tags: today's, and the one inflation writes for the day
        you actually need the money. This planner targets the second one, live as you move a slider.</p>
   </div>
 
@@ -132,7 +132,7 @@
         This planner is for illustration and education only. Projections assume constant goal
         inflation and a constant rate of return; actual costs and market-linked returns vary and
         are not guaranteed. This is not investment advice or an offer of any product.
-        Prospar Consulting LLP — investments are subject to market risks; read all
+        Prospar Consulting LLP: investments are subject to market risks; read all
         scheme-related documents carefully.
       </p>
     </section>
@@ -143,7 +143,7 @@
   <div class="pc-footer__inner">
     <div>
       <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
-      <div>Evidence-led wealth management — mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
     </div>
     <div>
       <h4>Explore</h4>
@@ -224,7 +224,7 @@
         F.formatINRCompact(futureCost) + "</strong> by " + targetYear +
         ". Planning with today's price would leave you <strong>" + shortPct + "% short</strong>."
       : "At 0% goal inflation the target stays " + F.formatINRCompact(s.goal) +
-        " — every rupee of growth takes you closer.");
+        ", every rupee of growth takes you closer.");
 
     U.legend("legend", [
       { color: C.invested, label: "Invested" },
@@ -260,7 +260,7 @@
       "Goal grows at " + F.formatPct(s.inflation, 1) + " a year until you need it",
       "Investments assumed to earn " + F.formatPct(s.rate, 1) + " p.a. (SIP at month start)",
       s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " every year"
-                   : "Flat SIP — add a yearly step-up under Advanced",
+                   : "Flat SIP, add a yearly step-up under Advanced",
       s.existing > 0 ? "Existing " + F.formatINRCompact(s.existing) + " grows at the same return"
                      : "No existing savings earmarked for this goal",
       "Taxes and exit loads not modelled · fund returns are quoted net of expense ratio"
