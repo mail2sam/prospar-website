@@ -109,6 +109,23 @@ body {
 }
 .pc-header__nav a { color: #fff; text-decoration: none; }
 .pc-header__nav a:hover { text-decoration: underline; }
+.pc-header__nav a[aria-current="page"] {
+  color: var(--pc-gold);
+  font-weight: 700;
+  border-bottom: 2px solid var(--pc-gold);
+  padding-bottom: 2px;
+}
+@media (max-width: 620px) {
+  .pc-header__inner {
+    height: auto;
+    min-height: 56px;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    row-gap: 2px;
+  }
+  .pc-header__nav { font-size: 13px; }
+  .pc-header__nav span { margin: 0 6px !important; }
+}
 
 /* ---------- Page scaffolding ---------- */
 .pc-page {
@@ -654,6 +671,9 @@ a.pc-toolcard:hover {
 .pc-btn--gold:hover { background: #d9b544; }
 .pc-btn--onnavy { background: transparent; border-color: #6c8199; color: #fff; }
 .pc-btn--onnavy:hover { background: rgba(255,255,255,.08); }
+.pc-btn--wa { background: #25d366; border-color: #25d366; color: #fff; }
+.pc-btn--wa:hover { background: #1ebe5a; }
+.pc-btn--wa svg { width: 20px; height: 20px; flex: 0 0 auto; }
 
 .pc-band {
   background: var(--pc-surface);
@@ -699,7 +719,7 @@ a.pc-toolcard:hover {
   }
   /* faint diagonal brand watermark repeated on every printed page */
   body::after {
-    content: "prospar. \00b7 consultprospar.com";
+    content: "prospar. \00b7 Call 98710 01868";
     position: fixed;
     top: 45%;
     left: 0;
