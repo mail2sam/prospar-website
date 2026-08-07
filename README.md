@@ -1,6 +1,6 @@
 # Prospar Financial Tools — Prototype
 
-**Live site: https://mail2sam.github.io/prospar-website/**
+**Live site: https://consultprospar.com/**
 
 Complete prototype of the calculator section for the Prospar Consulting website.
 **18 interactive tools + landing page**, zero dependencies — plain HTML/CSS/JS,
