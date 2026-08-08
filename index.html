@@ -24,6 +24,55 @@
   </div>
 </header>
 
+<!-- Desktop-only promotional slider -->
+<section class="pc-promo" id="promo" aria-label="Highlights">
+  <div class="pc-promo__track">
+    <a class="pc-promo__slide active" href="pms-aif.html">
+      <div class="pc-promo__text">
+        <div class="pc-promo__kicker">For qualified investors · ₹50 L+</div>
+        <h2 class="pc-promo__title">By the time a company reaches mutual funds, its explosive growth is often behind it.</h2>
+        <span class="pc-promo__cta">Explore PMS &amp; AIF →</span>
+      </div>
+      <img class="pc-promo__img" src="creatives/png/web/product-ladder-hni.png" alt="">
+    </a>
+    <a class="pc-promo__slide" href="insight-sip-discipline.html">
+      <div class="pc-promo__text">
+        <div class="pc-promo__kicker">The evidence · 22 funds, 15 years</div>
+        <h2 class="pc-promo__title">SIPs look broken in year 3. That's exactly when they're being built.</h2>
+        <span class="pc-promo__cta">Read the data →</span>
+      </div>
+      <img class="pc-promo__img" src="creatives/png/web/sip-continue.png" alt="">
+    </a>
+    <a class="pc-promo__slide" href="tools.html">
+      <div class="pc-promo__text">
+        <div class="pc-promo__kicker">Free · no sign-up · private</div>
+        <h2 class="pc-promo__title">18 honest calculators. Your numbers, your plan, in minutes.</h2>
+        <span class="pc-promo__cta">Open the calculators →</span>
+      </div>
+      <img class="pc-promo__img" src="creatives/png/web/swp-for-life.png" alt="">
+    </a>
+    <a class="pc-promo__slide" href="downloads.html">
+      <div class="pc-promo__text">
+        <div class="pc-promo__kicker">Free guide · share with family</div>
+        <h2 class="pc-promo__title">Five SIP mistakes that quietly cost crores — the 6-page guide.</h2>
+        <span class="pc-promo__cta">Get the PDF →</span>
+      </div>
+      <img class="pc-promo__img" src="creatives/png/web/carousel-sip-00.png" alt="">
+    </a>
+    <a class="pc-promo__slide" href="contact.html">
+      <div class="pc-promo__text">
+        <div class="pc-promo__kicker">A conversation, not a pitch</div>
+        <h2 class="pc-promo__title">Connect with an expert on WhatsApp: +91 98710 01868.</h2>
+        <span class="pc-promo__cta">Talk to us →</span>
+      </div>
+      <img class="pc-promo__img" src="creatives/png/web/behaviour-gap.png" alt="">
+    </a>
+  </div>
+  <button type="button" class="pc-promo__nav pc-promo__nav--prev" aria-label="Previous highlight">‹</button>
+  <button type="button" class="pc-promo__nav pc-promo__nav--next" aria-label="Next highlight">›</button>
+  <div class="pc-promo__dots" id="promoDots"></div>
+</section>
+
 <section class="pc-hero">
   <div class="pc-hero__inner">
     <div class="kicker">Prospar Consulting LLP</div>
@@ -175,5 +224,46 @@
   <div class="pc-footer__legal">© 2026 Prospar Consulting LLP · <a href="compliance.html">Disclaimers, disclosures &amp; privacy</a></div>
 </footer>
 
+<script>
+(function () {
+  "use strict";
+  var promo = document.getElementById("promo");
+  if (!promo) return;
+  var slides = promo.querySelectorAll(".pc-promo__slide");
+  var dotsBox = document.getElementById("promoDots");
+  var idx = 0, timer = null;
+
+  slides.forEach(function (_, i) {
+    var d = document.createElement("button");
+    d.type = "button";
+    d.className = "pc-promo__dot" + (i === 0 ? " active" : "");
+    d.setAttribute("aria-label", "Go to highlight " + (i + 1));
+    d.addEventListener("click", function () { go(i); restart(); });
+    dotsBox.appendChild(d);
+  });
+  var dots = dotsBox.querySelectorAll(".pc-promo__dot");
+
+  function go(i) {
+    idx = (i + slides.length) % slides.length;
+    slides.forEach(function (s, k) { s.classList.toggle("active", k === idx); });
+    dots.forEach(function (d, k) { d.classList.toggle("active", k === idx); });
+  }
+  function next() { go(idx + 1); }
+  function desktop() { return window.matchMedia("(min-width: 921px)").matches; }
+  function start() {
+    if (timer || !desktop()) return;
+    timer = setInterval(next, 6000);
+  }
+  function stop() { clearInterval(timer); timer = null; }
+  function restart() { stop(); start(); }
+
+  promo.querySelector(".pc-promo__nav--prev").addEventListener("click", function () { go(idx - 1); restart(); });
+  promo.querySelector(".pc-promo__nav--next").addEventListener("click", function () { go(idx + 1); restart(); });
+  promo.addEventListener("mouseenter", stop);
+  promo.addEventListener("mouseleave", start);
+  window.addEventListener("resize", function () { desktop() ? start() : stop(); });
+  start();
+})();
+</script>
 </body>
 </html>

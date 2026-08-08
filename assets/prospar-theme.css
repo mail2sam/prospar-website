@@ -707,6 +707,83 @@ a.pc-toolcard:hover {
   .pc-footer__inner { grid-template-columns: 1fr; gap: 24px; }
 }
 
+/* ---------- Promo slider (desktop only) ---------- */
+.pc-promo { display: none; }
+@media (min-width: 921px) {
+  .pc-promo {
+    display: block;
+    position: relative;
+    background: var(--pc-navy-deep);
+    border-bottom: 3px solid var(--pc-gold);
+    overflow: hidden;
+  }
+  .pc-promo__track { position: relative; height: 300px; }
+  .pc-promo__slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 26px 70px;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateX(28px);
+    transition: opacity .55s ease, transform .55s ease;
+    pointer-events: none;
+  }
+  .pc-promo__slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+  .pc-promo__text { flex: 1; min-width: 0; }
+  .pc-promo__kicker {
+    font-size: 13px; font-weight: 700; letter-spacing: 2.4px;
+    text-transform: uppercase; color: var(--pc-gold); margin-bottom: 10px;
+  }
+  .pc-promo__title {
+    font-size: 30px; line-height: 1.22; font-weight: 800;
+    color: #fff; margin: 0 0 18px; max-width: 620px;
+  }
+  .pc-promo__cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--pc-gold); color: var(--pc-navy-deep);
+    font-size: 15px; font-weight: 700;
+    border-radius: 9px; padding: 10px 20px;
+  }
+  .pc-promo__slide:hover .pc-promo__cta { background: #d9b544; }
+  .pc-promo__img {
+    height: 240px; width: 240px; flex: 0 0 auto;
+    border-radius: 14px; object-fit: cover;
+    box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  }
+  .pc-promo__nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.35);
+    background: rgba(255,255,255,.08);
+    color: #fff; font-size: 22px; line-height: 1;
+    cursor: pointer; z-index: 5;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pc-promo__nav:hover { background: rgba(255,255,255,.2); }
+  .pc-promo__nav--prev { left: 14px; }
+  .pc-promo__nav--next { right: 14px; }
+  .pc-promo__dots {
+    position: absolute; bottom: 12px; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 8px; z-index: 5;
+  }
+  .pc-promo__dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    border: 0; padding: 0; cursor: pointer;
+    background: rgba(255,255,255,.35);
+  }
+  .pc-promo__dot.active { background: var(--pc-gold); }
+}
+
 /* ---------- Home page ---------- */
 .pc-hero {
   background: linear-gradient(150deg, var(--pc-navy-deep) 0%, var(--pc-navy) 55%, #1d4568 100%);
