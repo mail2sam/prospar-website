@@ -62,6 +62,17 @@
 
         <div class="pc-field">
           <div class="pc-field__row">
+            <label class="pc-field__label" for="inLump">Already invested (lumpsum today)</label>
+            <span class="pc-field__hint">optional</span>
+          </div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inLump" min="0" max="50000000" step="50000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slLump" min="0" max="50000000" step="50000" value="0" aria-label="Existing lumpsum investment slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹5&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row">
             <label class="pc-field__label" for="inStep">Increase SIP every year by</label>
             <span class="pc-field__hint">step-up</span>
           </div>
@@ -174,12 +185,13 @@
   "use strict";
   var F = ProFin, U = PCUI, $ = U.$;
 
-  var state = { monthly: 25000, rate: 12, years: 15, stepUp: 10, adjust: false, inflation: 6 };
+  var state = { monthly: 25000, rate: 12, years: 15, stepUp: 10, lumpsum: 0, adjust: false, inflation: 6 };
   var url = U.urlState({
     monthly: { p: "m", lo: 500, hi: 500000, dflt: 25000 },
     rate: { p: "r", lo: 4, hi: 20, dflt: 12 },
     years: { p: "y", lo: 1, hi: 40, dflt: 15 },
     stepUp: { p: "su", lo: 0, hi: 25, dflt: 10 },
+    lumpsum: { p: "ls", lo: 0, hi: 50000000, dflt: 0 },
     adjust: { p: "adj", bool: true, dflt: false },
     inflation: { p: "inf", lo: 2, hi: 12, dflt: 6 }
   });
@@ -188,11 +200,11 @@
 
   function render() {
     var s = state, C = U.color();
-    var flatRows = F.sipSchedule({ monthly: s.monthly, annualRatePct: s.rate, years: s.years, stepUpPct: 0 });
-    var stepRows = F.sipSchedule({ monthly: s.monthly, annualRatePct: s.rate, years: s.years, stepUpPct: s.stepUp });
+    var flatRows = F.sipSchedule({ monthly: s.monthly, annualRatePct: s.rate, years: s.years, stepUpPct: 0, lumpsum: s.lumpsum });
+    var stepRows = F.sipSchedule({ monthly: s.monthly, annualRatePct: s.rate, years: s.years, stepUpPct: s.stepUp, lumpsum: s.lumpsum });
     lastFlat = flatRows; lastStep = stepRows;
 
-    var chartRows = [{ x: 0, flat: 0, stepped: 0 }].concat(stepRows.map(function (r, i) {
+    var chartRows = [{ x: 0, flat: s.lumpsum, stepped: s.lumpsum }].concat(stepRows.map(function (r, i) {
       return { x: r.year, flat: flatRows[i].value, stepped: r.value };
     }));
 
@@ -205,7 +217,8 @@
     var real = F.todaysValue(stepFV, s.inflation, s.years);
 
     U.renderStats("statsRow", [
-      { label: "Invested", dot: C.invested, value: F.formatINRCompact(invested), sub: F.formatINR(invested) },
+      { label: "Invested", dot: C.invested, value: F.formatINRCompact(invested),
+        sub: s.lumpsum > 0 ? "incl. " + F.formatINRCompact(s.lumpsum) + " head-start" : F.formatINR(invested) },
       { hero: true, label: "Value with step-up", value: F.formatINRCompact(stepFV),
         sub: s.adjust ? "≈ " + F.formatINRCompact(real) + " in today's money" : F.formatINR(stepFV) },
       { label: "Flat SIP value", value: F.formatINRCompact(flatFV), sub: "same SIP, never raised" },
@@ -261,6 +274,7 @@
       "Returns compound monthly at " + F.formatPct(s.rate, 1) + " p.a.",
       "Instalments at the start of each month",
       s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " once every year" : "Flat SIP (no yearly increase)",
+      s.lumpsum > 0 ? "Head-start of " + F.formatINRCompact(s.lumpsum) + " grows at the same return" : "No existing investment assumed",
       s.adjust ? "Today's-money figures use " + F.formatPct(s.inflation, 1) + " inflation" : "Figures are nominal (not inflation-adjusted)",
       "Taxes and exit loads not modelled · fund returns are quoted net of expense ratio"
     ]);
@@ -273,11 +287,12 @@
   var pYears = U.bindPair("inYears", "slYears", function (v) { state.years = v; render(); });
   var pStep = U.bindPair("inStep", "slStep", function (v) { state.stepUp = v; stepChips.sync(v); render(); });
   var stepChips = U.bindChips("stepChips", function (v) { state.stepUp = v; pStep.set(v); render(); });
+  var pLump = U.bindPair("inLump", "slLump", function (v) { state.lumpsum = v; render(); });
   var pInfl = U.bindPair("inInfl", "slInfl", function (v) { state.inflation = v; render(); });
   U.bindToggle("tgInflation", function (v) { state.adjust = v; $("inflationBlock").hidden = !v; render(); });
 
   pMonthly.set(state.monthly); pRate.set(state.rate); pYears.set(state.years);
-  pStep.set(state.stepUp); pInfl.set(state.inflation);
+  pStep.set(state.stepUp); pLump.set(state.lumpsum); pInfl.set(state.inflation);
   stepChips.sync(state.stepUp);
   $("tgInflation").checked = state.adjust; $("inflationBlock").hidden = !state.adjust;
 

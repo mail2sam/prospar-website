@@ -88,6 +88,18 @@
 
         <div class="pc-field">
           <div class="pc-field__row">
+            <label class="pc-field__label" for="inLump">Already invested (lumpsum today)</label>
+            <span class="pc-field__hint">optional</span>
+          </div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inLump" min="0" max="50000000" step="50000" value="0" inputmode="numeric">
+          </div>
+          <input type="range" class="pc-slider" id="slLump" min="0" max="50000000" step="50000" value="0" aria-label="Existing lumpsum investment slider">
+          <div class="pc-range-ends"><span>₹0</span><span>₹5&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row">
             <span class="pc-field__label">Increase SIP every year by</span>
             <span class="pc-field__hint">step-up</span>
           </div>
@@ -215,6 +227,7 @@
     rate: 12,
     years: 15,
     stepUp: 0,
+    lumpsum: 0,
     adjust: false,
     inflation: 6
   };
@@ -232,6 +245,7 @@
     state.rate = num("r", 4, 20, state.rate);
     state.years = num("y", 1, 40, state.years);
     state.stepUp = num("su", 0, 20, state.stepUp);
+    state.lumpsum = num("ls", 0, 50000000, state.lumpsum);
     state.inflation = num("inf", 2, 12, state.inflation);
     state.adjust = p.get("adj") === "1";
   }
@@ -245,6 +259,7 @@
       else p.set("t", state.target);
       p.set("r", state.rate); p.set("y", state.years);
       if (state.stepUp > 0) p.set("su", state.stepUp);
+      if (state.lumpsum > 0) p.set("ls", state.lumpsum);
       if (state.adjust) { p.set("adj", "1"); p.set("inf", state.inflation); }
       history.replaceState(null, "", location.pathname + "?" + p.toString());
     }, 250);
@@ -289,14 +304,17 @@
 
   function render() {
     var s = state, rows, startSip, flatEquivalent = null;
+    // head-start compounds monthly, matching the schedule's convention
+    var fvLump = s.lumpsum * Math.pow(1 + s.rate / 100 / 12, s.years * 12);
+    var goalGap = Math.max(0, s.target - fvLump);
 
     if (s.mode === "invest") {
       startSip = s.monthly;
     } else {
-      startSip = F.requiredStepUpSip(s.target, s.rate, s.years, s.stepUp);
-      if (s.stepUp > 0) flatEquivalent = F.requiredSip(s.target, s.rate, s.years);
+      startSip = goalGap > 0 ? F.requiredStepUpSip(goalGap, s.rate, s.years, s.stepUp) : 0;
+      if (s.stepUp > 0) flatEquivalent = goalGap > 0 ? F.requiredSip(goalGap, s.rate, s.years) : 0;
     }
-    rows = F.sipSchedule({ monthly: startSip, annualRatePct: s.rate, years: s.years, stepUpPct: s.stepUp });
+    rows = F.sipSchedule({ monthly: startSip, annualRatePct: s.rate, years: s.years, stepUpPct: s.stepUp, lumpsum: s.lumpsum });
     lastRows = rows;
 
     var last = rows[rows.length - 1];
@@ -308,10 +326,12 @@
     if (s.mode === "goal") {
       html += statCard({
         hero: true, label: "Required monthly SIP",
-        value: F.formatINR(Math.ceil(startSip / 100) * 100),
-        sub: s.stepUp > 0
-          ? "starting amount, rising " + F.formatPct(s.stepUp, 1) + " every year"
-          : "flat, for " + s.years + " years"
+        value: startSip > 0 ? F.formatINR(Math.ceil(startSip / 100) * 100) : "₹0",
+        sub: startSip <= 0
+          ? "your head-start alone reaches the goal"
+          : (s.stepUp > 0
+              ? "starting amount, rising " + F.formatPct(s.stepUp, 1) + " every year"
+              : "flat, for " + s.years + " years")
       });
     }
     html += statCard({ label: "Invested", dot: INV, value: F.formatINRCompact(invested),
@@ -330,8 +350,19 @@
 
     /* ---- callout ---- */
     var co = $("callout");
-    if (s.mode === "invest" && s.stepUp > 0) {
-      var flatFV = F.sipFV(s.monthly, s.rate, s.years);
+    var headStart = s.lumpsum > 0 && s.target > 0
+      ? " Your " + F.formatINRCompact(s.lumpsum) + " head-start grows to " +
+        F.formatINRCompact(fvLump) + " and funds " +
+        Math.min(100, Math.round(fvLump / s.target * 100)) + "% of the goal."
+      : "";
+    if (s.mode === "goal" && startSip <= 0) {
+      co.hidden = false;
+      co.innerHTML = "Your existing <strong>" + F.formatINRCompact(s.lumpsum) +
+        "</strong> grows to <strong>" + F.formatINRCompact(fvLump) +
+        "</strong> in " + s.years + " years and reaches the goal on its own. " +
+        "No SIP is strictly needed, though adding one builds a buffer for weaker markets.";
+    } else if (s.mode === "invest" && s.stepUp > 0) {
+      var flatFV = F.sipFV(s.monthly, s.rate, s.years) + fvLump;
       var extra = value - flatFV;
       co.hidden = false;
       co.innerHTML = "Stepping up " + F.formatPct(s.stepUp, 1) + " a year adds <strong>" +
@@ -344,13 +375,13 @@
         F.formatINR(Math.ceil(flatEquivalent / 100) * 100) + "/month flat</strong>. " +
         "With " + F.formatPct(s.stepUp, 1) + " yearly increases you start at <strong>" +
         F.formatINR(Math.ceil(startSip / 100) * 100) + "</strong> and reach " +
-        F.formatINR(last.monthlySip) + " in year " + s.years + ".";
+        F.formatINR(last.monthlySip) + " in year " + s.years + "." + headStart;
     } else if (s.mode === "goal") {
       var pctInvested = invested / s.target * 100;
       co.hidden = false;
       co.innerHTML = "You invest <strong>" + F.formatINRCompact(invested) + "</strong> (" +
         Math.round(pctInvested) + "% of the goal); compounding contributes the remaining <strong>" +
-        F.formatINRCompact(gains) + "</strong>.";
+        F.formatINRCompact(gains) + "</strong>." + headStart;
     } else {
       co.hidden = true;
     }
@@ -392,7 +423,7 @@
 
   function drawChart(rows) {
     var s = state;
-    var pts = [{ year: 0, cumInvested: 0, value: 0 }].concat(rows);
+    var pts = [{ year: 0, cumInvested: s.lumpsum, value: s.lumpsum }].concat(rows);
     var maxV = Math.max(pts[pts.length - 1].value, s.mode === "goal" ? s.target : 0);
     var nt = niceTop(maxV), top = nt.top, step = nt.step;
 
@@ -566,6 +597,7 @@
       "Returns compound monthly at " + F.formatPct(s.rate, 1) + " p.a.",
       "Instalments at the start of each month",
       s.stepUp > 0 ? "SIP rises " + F.formatPct(s.stepUp, 1) + " once every year" : "Flat SIP (no yearly increase)",
+      s.lumpsum > 0 ? "Head-start of " + F.formatINRCompact(s.lumpsum) + " grows at the same return" : "No existing investment assumed",
       s.adjust ? "Today's-money figures use " + F.formatPct(s.inflation, 1) + " inflation" : "Figures are nominal (not inflation-adjusted)",
       "Taxes and exit loads not modelled · fund returns are quoted net of expense ratio"
     ];
@@ -638,6 +670,7 @@
   bindPair("inTarget", "slTarget", "target");
   bindPair("inRate", "slRate", "rate");
   bindPair("inYears", "slYears", "years");
+  bindPair("inLump", "slLump", "lumpsum");
   bindPair("inInfl", "slInfl", "inflation");
 
   // reflect state read from URL into controls
@@ -645,11 +678,12 @@
   $("inTarget").value = state.target; $("slTarget").value = state.target;
   $("inRate").value = state.rate; $("slRate").value = state.rate;
   $("inYears").value = state.years; $("slYears").value = state.years;
+  $("inLump").value = state.lumpsum; $("slLump").value = state.lumpsum;
   $("inInfl").value = state.inflation; $("slInfl").value = state.inflation;
   $("slStep").value = state.stepUp;
   $("tgInflation").checked = state.adjust;
   $("inflationBlock").hidden = !state.adjust;
-  ["slMonthly", "slTarget", "slRate", "slYears", "slInfl", "slStep"].forEach(function (id) { paintSlider($(id)); });
+  ["slMonthly", "slTarget", "slRate", "slYears", "slLump", "slInfl", "slStep"].forEach(function (id) { paintSlider($(id)); });
   syncStepChips();
   setMode(state.mode);
 })();
