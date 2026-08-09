@@ -112,8 +112,26 @@ body {
   font-size: 14px;
   color: #c8d4e0;
 }
-.pc-header__nav a { color: #fff; text-decoration: none; }
-.pc-header__nav a:hover { text-decoration: underline; }
+.pc-header__nav a {
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 3px;
+  transition: color .2s ease;
+}
+.pc-header__nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--pc-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .25s ease;
+}
+.pc-header__nav a:hover { color: var(--pc-gold); }
+.pc-header__nav a:hover::after { transform: scaleX(1); }
+.pc-header__nav a[aria-current="page"]::after { transform: scaleX(1); }
 .pc-header__nav a[aria-current="page"] {
   color: var(--pc-gold);
   font-weight: 700;
@@ -519,9 +537,14 @@ table.pc-table {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  transition: background .12s;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
 }
-.pc-btn:hover { background: var(--pc-navy-deep); }
+.pc-btn:hover {
+  background: var(--pc-navy-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(13, 34, 55, .22);
+}
+.pc-btn:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(13, 34, 55, .18); }
 .pc-btn--ghost {
   background: transparent;
   color: var(--pc-navy);
@@ -566,14 +589,17 @@ table.pc-table {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  transition: transform .12s, box-shadow .12s;
+  transition: transform .22s cubic-bezier(.2, .7, .3, 1), box-shadow .22s ease, border-color .22s ease;
 }
 a.pc-toolcard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(13,34,55,.12);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(13, 34, 55, .16);
   border-color: var(--pc-navy);
 }
-.pc-toolcard h3 { margin: 0; font-size: 15.5px; color: var(--pc-navy); }
+.pc-toolcard img { transition: transform .35s ease; }
+a.pc-toolcard:hover img { transform: scale(1.02); }
+.pc-toolcard h3 { margin: 0; font-size: 15.5px; color: var(--pc-navy); transition: color .2s ease; }
+a.pc-toolcard:hover h3 { color: var(--pc-gold-ink); }
 .pc-toolcard p { margin: 0; font-size: 13px; color: var(--pc-ink-2); flex: 1; }
 .pc-toolcard .tag {
   align-self: flex-start;
@@ -899,4 +925,117 @@ a.pc-toolcard:hover {
   .pc-tablecard { display: block; }
   .pc-tablecard summary { display: none; }
   .pc-tablecard .pc-tablescroll { display: block !important; }
+}
+
+/* ==========================================================================
+   Premium interactions & polish
+   Motion is presentation only: every effect degrades gracefully without JS,
+   and prefers-reduced-motion switches the whole layer off.
+   ========================================================================== */
+
+html { scroll-behavior: smooth; }
+
+::selection { background: var(--pc-navy); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--pc-gold);
+  outline-offset: 2px;
+}
+
+/* Slim branded scrollbar */
+html { scrollbar-color: #3d5a77 #eef1f5; scrollbar-width: thin; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #eef1f5; }
+::-webkit-scrollbar-thumb { background: #3d5a77; border-radius: 8px; border: 2px solid #eef1f5; }
+::-webkit-scrollbar-thumb:hover { background: var(--pc-navy); }
+
+/* Glass header once backdrop-filter is available; deepens after scroll */
+@supports ((backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))) {
+  .pc-header {
+    background: rgba(20, 48, 77, .9);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    backdrop-filter: saturate(1.4) blur(10px);
+  }
+}
+.pc-header { transition: box-shadow .3s ease; }
+.pc-header.pc-scrolled { box-shadow: 0 6px 26px rgba(9, 24, 40, .5); }
+
+/* Logo micro-interaction */
+.pc-logo { transition: opacity .2s ease; }
+.pc-logo:hover { opacity: .85; }
+
+/* Hero: slow-drifting gold aurora behind the content */
+.pc-hero { position: relative; overflow: hidden; }
+.pc-hero::before {
+  content: "";
+  position: absolute;
+  width: 720px; height: 720px;
+  top: -280px; right: -160px;
+  background: radial-gradient(circle, rgba(201, 162, 39, .16) 0%, rgba(201, 162, 39, 0) 62%);
+  pointer-events: none;
+  animation: pc-aurora 16s ease-in-out infinite alternate;
+}
+.pc-hero__inner { position: relative; z-index: 1; }
+@keyframes pc-aurora {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-130px, 90px, 0) scale(1.18); }
+}
+
+/* Promo card: lift on hover, caption arrow glides */
+@media (min-width: 921px) {
+  .pc-promo { transition: transform .3s cubic-bezier(.2, .7, .3, 1), box-shadow .3s ease; }
+  .pc-promo:hover { transform: translateY(-3px); box-shadow: 0 26px 60px rgba(0, 0, 0, .5); }
+  .pc-promo__cta::after { display: inline-block; transition: transform .22s ease; }
+  .pc-promo__cta:hover::after { transform: translateX(5px); }
+}
+
+/* Footer links: gold slide-in on hover */
+.pc-footer__links a { transition: color .18s ease, padding-left .18s ease; }
+.pc-footer__links a:hover { color: var(--pc-gold); padding-left: 4px; }
+
+/* FAQ / details: answer fades up as it opens */
+details[open] > *:not(summary) { animation: pc-fade-up .32s ease both; }
+@keyframes pc-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* WhatsApp pill: soft periodic ring plus hover lift */
+.pc-wa-float {
+  transition: transform .22s cubic-bezier(.2, .7, .3, 1), background .18s ease, box-shadow .22s ease;
+}
+.pc-wa-float:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 30px rgba(0, 0, 0, .34); }
+.pc-wa-float::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(37, 211, 102, .5);
+  animation: pc-wa-ring 3.2s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes pc-wa-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, .45); }
+  55%  { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+/* Scroll-reveal system: prospar-fx.js tags <html> with .pc-fx and elements
+   below the fold with .pc-reveal, then flips .pc-in as they enter view.
+   Without JS nothing is ever hidden. */
+.pc-fx .pc-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .3, 1);
+  transition-delay: var(--pc-d, 0s);
+}
+.pc-fx .pc-reveal.pc-in { opacity: 1; transform: none; }
+
+/* Accessibility: one switch turns the motion layer off */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .pc-hero::before, .pc-wa-float::before { animation: none; }
+  details[open] > *:not(summary) { animation: none; }
+  .pc-fx .pc-reveal { opacity: 1; transform: none; transition: none; }
+  .pc-promo__slide { transition: none; }
 }
