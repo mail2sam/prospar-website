@@ -1039,3 +1039,24 @@ details[open] > *:not(summary) { animation: pc-fade-up .32s ease both; }
   .pc-fx .pc-reveal { opacity: 1; transform: none; transition: none; }
   .pc-promo__slide { transition: none; }
 }
+
+/* Attention button: periodic shine sweep across a gold button */
+.pc-btn--shine { position: relative; overflow: hidden; }
+.pc-btn--shine::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 42%;
+  left: -60%;
+  background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, .55) 50%, transparent 100%);
+  animation: pc-shine 3.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes pc-shine {
+  0%   { left: -60%; }
+  55%  { left: 135%; }
+  100% { left: 135%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc-btn--shine::after { animation: none; }
+}
