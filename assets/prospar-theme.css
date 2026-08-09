@@ -59,6 +59,11 @@ body {
   background: var(--pc-navy);
   color: #fff;
   padding: 0 20px;
+  /* stays pinned while the page scrolls, so navigation is always in reach */
+  position: sticky;
+  top: 0;
+  z-index: 800;
+  box-shadow: 0 2px 12px rgba(9, 24, 40, .35);
 }
 .pc-header__inner {
   max-width: 1200px;
@@ -811,6 +816,25 @@ a.pc-toolcard:hover {
 .pc-btn--wa { background: #25d366; border-color: #25d366; color: #fff; }
 .pc-btn--wa:hover { background: #1ebe5a; }
 .pc-btn--wa svg { width: 20px; height: 20px; flex: 0 0 auto; }
+
+/* Floating WhatsApp "Consult Now" pill, bottom-right on every page */
+.pc-wa-float {
+  position: fixed; right: 18px; bottom: 18px; z-index: 900;
+  display: flex; align-items: center; gap: 9px;
+  background: #25d366; color: #fff;
+  font-weight: 700; font-size: 15px; line-height: 1;
+  padding: 13px 20px 13px 14px; border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .28);
+}
+.pc-wa-float:hover { background: #1ebe5a; }
+.pc-wa-float svg { width: 24px; height: 24px; flex: 0 0 auto; }
+@media (max-width: 620px) {
+  .pc-wa-float { right: 12px; bottom: 12px; font-size: 14px; padding: 11px 16px 11px 12px; }
+}
+@media print {
+  .pc-wa-float { display: none !important; }
+}
 
 .pc-band {
   background: var(--pc-surface);
