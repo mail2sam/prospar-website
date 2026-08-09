@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PMS Fee Comparator | Prospar Consulting</title>
+<meta name="description" content="Fixed vs hybrid vs variable PMS fees: enter the quotes you received and your return assumption, and see the charge this year and the drag over time.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="tools.html" aria-current="page">Calculators</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="insights.html">Insights</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="pms-aif.html">PMS &amp; AIF</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="about.html">About</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="faq.html">FAQ</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="contact.html">Contact</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="tools.html">Calculators</a> / PMS Fee Comparator</div>
+  <div class="pc-title">
+    <h1>PMS Fee Comparator</h1>
+    <p>The same portfolio is usually offered under two or three fee menus. Enter the quotes
+       you received and your own return assumption; see what each structure charges this
+       year, where the crossovers sit, and what the drag adds up to over your holding period.
+       New to the structures? <a href="pms-aif.html#fee-structures">Read the primer first</a>.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inAmount">Investment amount</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inAmount" min="1000000" max="100000000" step="100000" value="5000000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slAmount" min="1000000" max="100000000" step="100000" value="5000000" aria-label="Investment amount slider">
+          <div class="pc-range-ends"><span>₹10&nbsp;L</span><span>₹10&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inRate">Assumed annual return</label>
+            <span class="pc-field__hint">yours, not a forecast</span></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inRate" min="0" max="30" step="0.5" value="12" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slRate" min="0" max="30" step="0.5" value="12" aria-label="Assumed annual return slider">
+          <div class="pc-range-ends"><span>0%</span><span>30%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inYears">Holding period</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inYears" min="1" max="25" step="1" value="10" inputmode="numeric">
+            <span class="affix">years</span></div>
+          <input type="range" class="pc-slider" id="slYears" min="1" max="25" step="1" value="10" aria-label="Holding period slider">
+          <div class="pc-range-ends"><span>1&nbsp;yr</span><span>25&nbsp;yrs</span></div>
+        </div>
+
+        <div class="pc-card__title" style="margin:20px 0 12px">Fixed menu</div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inFf">Management fee</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inFf" min="0" max="3.5" step="0.05" value="2.25" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slFf" min="0" max="3.5" step="0.05" value="2.25" aria-label="Fixed management fee slider">
+          <div class="pc-range-ends"><span>0%</span><span>3.5%</span></div>
+        </div>
+
+        <div class="pc-card__title" style="margin:20px 0 12px">Hybrid menu</div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inHf">Fixed leg</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inHf" min="0" max="3" step="0.05" value="1.75" inputmode="decimal">
+            <span class="affix">% p.a.</span></div>
+          <input type="range" class="pc-slider" id="slHf" min="0" max="3" step="0.05" value="1.75" aria-label="Hybrid fixed leg slider">
+          <div class="pc-range-ends"><span>0%</span><span>3%</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inHs">Profit share</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inHs" min="0" max="30" step="1" value="20" inputmode="numeric">
+            <span class="affix">%</span></div>
+          <input type="range" class="pc-slider" id="slHs" min="0" max="30" step="1" value="20" aria-label="Hybrid profit share slider">
+          <div class="pc-range-ends"><span>0%</span><span>30%</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inHh">Hurdle</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inHh" min="0" max="15" step="0.5" value="12" inputmode="decimal">
+            <span class="affix">%</span></div>
+          <input type="range" class="pc-slider" id="slHh" min="0" max="15" step="0.5" value="12" aria-label="Hybrid hurdle slider">
+          <div class="pc-range-ends"><span>0%</span><span>15%</span></div>
+        </div>
+
+        <div class="pc-card__title" style="margin:20px 0 12px">Variable menu</div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inVs">Profit share</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inVs" min="0" max="30" step="1" value="15" inputmode="numeric">
+            <span class="affix">%</span></div>
+          <input type="range" class="pc-slider" id="slVs" min="0" max="30" step="1" value="15" aria-label="Variable profit share slider">
+          <div class="pc-range-ends"><span>0%</span><span>30%</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inVh">Hurdle</label></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inVh" min="0" max="15" step="0.5" value="0" inputmode="decimal">
+            <span class="affix">%</span></div>
+          <input type="range" class="pc-slider" id="slVh" min="0" max="15" step="0.5" value="0" aria-label="Variable hurdle slider">
+          <div class="pc-range-ends"><span>0%</span><span>15%</span></div>
+        </div>
+
+        <div class="pc-field" style="margin-bottom:6px">
+          <label class="pc-toggle">
+            <input type="checkbox" id="tgCatchup">
+            <span class="knob"></span>
+            <span>Catch-up clause on profit share</span>
+          </label>
+          <div class="pc-field__hint" style="margin-top:8px;line-height:1.5">Once the hurdle is
+            crossed, the share applies to the full profit as if the hurdle never existed.
+            Watch the chart kink when you switch it on.</div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout"></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">This year's charge, across possible returns</div>
+          <div class="pc-legend" id="legend1"></div>
+        </div>
+        <div id="chartYear"></div>
+        <p style="font-size:12.5px;color:var(--pc-muted);margin:10px 0 0">Where the lines cross
+           is where the cheapest structure changes. The gold marker sits on your own return
+           assumption. A loss year is included deliberately: only the fixed legs charge there.</p>
+      </div>
+
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Fees paid over your holding period</div>
+          <div class="pc-legend" id="legend2"></div>
+        </div>
+        <div id="chartTime"></div>
+        <div class="pc-tablescroll" style="margin-top:14px"><table class="pc-table" id="outcomeTable"></table></div>
+        <p style="font-size:12.5px;color:var(--pc-muted);margin:10px 0 0">Each structure's fee is
+           deducted from the portfolio every year, so later years compound on a smaller base:
+           the quiet cost of fees is the growth they never earn.</p>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Year-by-year: fee and portfolio under each structure</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This comparator illustrates fee mechanics only; it is not investment advice, a forecast
+        of returns, or an offer of any product. Fee menus, hurdle definitions, high-water mark
+        and catch-up wording vary by provider and are governed solely by the final PMS agreement:
+        always confirm the current schedule in writing before signing. PMS carries a SEBI-prescribed
+        minimum investment of ₹50 lakh and fees provide no tax relief against capital gains.
+        Prospar Consulting LLP: investments are subject to market risks.
+      </p>
+    </section>
+  </div>
+</main>
+
+<footer class="pc-footer">
+  <div class="pc-footer__inner">
+    <div>
+      <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <div class="pc-footer__links">
+        <a href="tools.html">Calculators</a>
+        <a href="insights.html">Insights</a>
+        <a href="pms-aif.html">PMS &amp; AIF</a>
+        <a href="how-we-work.html">How We Work</a>
+        <a href="faq.html">FAQ</a>
+        <a href="downloads.html">Download Centre</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+        <a href="compliance.html">Disclosures &amp; Privacy</a>
+      </div>
+    </div>
+    <div>
+      <h4>The fine print</h4>
+      <div>Investments are subject to market risks. Content on this site is for education and
+        awareness; it is not investment advice or an offer. PMS &amp; AIF carry regulatory
+        minimums (₹50 lakh / ₹1 crore) and are distributed through formal tie-ups with
+        SEBI-registered providers.</div>
+    </div>
+  </div>
+  <div class="pc-footer__legal">© 2026 Prospar Consulting LLP · <a href="compliance.html">Disclaimers, disclosures &amp; privacy</a></div>
+</footer>
+
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+
+  var state = { amount: 5000000, rate: 12, years: 10, ff: 2.25, hf: 1.75, hs: 20, hh: 12, vs: 15, vh: 0, catchup: false };
+  var url = U.urlState({
+    amount: { p: "a", lo: 1000000, hi: 100000000, dflt: 5000000 },
+    rate: { p: "r", lo: 0, hi: 30, dflt: 12 },
+    years: { p: "y", lo: 1, hi: 25, dflt: 10 },
+    ff: { p: "ff", lo: 0, hi: 3.5, dflt: 2.25 },
+    hf: { p: "hf", lo: 0, hi: 3, dflt: 1.75 },
+    hs: { p: "hs", lo: 0, hi: 30, dflt: 20 },
+    hh: { p: "hh", lo: 0, hi: 15, dflt: 12 },
+    vs: { p: "vs", lo: 0, hi: 30, dflt: 15 },
+    vh: { p: "vh", lo: 0, hi: 15, dflt: 0 },
+    catchup: { p: "cu", bool: true, dflt: false }
+  });
+
+  var NAMES = { fixed: "Fixed", hybrid: "Hybrid", variable: "Variable" };
+  var lastSched = [];
+
+  function menus(s) {
+    return {
+      fixed: { fixed: s.ff, share: 0, hurdle: 0 },
+      hybrid: { fixed: s.hf, share: s.hs, hurdle: s.hh },
+      variable: { fixed: 0, share: s.vs, hurdle: s.vh }
+    };
+  }
+
+  /* Convention (stated on page): management fee and hurdle are computed on the
+     year-end value; the profit share applies to the year's profit after the
+     management fee and above the hurdle amount. */
+  function feeForYear(startV, endV, m, catchup) {
+    var mgmt = m.fixed / 100 * endV;
+    var share = 0;
+    var profit = endV - startV;
+    if (m.share > 0 && profit > 0) {
+      var base = profit - mgmt;
+      var hurdleAmt = m.hurdle / 100 * endV;
+      if (base > hurdleAmt) share = m.share / 100 * (catchup ? base : base - hurdleAmt);
+    }
+    return mgmt + Math.max(0, share);
+  }
+
+  function cheapestAt(r, s, mm) {
+    var endV = s.amount * (1 + r / 100);
+    var best = null, bestFee = Infinity;
+    ["fixed", "hybrid", "variable"].forEach(function (k) {
+      var f = feeForYear(s.amount, endV, mm[k], s.catchup);
+      if (f < bestFee - 0.005) { bestFee = f; best = k; }
+    });
+    return best;
+  }
+
+  function breakevenRanges(s, mm) {
+    var ranges = [], cur = null;
+    for (var r = -10; r <= 30.001; r += 0.1) {
+      var w = cheapestAt(r, s, mm);
+      if (!cur || cur.w !== w) { cur = { w: w, from: r, to: r }; ranges.push(cur); }
+      else cur.to = r;
+    }
+    return ranges.filter(function (g) { return g.to - g.from >= 0.3; });
+  }
+
+  function render() {
+    var s = state, C = U.color(), mm = menus(s);
+
+    /* ---- this year, at the user's assumption ---- */
+    var endV = s.amount * (1 + s.rate / 100);
+    var yearFee = {
+      fixed: feeForYear(s.amount, endV, mm.fixed, s.catchup),
+      hybrid: feeForYear(s.amount, endV, mm.hybrid, s.catchup),
+      variable: feeForYear(s.amount, endV, mm.variable, s.catchup)
+    };
+    var order = ["fixed", "hybrid", "variable"].sort(function (a, b) { return yearFee[a] - yearFee[b]; });
+    var win = order[0];
+
+    /* ---- multi-year: each structure compounds its own net corpus ---- */
+    var corpus = { fixed: s.amount, hybrid: s.amount, variable: s.amount };
+    var cumFees = { fixed: 0, hybrid: 0, variable: 0 };
+    var timeRows = [{ x: 0, fixed: 0, hybrid: 0, variable: 0 }];
+    lastSched = [];
+    for (var yByr = 1; yByr <= s.years; yByr++) {
+      var rec = { year: yByr };
+      ["fixed", "hybrid", "variable"].forEach(function (k) {
+        var grossEnd = corpus[k] * (1 + s.rate / 100);
+        var fee = feeForYear(corpus[k], grossEnd, mm[k], s.catchup);
+        corpus[k] = grossEnd - fee;
+        cumFees[k] += fee;
+        rec[k + "Fee"] = fee;
+        rec[k + "Corpus"] = corpus[k];
+      });
+      lastSched.push(rec);
+      timeRows.push({ x: yByr, fixed: cumFees.fixed, hybrid: cumFees.hybrid, variable: cumFees.variable });
+    }
+
+    /* ---- stat cards ---- */
+    var SERIES_COLOR = { fixed: C.invested, hybrid: C.gains, variable: C.cat3 };
+    var cards = [{ hero: true, label: "Cheapest this year", value: NAMES[win],
+      sub: F.formatINR(Math.round(yearFee[win])) + " at " + F.formatPct(s.rate, 1) }];
+    ["fixed", "hybrid", "variable"].forEach(function (k) {
+      cards.push({ label: NAMES[k] + " · this year", dot: SERIES_COLOR[k],
+        value: F.formatINRCompact(yearFee[k]),
+        sub: s.years + "-yr fees " + F.formatINRCompact(cumFees[k]) });
+    });
+    U.renderStats("statsRow", cards);
+
+    /* ---- verdict callout from break-even scan ---- */
+    var parts = breakevenRanges(s, mm).map(function (g) {
+      var span;
+      if (g.from <= -9.9) span = "below " + g.to.toFixed(0) + "%";
+      else if (g.to >= 29.9) span = "beyond " + g.from.toFixed(0) + "%";
+      else span = g.from.toFixed(0) + "% to " + g.to.toFixed(0) + "%";
+      return span + ": <strong>" + NAMES[g.w] + "</strong>";
+    });
+    U.callout("callout",
+      "With these menus, the cheapest structure by the year's return is " + parts.join(" · ") +
+      ". Over " + s.years + " years at your " + F.formatPct(s.rate, 1) + " assumption, " +
+      "<strong>" + NAMES[order[0]] + "</strong> charges the least this year, while the lowest total drag is <strong>" +
+      NAMES[["fixed", "hybrid", "variable"].sort(function (a, b) { return cumFees[a] - cumFees[b]; })[0]] +
+      "</strong>. No structure is cheapest everywhere; the year decides.");
+
+    /* ---- chart 1: fee vs return this year ---- */
+    var feeRows = [];
+    for (var r = -10; r <= 30.001; r += 1) {
+      var ev = s.amount * (1 + r / 100);
+      feeRows.push({
+        x: r,
+        fixed: feeForYear(s.amount, ev, mm.fixed, s.catchup),
+        hybrid: feeForYear(s.amount, ev, mm.hybrid, s.catchup),
+        variable: feeForYear(s.amount, ev, mm.variable, s.catchup)
+      });
+    }
+    var legendItems = [
+      { color: C.invested, label: "Fixed" },
+      { color: C.gains, label: "Hybrid" },
+      { color: C.cat3, label: "Variable" }
+    ];
+    U.legend("legend1", legendItems);
+    U.mountAreaChart("chartYear", {
+      rows: feeRows,
+      x: { min: -10, max: 30, format: function (v) { return v + "%"; } },
+      series: [
+        { field: "fixed", color: C.invested, width: 2.5 },
+        { field: "hybrid", color: C.gains, width: 2.5 },
+        { field: "variable", color: C.cat3, width: 2.5 }
+      ],
+      refX: [{ value: s.rate, color: C.goldInk, label: "Your " + F.formatPct(s.rate, 1) }],
+      ariaLabel: "Annual fee under each structure across possible yearly returns",
+      tooltip: function (row) {
+        var t = { title: "Year's return " + row.x + "%", rows: [] };
+        ["fixed", "hybrid", "variable"].forEach(function (k) {
+          t.rows.push({ sw: SERIES_COLOR[k], label: NAMES[k], value: F.formatINR(Math.round(row[k])) });
+        });
+        var w2 = ["fixed", "hybrid", "variable"].sort(function (a, b) { return row[a] - row[b]; })[0];
+        t.rows.push({ label: "Cheapest", value: NAMES[w2] });
+        return t;
+      }
+    });
+
+    /* ---- chart 2: cumulative fees over time ---- */
+    U.legend("legend2", legendItems);
+    U.mountAreaChart("chartTime", {
+      rows: timeRows,
+      x: { min: 0, max: s.years, format: function (v) { return v === 0 ? "Now" : "Yr " + v; } },
+      series: [
+        { field: "fixed", color: C.invested, width: 2.5 },
+        { field: "hybrid", color: C.gains, width: 2.5 },
+        { field: "variable", color: C.cat3, width: 2.5 }
+      ],
+      endLabels: [{ field: ["fixed", "hybrid", "variable"].sort(function (a, b) { return cumFees[b] - cumFees[a]; })[0],
+        text: function (row) { return "Fees to date"; } }],
+      ariaLabel: "Cumulative fees paid under each structure over the holding period",
+      tooltip: function (row) {
+        var t = { title: row.x === 0 ? "Start" : "After year " + row.x, rows: [] };
+        ["fixed", "hybrid", "variable"].forEach(function (k) {
+          t.rows.push({ sw: SERIES_COLOR[k], label: NAMES[k] + " fees", value: F.formatINRCompact(row[k]) });
+        });
+        return t;
+      }
+    });
+
+    /* ---- outcome table ---- */
+    U.buildTable("outcomeTable",
+      ["After " + s.years + " years", "Fixed", "Hybrid", "Variable"],
+      [
+        ["Total fees paid", F.formatINR(Math.round(cumFees.fixed)), F.formatINR(Math.round(cumFees.hybrid)), F.formatINR(Math.round(cumFees.variable))],
+        ["Portfolio, net of fees", F.formatINRCompact(corpus.fixed), F.formatINRCompact(corpus.hybrid), F.formatINRCompact(corpus.variable)],
+        ["Fees as % of final value", F.formatPct(cumFees.fixed / corpus.fixed * 100, 1), F.formatPct(cumFees.hybrid / corpus.hybrid * 100, 1), F.formatPct(cumFees.variable / corpus.variable * 100, 1)]
+      ]);
+
+    /* ---- schedule table ---- */
+    U.buildTable("schedTable",
+      ["Year", "Fixed fee", "Fixed corpus", "Hybrid fee", "Hybrid corpus", "Variable fee", "Variable corpus"],
+      lastSched.map(function (rec) {
+        return [rec.year,
+          F.formatINR(Math.round(rec.fixedFee)), F.formatINRCompact(rec.fixedCorpus),
+          F.formatINR(Math.round(rec.hybridFee)), F.formatINRCompact(rec.hybridCorpus),
+          F.formatINR(Math.round(rec.variableFee)), F.formatINRCompact(rec.variableCorpus)];
+      }));
+
+    U.assumptions("assumeChips", [
+      "Convention: management fee and hurdle computed on year-end value; profit share on the year's profit after the management fee, above the hurdle",
+      s.catchup ? "Catch-up ON: share applies to full profit once the hurdle is crossed" : "No catch-up: share applies only to profit above the hurdle",
+      "Smooth constant-return path, so a high-water mark never binds here; in volatile real years it matters, insist on one",
+      "Return assumption is yours, for illustration only; fees are deducted yearly from the portfolio",
+      "Taxes, exit loads and custody charges not modelled · PMS fees give no tax relief against capital gains"
+    ]);
+    url.write(s);
+  }
+
+  url.read(state);
+  var binds = [
+    ["inAmount", "slAmount", "amount"], ["inRate", "slRate", "rate"], ["inYears", "slYears", "years"],
+    ["inFf", "slFf", "ff"], ["inHf", "slHf", "hf"], ["inHs", "slHs", "hs"], ["inHh", "slHh", "hh"],
+    ["inVs", "slVs", "vs"], ["inVh", "slVh", "vh"]
+  ].map(function (b) {
+    var pair = U.bindPair(b[0], b[1], function (v) { state[b[2]] = v; render(); });
+    pair.set(state[b[2]]);
+    return pair;
+  });
+  U.bindToggle("tgCatchup", function (v) { state.catchup = v; render(); });
+  $("tgCatchup").checked = state.catchup;
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-pms-fee-comparison.csv",
+    headers: function () {
+      return ["Year", "Fixed fee", "Fixed corpus", "Hybrid fee", "Hybrid corpus", "Variable fee", "Variable corpus"];
+    },
+    rows: function () {
+      return lastSched.map(function (rec) {
+        return [rec.year, Math.round(rec.fixedFee), Math.round(rec.fixedCorpus),
+          Math.round(rec.hybridFee), Math.round(rec.hybridCorpus),
+          Math.round(rec.variableFee), Math.round(rec.variableCorpus)];
+      });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+<a class="pc-wa-float" href="https://wa.me/919871001868?text=I%20need%20investment%20advice" target="_blank" rel="noopener" aria-label="WhatsApp Nikesh Kumar: Consult Now"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 1.8a8.2 8.2 0 1 1-4.2 15.3l-.3-.2-2.9.8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8Zm-3.1 4c-.2 0-.5.1-.7.4-.2.3-.9.9-.9 2.1s.9 2.5 1 2.6c.1.2 1.8 2.9 4.4 3.9 2.2.9 2.6.7 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.1-.2 0-.4.1-.5l.6-.7c.2-.2.2-.4.1-.6L9.6 8.2c-.1-.3-.3-.4-.5-.4h-.2Z"/></svg><span>Consult Now</span></a>
+<script src="assets/prospar-fx.js" defer></script>
+</body>
+</html>
