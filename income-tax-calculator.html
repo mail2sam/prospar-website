@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Income Tax Calculator | Prospar Consulting</title>
+<meta name="description" content="Old vs new regime on your salary, house property, capital gains and other income: regime verdict, break-even deductions, effective vs marginal rate, and what-if scenarios.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="tools.html" aria-current="page">Calculators</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="insights.html">Insights</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="pms-aif.html">PMS &amp; AIF</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="about.html">About</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="faq.html">FAQ</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="contact.html">Contact</a></nav>
+  </div>
+</header>
+
+<main class="pc-page">
+  <div class="pc-crumb"><a href="tools.html">Calculators</a> / Income Tax Calculator</div>
+  <div class="pc-title">
+    <h1>Income Tax Calculator</h1>
+    <p>Salary, house property, capital gains and other income, computed under both regimes
+       side by side: which regime wins for you, the deductions where the answer flips, and
+       what your investment decisions cost in tax. Nothing you type leaves your browser.</p>
+  </div>
+
+  <div class="pc-tool">
+    <aside class="pc-tool__inputs">
+      <div class="pc-card">
+        <div class="pc-modes" role="tablist" aria-label="Financial year">
+          <button type="button" id="fy1" aria-pressed="true">FY 2025-26</button>
+          <button type="button" id="fy2" aria-pressed="false">FY 2026-27</button>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label">Your age band</label>
+            <span class="pc-field__hint">old-regime slabs</span></div>
+          <div class="pc-chips" id="ageChips">
+            <button type="button" class="pc-chip" data-val="below" aria-pressed="true">Below 60</button>
+            <button type="button" class="pc-chip" data-val="senior" aria-pressed="false">60 to 80</button>
+            <button type="button" class="pc-chip" data-val="super" aria-pressed="false">80 plus</button>
+          </div>
+        </div>
+
+        <div class="pc-card__title" style="margin:20px 0 12px">Salary</div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inSal">Gross annual salary</label>
+            <span class="pc-field__hint">standard deduction auto</span></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inSal" min="0" max="30000000" step="25000" value="1800000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slSal" min="0" max="30000000" step="25000" value="1800000" aria-label="Gross annual salary slider">
+          <div class="pc-range-ends"><span>0</span><span>₹3&nbsp;Cr</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inEnps">Employer NPS, 80CCD(2)</label>
+            <span class="pc-field__hint">both regimes</span></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inEnps" min="0" max="500000" step="5000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slEnps" min="0" max="500000" step="5000" value="0" aria-label="Employer NPS slider">
+          <div class="pc-range-ends"><span>0</span><span>₹5&nbsp;L</span></div>
+        </div>
+
+        <div class="pc-card__title" style="margin:20px 0 12px">House property</div>
+        <div class="pc-field">
+          <div class="pc-chips" id="hpChips">
+            <button type="button" class="pc-chip" data-val="none" aria-pressed="true">None</button>
+            <button type="button" class="pc-chip" data-val="self" aria-pressed="false">Self-occupied, loan</button>
+            <button type="button" class="pc-chip" data-val="let" aria-pressed="false">Let out</button>
+          </div>
+        </div>
+        <div id="hpRentBlock" hidden>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inRent">Annual rent received</label></div>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="inRent" min="0" max="6000000" step="10000" value="360000" inputmode="numeric"></div>
+            <input type="range" class="pc-slider" id="slRent" min="0" max="6000000" step="10000" value="360000" aria-label="Annual rent slider">
+            <div class="pc-range-ends"><span>0</span><span>₹60&nbsp;L</span></div>
+          </div>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inMtax">Municipal taxes paid</label></div>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="inMtax" min="0" max="500000" step="1000" value="0" inputmode="numeric"></div>
+            <input type="range" class="pc-slider" id="slMtax" min="0" max="500000" step="1000" value="0" aria-label="Municipal taxes slider">
+            <div class="pc-range-ends"><span>0</span><span>₹5&nbsp;L</span></div>
+          </div>
+        </div>
+        <div id="hpLoanBlock" hidden>
+          <div class="pc-field">
+            <div class="pc-field__row"><label class="pc-field__label" for="inHint">Home-loan interest this year</label></div>
+            <div class="pc-numwrap"><span class="affix">₹</span>
+              <input type="number" id="inHint" min="0" max="2000000" step="5000" value="200000" inputmode="numeric"></div>
+            <input type="range" class="pc-slider" id="slHint" min="0" max="2000000" step="5000" value="200000" aria-label="Home loan interest slider">
+            <div class="pc-range-ends"><span>0</span><span>₹20&nbsp;L</span></div>
+          </div>
+        </div>
+
+        <div class="pc-card__title" style="margin:20px 0 12px">Capital gains</div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inLtcg">Equity LTCG, held over 1 yr</label>
+            <span class="pc-field__hint">first ₹1.25L exempt</span></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inLtcg" min="0" max="20000000" step="5000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slLtcg" min="0" max="20000000" step="5000" value="0" aria-label="Equity long term capital gains slider">
+          <div class="pc-range-ends"><span>0</span><span>₹2&nbsp;Cr</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inStcg">Equity STCG, under 1 yr</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inStcg" min="0" max="20000000" step="5000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slStcg" min="0" max="20000000" step="5000" value="0" aria-label="Equity short term capital gains slider">
+          <div class="pc-range-ends"><span>0</span><span>₹2&nbsp;Cr</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inOltg">Other long-term gains</label>
+            <span class="pc-field__hint">property, gold, unlisted</span></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inOltg" min="0" max="50000000" step="10000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slOltg" min="0" max="50000000" step="10000" value="0" aria-label="Other long term gains slider">
+          <div class="pc-range-ends"><span>0</span><span>₹5&nbsp;Cr</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inDbt">Debt-fund and slab-rate gains</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inDbt" min="0" max="20000000" step="5000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slDbt" min="0" max="20000000" step="5000" value="0" aria-label="Debt fund gains slider">
+          <div class="pc-range-ends"><span>0</span><span>₹2&nbsp;Cr</span></div>
+        </div>
+
+        <div class="pc-card__title" style="margin:20px 0 12px">Other sources</div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inInt">Interest income</label>
+            <span class="pc-field__hint">FDs, savings, bonds</span></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inInt" min="0" max="5000000" step="5000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slInt" min="0" max="5000000" step="5000" value="0" aria-label="Interest income slider">
+          <div class="pc-range-ends"><span>0</span><span>₹50&nbsp;L</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inDiv">Dividends</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inDiv" min="0" max="5000000" step="5000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slDiv" min="0" max="5000000" step="5000" value="0" aria-label="Dividend income slider">
+          <div class="pc-range-ends"><span>0</span><span>₹50&nbsp;L</span></div>
+        </div>
+
+        <div class="pc-card__title" style="margin:20px 0 12px">Deductions, old regime</div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inC80">80C: PF, ELSS, LIC, principal</label>
+            <span class="pc-field__hint">cap ₹1.5L</span></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inC80" min="0" max="150000" step="5000" value="150000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slC80" min="0" max="150000" step="5000" value="150000" aria-label="Section 80C slider">
+          <div class="pc-range-ends"><span>0</span><span>₹1.5&nbsp;L</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inD80">80D: health insurance</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inD80" min="0" max="100000" step="1000" value="25000" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slD80" min="0" max="100000" step="1000" value="25000" aria-label="Section 80D slider">
+          <div class="pc-range-ends"><span>0</span><span>₹1&nbsp;L</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inNps">NPS own, 80CCD(1B)</label>
+            <span class="pc-field__hint">cap ₹50k</span></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inNps" min="0" max="50000" step="5000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slNps" min="0" max="50000" step="5000" value="0" aria-label="NPS 80CCD 1B slider">
+          <div class="pc-range-ends"><span>0</span><span>₹50k</span></div>
+        </div>
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inHra">HRA exemption claimed</label></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inHra" min="0" max="1200000" step="5000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slHra" min="0" max="1200000" step="5000" value="0" aria-label="HRA exemption slider">
+          <div class="pc-range-ends"><span>0</span><span>₹12&nbsp;L</span></div>
+        </div>
+        <div class="pc-field" style="margin-bottom:6px">
+          <div class="pc-field__row"><label class="pc-field__label" for="inOded">Other deductions</label>
+            <span class="pc-field__hint">80TTA/TTB, 80G, 80E…</span></div>
+          <div class="pc-numwrap"><span class="affix">₹</span>
+            <input type="number" id="inOded" min="0" max="500000" step="1000" value="0" inputmode="numeric"></div>
+          <input type="range" class="pc-slider" id="slOded" min="0" max="500000" step="1000" value="0" aria-label="Other deductions slider">
+          <div class="pc-range-ends"><span>0</span><span>₹5&nbsp;L</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="pc-tool__top">
+      <div class="pc-stats" id="statsRow"></div>
+      <div class="pc-callout" id="callout"></div>
+      <div id="whatifRow" style="margin-top:12px"></div>
+    </section>
+
+    <section class="pc-tool__rest">
+      <div class="pc-card pc-chart-card">
+        <div class="pc-chart-head">
+          <div class="pc-card__title" style="margin:0">Old vs new: where the tax comes from</div>
+          <div class="pc-legend" id="legend1"></div>
+        </div>
+        <div id="chartBars"></div>
+      </div>
+
+      <div class="pc-card" id="impatienceCard" hidden style="border-left:4px solid var(--pc-gold)">
+        <div class="pc-card__title">The cost of impatience</div>
+        <p id="impatienceText" style="margin:0;color:var(--pc-ink-2);line-height:1.65"></p>
+      </div>
+
+      <details class="pc-card pc-tablecard" id="tableCard">
+        <summary><span class="chev">▶</span> Line-by-line: both regimes</summary>
+        <div class="pc-tablescroll"><table class="pc-table" id="schedTable"></table></div>
+        <div class="pc-actions" style="margin-top:14px">
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnCsv">Download CSV</button>
+        </div>
+      </details>
+
+      <div class="pc-card" style="background:linear-gradient(135deg,var(--pc-navy) 0%,#1d4568 100%);border:0;display:flex;flex-wrap:wrap;align-items:center;gap:18px;justify-content:space-between">
+        <div>
+          <div style="color:#fff;font-size:18px;font-weight:700">Numbers are the easy half</div>
+          <div style="color:#b9c8d6;margin-top:4px">Planning the year so these numbers shrink is the other. Talk it through with your consultant.</div>
+        </div>
+        <a class="pc-btn pc-btn--wa" style="text-decoration:none" target="_blank" rel="noopener"
+           href="https://wa.me/919871001868?text=I%20want%20to%20discuss%20tax%20planning">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 1.8a8.2 8.2 0 1 1-4.2 15.3l-.3-.2-2.9.8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8Zm-3.1 4c-.2 0-.5.1-.7.4-.2.3-.9.9-.9 2.1s.9 2.5 1 2.6c.1.2 1.8 2.9 4.4 3.9 2.2.9 2.6.7 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.1-.2 0-.4.1-.5l.6-.7c.2-.2.2-.4.1-.6L9.6 8.2c-.1-.3-.3-.4-.5-.4h-.2Z"/></svg>
+          Discuss tax planning
+        </a>
+      </div>
+
+      <div class="pc-card pc-assume">
+        <div class="pc-card__title">Assumptions</div>
+        <div class="pc-chips" id="assumeChips"></div>
+        <div class="pc-actions" style="margin-top:16px">
+          <button type="button" class="pc-btn" id="btnShare">Copy shareable link</button>
+          <button type="button" class="pc-btn pc-btn--ghost" id="btnPrint">Print / save PDF</button>
+        </div>
+      </div>
+
+      <p class="pc-disclaimer">
+        This calculator provides an educational estimate for resident individuals under the
+        Income-tax law as amended to date; it is not tax advice and not a substitute for a
+        chartered accountant or the official portal at the time of filing. Cess, surcharge with
+        approximated marginal relief, the ₹1.25 lakh equity LTCG exemption and Section 87A
+        rebates are applied; TDS, advance-tax interest, business income, foreign assets,
+        set-off carry-forwards and the pre-July-2024 property indexation option are outside
+        its scope. Prospar Consulting LLP.
+      </p>
+    </section>
+  </div>
+</main>
+
+<footer class="pc-footer">
+  <div class="pc-footer__inner">
+    <div>
+      <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <div class="pc-footer__links">
+        <a href="tools.html">Calculators</a>
+        <a href="insights.html">Insights</a>
+        <a href="pms-aif.html">PMS &amp; AIF</a>
+        <a href="how-we-work.html">How We Work</a>
+        <a href="faq.html">FAQ</a>
+        <a href="downloads.html">Download Centre</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+        <a href="compliance.html">Disclosures &amp; Privacy</a>
+      </div>
+    </div>
+    <div>
+      <h4>The fine print</h4>
+      <div>Investments are subject to market risks. Content on this site is for education and
+        awareness; it is not investment advice or an offer. PMS &amp; AIF carry regulatory
+        minimums (₹50 lakh / ₹1 crore) and are distributed through formal tie-ups with
+        SEBI-registered providers.</div>
+    </div>
+  </div>
+  <div class="pc-footer__legal">© 2026 Prospar Consulting LLP · <a href="compliance.html">Disclaimers, disclosures &amp; privacy</a></div>
+</footer>
+
+
+<script>
+(function () {
+  "use strict";
+  var F = ProFin, U = PCUI, $ = U.$;
+
+  /* Rates as enacted. Budget 2026 made no rate changes for FY 2026-27, so the
+     two years currently share one table; kept separate so a future Finance Act
+     is a five-minute update. */
+  function makeRules() {
+    return {
+      newSlabs: [[400000, 0], [800000, 5], [1200000, 10], [1600000, 15], [2000000, 20], [2400000, 25], [Infinity, 30]],
+      newStd: 75000, newRebateLimit: 1200000, newRebateCap: 60000, newExemption: 400000,
+      oldExemption: { below: 250000, senior: 300000, super: 500000 },
+      oldStd: 50000, oldRebateLimit: 500000, oldRebateCap: 12500,
+      ltcgExemption: 125000, ltcgPct: 12.5, stcgPct: 20, otherLtcgPct: 12.5,
+      surch: [[50000000, { old: 0.37, new: 0.25 }], [20000000, { old: 0.25, new: 0.25 }],
+              [10000000, { old: 0.15, new: 0.15 }], [5000000, { old: 0.10, new: 0.10 }]],
+      cgSurchCap: 0.15, cess: 0.04
+    };
+  }
+  var RULES = { "2025-26": makeRules(), "2026-27": makeRules() };
+
+  var state = { fy: "2025-26", age: "below", sal: 1800000, enps: 0, hpm: "none", rent: 360000,
+    mtax: 0, hint: 200000, ltcg: 0, stcg: 0, oltg: 0, dbt: 0, int: 0, div: 0,
+    c80: 150000, d80: 25000, nps: 0, hra: 0, oded: 0 };
+
+  var url = U.urlState({
+    fy: { p: "fy", str: true, dflt: "2025-26" },
+    age: { p: "age", str: true, dflt: "below" },
+    sal: { p: "sal", lo: 0, hi: 30000000, dflt: 1800000 },
+    enps: { p: "enps", lo: 0, hi: 500000, dflt: 0 },
+    hpm: { p: "hpm", str: true, dflt: "none" },
+    rent: { p: "rent", lo: 0, hi: 6000000, dflt: 360000 },
+    mtax: { p: "mtax", lo: 0, hi: 500000, dflt: 0 },
+    hint: { p: "hint", lo: 0, hi: 2000000, dflt: 200000 },
+    ltcg: { p: "ltcg", lo: 0, hi: 20000000, dflt: 0 },
+    stcg: { p: "stcg", lo: 0, hi: 20000000, dflt: 0 },
+    oltg: { p: "oltg", lo: 0, hi: 50000000, dflt: 0 },
+    dbt: { p: "dbt", lo: 0, hi: 20000000, dflt: 0 },
+    int: { p: "int", lo: 0, hi: 5000000, dflt: 0 },
+    div: { p: "div", lo: 0, hi: 5000000, dflt: 0 },
+    c80: { p: "c80", lo: 0, hi: 150000, dflt: 150000 },
+    d80: { p: "d80", lo: 0, hi: 100000, dflt: 25000 },
+    nps: { p: "nps", lo: 0, hi: 50000, dflt: 0 },
+    hra: { p: "hra", lo: 0, hi: 1200000, dflt: 0 },
+    oded: { p: "oded", lo: 0, hi: 500000, dflt: 0 }
+  });
+
+  function bandTax(taxable, bands) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < bands.length && taxable > prev; i++) {
+      var upTo = Math.min(taxable, bands[i][0]);
+      tax += (upTo - prev) * bands[i][1] / 100;
+      prev = bands[i][0];
+    }
+    return tax;
+  }
+
+  function housePropertyIncome(s, regime) {
+    if (s.hpm === "none") return 0;
+    if (s.hpm === "self") {
+      if (regime === "new") return 0;                 // no 24(b) for self-occupied
+      return -Math.min(s.hint, 200000);               // loss, capped at set-off limit
+    }
+    var nav = Math.max(0, s.rent - s.mtax);
+    var income = nav * 0.7 - s.hint;                  // 30% standard deduction, then interest
+    if (regime === "new") return Math.max(0, income); // loss cannot offset other heads
+    return Math.max(-200000, income);                 // set-off capped at 2L
+  }
+
+  /* Returns the full computation for one regime. */
+  function computeRegime(regime, s, R) {
+    var std = s.sal > 0 ? Math.min(s.sal, regime === "new" ? R.newStd : R.oldStd) : 0;
+    var salIncome = Math.max(0, s.sal - std);
+    var hp = housePropertyIncome(s, regime);
+    var normal = salIncome + hp + s.int + s.div + s.dbt;
+
+    var ded = Math.min(s.enps, s.sal);                 // 80CCD(2), both regimes
+    if (regime === "old") {
+      ded += Math.min(s.c80, 150000) + Math.min(s.d80, 100000) +
+             Math.min(s.nps, 50000) + Math.min(s.hra, salIncome) + s.oded;
+    }
+    var normalTaxable = Math.max(0, normal - ded);
+
+    // Unexhausted basic exemption absorbs special-rate gains (resident):
+    // costliest first (STCG 20%), then equity LTCG, then other LTCG.
+    var exemption = regime === "new" ? R.newExemption : R.oldExemption[s.age];
+    var shortfall = Math.max(0, exemption - normalTaxable);
+    var stcgTaxable = Math.max(0, s.stcg - shortfall);
+    shortfall = Math.max(0, shortfall - s.stcg);
+    var eqLtcgBase = Math.max(0, s.ltcg - R.ltcgExemption);
+    var ltcgTaxable = Math.max(0, eqLtcgBase - shortfall);
+    shortfall = Math.max(0, shortfall - eqLtcgBase);
+    var oltgTaxable = Math.max(0, s.oltg - shortfall);
+
+    var slabs = regime === "new" ? R.newSlabs
+      : [[R.oldExemption[s.age], 0]].concat(
+          s.age === "super" ? [[1000000, 20], [Infinity, 30]]
+                            : [[500000, 5], [1000000, 20], [Infinity, 30]]);
+    var slabTax = bandTax(normalTaxable, slabs);
+
+    var stcgTax = stcgTaxable * R.stcgPct / 100;
+    var ltcgTax = ltcgTaxable * R.ltcgPct / 100;
+    var oltgTax = oltgTaxable * R.otherLtcgPct / 100;
+
+    // Section 87A: new regime on slab income only, with marginal relief;
+    // old regime against slab + 111A STCG tax (never 112A LTCG).
+    var slabTaxPay;
+    if (regime === "new") {
+      slabTaxPay = normalTaxable <= R.newRebateLimit
+        ? Math.max(0, slabTax - R.newRebateCap)
+        : Math.min(slabTax, normalTaxable - R.newRebateLimit);
+    } else {
+      slabTaxPay = slabTax;
+      var totInc = normalTaxable + stcgTaxable + ltcgTaxable + oltgTaxable;
+      if (totInc <= R.oldRebateLimit) {
+        var reb = Math.min(R.oldRebateCap, slabTax + stcgTax);
+        var offSlab = Math.min(reb, slabTax);
+        slabTaxPay = slabTax - offSlab;
+        stcgTax = Math.max(0, stcgTax - (reb - offSlab));
+      }
+    }
+
+    var totalIncome = normalTaxable + stcgTaxable + ltcgTaxable + oltgTaxable;
+    var cgTax = stcgTax + ltcgTax + oltgTax;
+    var surRate = 0, threshold = 0;
+    for (var i = 0; i < R.surch.length; i++) {
+      if (totalIncome > R.surch[i][0]) { surRate = R.surch[i][1][regime]; threshold = R.surch[i][0]; break; }
+    }
+    var sur = slabTaxPay * surRate + cgTax * Math.min(surRate, R.cgSurchCap);
+    if (surRate > 0) sur = Math.min(sur, Math.max(0, totalIncome - threshold)); // marginal relief, approximated
+
+    var preCess = slabTaxPay + cgTax + sur;
+    var cess = preCess * R.cess;
+    var total = Math.round(preCess + cess);
+
+    var grossAll = s.sal + Math.max(0, hp) + s.int + s.div + s.dbt + s.stcg + s.ltcg + s.oltg;
+    return {
+      regime: regime, std: std, ded: ded, hp: hp, normalTaxable: normalTaxable,
+      slabs: slabs, slabTaxPay: slabTaxPay, stcgTax: stcgTax, ltcgTax: ltcgTax,
+      oltgTax: oltgTax, surcharge: sur, cess: cess, total: total,
+      totalIncome: totalIncome,
+      effective: grossAll > 0 ? total / grossAll * 100 : 0
+    };
+  }
+
+  function computeBoth(s, R) {
+    var o = computeRegime("old", s, R), n = computeRegime("new", s, R);
+    return { oldR: o, newR: n, better: n.total <= o.total ? n : o, worse: n.total <= o.total ? o : n };
+  }
+
+  function marginalRate(s, R) {
+    var base = computeBoth(s, R).better.total;
+    var s2 = Object.assign({}, s, { int: s.int + 10000 });
+    var bumped = computeBoth(s2, R);
+    var pick = computeBoth(s, R).better.regime === "old" ? bumped.oldR.total : bumped.newR.total;
+    return Math.max(0, (pick - base) / 10000 * 100);
+  }
+
+  /* Extra old-regime deductions needed for old to match new. */
+  function breakevenDeductions(s, R, both) {
+    if (both.oldR.total <= both.newR.total) return { alreadyOld: true };
+    var lo = 0, hi = 1500000;
+    var atHi = computeRegime("old", Object.assign({}, s, { oded: s.oded + hi }), R).total;
+    if (atHi > both.newR.total) return { unreachable: true };
+    for (var i = 0; i < 40; i++) {
+      var mid = (lo + hi) / 2;
+      var t = computeRegime("old", Object.assign({}, s, { oded: s.oded + mid }), R).total;
+      if (t > both.newR.total) lo = mid; else hi = mid;
+    }
+    return { extra: hi };
+  }
+
+  var lastLines = [];
+
+  function whatIfDefs(s) {
+    return [
+      { key: "c80", label: "Max out 80C", apply: function (x) { x.c80 = 150000; }, active: s.c80 >= 150000 },
+      { key: "nps", label: "Add ₹50k NPS (1B)", apply: function (x) { x.nps = 50000; }, active: s.nps >= 50000 },
+      { key: "d80", label: "₹25k health cover 80D", apply: function (x) { x.d80 = Math.max(x.d80, 25000); }, active: s.d80 >= 25000 },
+      { key: "hold", label: "Hold STCG past 1 yr", apply: function (x) { x.ltcg = x.ltcg + x.stcg; x.stcg = 0; }, active: s.stcg === 0 }
+    ];
+  }
+
+  function render() {
+    var s = state, C = U.color(), R = RULES[s.fy];
+    var both = computeBoth(s, R);
+    var bt = both.better, wt = both.worse;
+    var saves = wt.total - bt.total;
+    var marg = marginalRate(s, R);
+
+    $("hpRentBlock").hidden = s.hpm !== "let";
+    $("hpLoanBlock").hidden = s.hpm === "none";
+
+    /* stats */
+    var cards = [
+      { hero: true, label: "Better for you: " + (bt.regime === "new" ? "New regime" : "Old regime"),
+        value: F.formatINRCompact(bt.total),
+        sub: saves > 0 ? "saves " + F.formatINR(Math.round(saves)) + " vs " + (wt.regime === "new" ? "new" : "old") : "both regimes equal" },
+      { label: "Old regime tax", dot: C.invested, value: F.formatINRCompact(both.oldR.total), sub: F.formatINR(both.oldR.total) },
+      { label: "New regime tax", dot: C.gains, value: F.formatINRCompact(both.newR.total), sub: F.formatINR(both.newR.total) },
+      { label: "Effective vs marginal", value: F.formatPct(bt.effective, 1),
+        sub: "next ₹100 of income taxed ₹" + marg.toFixed(0) }
+    ];
+    if (s.sal > 0) {
+      cards.push({ label: "Monthly in-hand, approx", value: F.formatINRCompact(Math.max(0, (s.sal - bt.total) / 12)),
+        sub: "if all tax is met from salary" });
+    }
+    U.renderStats("statsRow", cards);
+
+    /* verdict callout */
+    var be = breakevenDeductions(s, R, both);
+    var beText;
+    var dedNow = Math.min(s.c80, 150000) + Math.min(s.d80, 100000) + Math.min(s.nps, 50000) + Math.min(s.hra, s.sal) + s.oded;
+    if (be.alreadyOld) {
+      beText = "With " + F.formatINRCompact(dedNow) + " of deductions, the <strong>old regime already wins</strong>. It stays ahead while your deductions stay high; if they fall, re-check.";
+    } else if (be.unreachable) {
+      beText = "At your income mix, the <strong>new regime wins even with very large deductions</strong>: no realistic deduction level flips the answer this year.";
+    } else {
+      beText = "The old regime starts winning only beyond <strong>" + F.formatINRCompact(dedNow + be.extra) +
+        "</strong> of total deductions: you are " + F.formatINRCompact(be.extra) + " short of the flip point.";
+    }
+    var ltcgRoom = Math.max(0, R.ltcgExemption - s.ltcg);
+    if (ltcgRoom > 0 && (s.ltcg > 0 || s.stcg > 0)) {
+      beText += " Also: <strong>" + F.formatINRCompact(ltcgRoom) + "</strong> of this year's ₹1.25 L equity-LTCG exemption is still unused.";
+    }
+    U.callout("callout", beText);
+
+    /* what-if chips */
+    var defs = whatIfDefs(s);
+    var chipHtml = '<div class="pc-chips">';
+    defs.forEach(function (d, i) {
+      var label;
+      if (d.active) {
+        label = d.label + " · applied";
+      } else {
+        var s2 = Object.assign({}, s);
+        d.apply(s2);
+        var b2 = computeBoth(s2, R);
+        var delta = bt.total - Math.min(b2.oldR.total, b2.newR.total);
+        label = d.label + (delta > 0 ? " · saves " + F.formatINRCompact(delta) : " · no change");
+      }
+      chipHtml += '<button type="button" class="pc-chip" data-wi="' + i + '" aria-pressed="' + d.active + '"' +
+        (d.active ? " disabled" : "") + ">" + label + "</button>";
+    });
+    chipHtml += "</div>";
+    $("whatifRow").innerHTML = chipHtml;
+    Array.prototype.forEach.call($("whatifRow").querySelectorAll("[data-wi]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var d = whatIfDefs(state)[+btn.dataset.wi];
+        if (d.active) return;
+        d.apply(state);
+        syncInputs();
+        render();
+      });
+    });
+
+    /* stacked bars */
+    U.legend("legend1", [
+      { color: C.invested, label: "Slab tax" },
+      { color: C.cat4, label: "STCG" },
+      { color: C.cat3, label: "LTCG & other" },
+      { color: C.cat5, label: "Surcharge" },
+      { color: C.other, label: "Cess" }
+    ]);
+    function segs(rr) {
+      return [
+        { label: "Slab tax", color: C.invested, value: rr.slabTaxPay },
+        { label: "STCG", color: C.cat4, value: rr.stcgTax },
+        { label: "LTCG & other", color: C.cat3, value: rr.ltcgTax + rr.oltgTax },
+        { label: "Surcharge", color: C.cat5, value: rr.surcharge },
+        { label: "Cess", color: C.other, value: rr.cess }
+      ];
+    }
+    U.mountBarChart("chartBars", {
+      height: 300,
+      rows: [{ x: "Old regime", segments: segs(both.oldR) }, { x: "New regime", segments: segs(both.newR) }],
+      ariaLabel: "Tax composition under old and new regimes",
+      tooltip: function (row) {
+        var tot = 0; row.segments.forEach(function (g) { tot += g.value; });
+        return { title: row.x + " · " + F.formatINRCompact(tot),
+          rows: row.segments.filter(function (g) { return g.value > 0; }).map(function (g) {
+            return { sw: g.color, label: g.label, value: F.formatINR(Math.round(g.value)) };
+          }) };
+      }
+    });
+
+    /* impatience card */
+    if (s.stcg > 0) {
+      var sHold = Object.assign({}, s, { ltcg: s.ltcg + s.stcg, stcg: 0 });
+      var bHold = computeBoth(sHold, R);
+      var heldTotal = Math.min(bHold.oldR.total, bHold.newR.total);
+      var cost = bt.total - heldTotal;
+      $("impatienceCard").hidden = false;
+      $("impatienceText").innerHTML = "Your " + F.formatINRCompact(s.stcg) +
+        " of equity gains booked within a year is taxed at " + F.formatPct(R.stcgPct, 0) +
+        ". Held past twelve months, the same gains would fall under the " + F.formatPct(R.ltcgPct, 1) +
+        " long-term rate with the ₹1.25 L exemption, and this year's bill would drop by <strong>" +
+        F.formatINR(Math.round(cost)) + "</strong>. Patience has a price tag; so does the lack of it.";
+    } else {
+      $("impatienceCard").hidden = true;
+    }
+
+    /* line-by-line table */
+    function inr0(x) { return F.formatINR(Math.round(x)); }
+    lastLines = [
+      ["Standard deduction", inr0(both.oldR.std), inr0(both.newR.std)],
+      ["Deductions allowed", inr0(both.oldR.ded), inr0(both.newR.ded)],
+      ["Income from house property", inr0(both.oldR.hp), inr0(both.newR.hp)],
+      ["Taxable income, slab rates", inr0(both.oldR.normalTaxable), inr0(both.newR.normalTaxable)],
+      ["Tax at slab rates, after rebate", inr0(both.oldR.slabTaxPay), inr0(both.newR.slabTaxPay)],
+      ["Equity STCG tax", inr0(both.oldR.stcgTax), inr0(both.newR.stcgTax)],
+      ["Equity LTCG tax", inr0(both.oldR.ltcgTax), inr0(both.newR.ltcgTax)],
+      ["Other LTCG tax", inr0(both.oldR.oltgTax), inr0(both.newR.oltgTax)],
+      ["Surcharge", inr0(both.oldR.surcharge), inr0(both.newR.surcharge)],
+      ["Health & education cess 4%", inr0(both.oldR.cess), inr0(both.newR.cess)],
+      ["<strong>Total tax</strong>", "<strong>" + inr0(both.oldR.total) + "</strong>", "<strong>" + inr0(both.newR.total) + "</strong>"]
+    ];
+    U.buildTable("schedTable", ["", "Old regime", "New regime"], lastLines);
+
+    U.assumptions("assumeChips", [
+      "FY " + s.fy + " rules as enacted · Budget 2026 made no rate changes",
+      "Resident individual, " + (s.age === "below" ? "below 60" : s.age === "senior" ? "aged 60 to 80" : "aged 80 plus"),
+      "New regime: ₹75k standard deduction, ₹60k rebate to ₹12 L slab income with marginal relief; rebate never applies to capital-gains tax",
+      "Equity: LTCG 12.5% above ₹1.25 L, STCG 20% · other LTCG 12.5% · debt-fund gains at slab",
+      "Unused basic exemption set against special-rate gains, costliest first",
+      "Surcharge above ₹50 L with capital-gains cap 15% and approximated marginal relief · cess 4%",
+      "TDS, advance tax, carry-forwards and business income not modelled"
+    ]);
+    url.write(s);
+  }
+
+  /* mode + chips + pairs */
+  function setFy(fy) {
+    state.fy = fy;
+    $("fy1").setAttribute("aria-pressed", fy === "2025-26");
+    $("fy2").setAttribute("aria-pressed", fy === "2026-27");
+    render();
+  }
+  $("fy1").addEventListener("click", function () { setFy("2025-26"); });
+  $("fy2").addEventListener("click", function () { setFy("2026-27"); });
+
+  url.read(state);
+  if (state.fy !== "2025-26" && state.fy !== "2026-27") state.fy = "2025-26";
+  if (["below", "senior", "super"].indexOf(state.age) < 0) state.age = "below";
+  if (["none", "self", "let"].indexOf(state.hpm) < 0) state.hpm = "none";
+
+  var ageChips = U.bindChips("ageChips", function (v) { state.age = v; render(); });
+  var hpChips = U.bindChips("hpChips", function (v) { state.hpm = v; render(); });
+
+  var pairs = {};
+  [["inSal", "slSal", "sal"], ["inEnps", "slEnps", "enps"], ["inRent", "slRent", "rent"],
+   ["inMtax", "slMtax", "mtax"], ["inHint", "slHint", "hint"], ["inLtcg", "slLtcg", "ltcg"],
+   ["inStcg", "slStcg", "stcg"], ["inOltg", "slOltg", "oltg"], ["inDbt", "slDbt", "dbt"],
+   ["inInt", "slInt", "int"], ["inDiv", "slDiv", "div"], ["inC80", "slC80", "c80"],
+   ["inD80", "slD80", "d80"], ["inNps", "slNps", "nps"], ["inHra", "slHra", "hra"],
+   ["inOded", "slOded", "oded"]
+  ].forEach(function (b) {
+    pairs[b[2]] = U.bindPair(b[0], b[1], function (v) { state[b[2]] = v; render(); });
+  });
+
+  function syncInputs() {
+    Object.keys(pairs).forEach(function (k) { pairs[k].set(state[k]); });
+    ageChips.sync(state.age);
+    hpChips.sync(state.hpm);
+  }
+  syncInputs();
+  $("fy1").setAttribute("aria-pressed", state.fy === "2025-26");
+  $("fy2").setAttribute("aria-pressed", state.fy === "2026-27");
+
+  U.csvButton("btnCsv", {
+    filename: "prospar-income-tax-estimate.csv",
+    headers: function () { return ["Line item", "Old regime", "New regime"]; },
+    rows: function () {
+      return lastLines.map(function (r) {
+        return r.map(function (c) { return '"' + String(c).replace(/<[^>]+>/g, "").replace(/,/g, "") + '"'; });
+      });
+    }
+  });
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", "tableCard");
+
+  render();
+})();
+</script>
+<a class="pc-wa-float" href="https://wa.me/919871001868?text=I%20need%20investment%20advice" target="_blank" rel="noopener" aria-label="WhatsApp Nikesh Kumar: Consult Now"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 1.8a8.2 8.2 0 1 1-4.2 15.3l-.3-.2-2.9.8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8Zm-3.1 4c-.2 0-.5.1-.7.4-.2.3-.9.9-.9 2.1s.9 2.5 1 2.6c.1.2 1.8 2.9 4.4 3.9 2.2.9 2.6.7 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.1-.2 0-.4.1-.5l.6-.7c.2-.2.2-.4.1-.6L9.6 8.2c-.1-.3-.3-.4-.5-.4h-.2Z"/></svg><span>Consult Now</span></a>
+<script src="assets/prospar-fx.js" defer></script>
+</body>
+</html>
