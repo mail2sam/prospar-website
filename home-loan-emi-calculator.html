@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Home Loan EMI Calculator | Prospar Consulting</title>
-<meta name="description" content="Home loan EMI with total interest, a full amortization schedule, and prepayment savings: all live and interactive.">
+<title>Loan EMI Calculator | Prospar Consulting</title>
+<meta name="description" content="Home and vehicle loan EMI with total interest, a full amortization schedule, and prepayment savings: all live and interactive.">
 <link rel="stylesheet" href="assets/prospar-theme.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <script src="assets/finance-engine.js"></script>
@@ -18,27 +18,35 @@
       <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
       <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
     </a>
-    <nav class="pc-header__nav"><a href="tools.html" aria-current="page">Calculators</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="insights.html">Insights</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="risk-profile.html">Risk Profile</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="pms-aif.html">PMS &amp; AIF</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="about.html">About</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="faq.html">FAQ</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="contact.html">Contact</a></nav>
+    <nav class="pc-header__nav"><a href="tools.html" aria-current="page">Calculators</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="insights.html">Insights</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="risk-profile.html">Risk Profile</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="income-tax-calculator.html">Tax</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="pms-aif.html">PMS &amp; AIF</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="about.html">About</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="faq.html">FAQ</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="contact.html">Contact</a></nav>
   </div>
 </header>
 
 <main class="pc-page">
-  <div class="pc-crumb"><a href="tools.html">Calculators</a> / Home Loan EMI Calculator</div>
+  <div class="pc-crumb"><a href="tools.html">Calculators</a> / Loan EMI Calculator</div>
   <div class="pc-title">
-    <h1>Home Loan EMI Calculator</h1>
-    <p>Your EMI is only half the story: see the total interest, the year-by-year
-       amortization, and how much a small monthly prepayment saves.</p>
+    <h1>Loan EMI Calculator</h1>
+    <p>Home or vehicle: your EMI is only half the story. See the total interest, the
+       year-by-year amortization, and how much a small monthly prepayment saves.</p>
   </div>
 
   <div class="pc-tool">
     <aside class="pc-tool__inputs">
       <div class="pc-card">
         <div class="pc-field">
-          <div class="pc-field__row"><label class="pc-field__label" for="inAmount">Loan amount</label></div>
+          <div class="pc-chips" id="typeChips">
+            <button type="button" class="pc-chip" data-val="home">Home loan</button>
+            <button type="button" class="pc-chip" data-val="vehicle">Vehicle loan</button>
+          </div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inAmount">Loan amount</label>
+            <span class="pc-field__hint" id="amtHint">after down payment</span></div>
           <div class="pc-numwrap"><span class="affix">₹</span>
             <input type="number" id="inAmount" min="500000" max="50000000" step="100000" value="5000000" inputmode="numeric"></div>
           <input type="range" class="pc-slider" id="slAmount" min="500000" max="50000000" step="100000" value="5000000" aria-label="Loan amount slider">
-          <div class="pc-range-ends"><span>₹5&nbsp;L</span><span>₹5&nbsp;Cr</span></div>
+          <div class="pc-range-ends" id="amtEnds"><span>₹5&nbsp;L</span><span>₹5&nbsp;Cr</span></div>
         </div>
 
         <div class="pc-field">
@@ -56,7 +64,7 @@
             <input type="number" id="inYears" min="1" max="30" step="1" value="20" inputmode="numeric">
             <span class="affix">years</span></div>
           <input type="range" class="pc-slider" id="slYears" min="1" max="30" step="1" value="20" aria-label="Loan tenure slider">
-          <div class="pc-range-ends"><span>1&nbsp;yr</span><span>30&nbsp;yrs</span></div>
+          <div class="pc-range-ends" id="yrEnds"><span>1&nbsp;yr</span><span>30&nbsp;yrs</span></div>
         </div>
 
         <div class="pc-field" style="margin-bottom:6px">
@@ -124,6 +132,7 @@
         <a href="tools.html">Calculators</a>
         <a href="insights.html">Insights</a>
         <a href="risk-profile.html">Risk Profile</a>
+        <a href="income-tax-calculator.html">Income Tax</a>
         <a href="pms-aif.html">PMS &amp; AIF</a>
         <a href="how-we-work.html">How We Work</a>
         <a href="faq.html">FAQ</a>
@@ -150,13 +159,24 @@
   "use strict";
   var F = ProFin, U = PCUI, $ = U.$;
 
-  var state = { amount: 5000000, rate: 8.5, years: 20, extra: 0 };
+  var state = { type: "home", amount: 5000000, rate: 8.5, years: 20, extra: 0 };
   var url = U.urlState({
-    amount: { p: "a", lo: 500000, hi: 50000000, dflt: 5000000 },
-    rate: { p: "r", lo: 6, hi: 15, dflt: 8.5 },
+    type: { p: "t", str: true, dflt: "home" },
+    amount: { p: "a", lo: 100000, hi: 50000000, dflt: 5000000 },
+    rate: { p: "r", lo: 6, hi: 16, dflt: 8.5 },
     years: { p: "y", lo: 1, hi: 30, dflt: 20 },
     extra: { p: "x", lo: 0, hi: 100000, dflt: 0 }
   });
+
+  /* Per-type input ranges and defaults; the maths is identical. */
+  var TYPES = {
+    home: { amount: [500000, 50000000, 100000, 5000000], rate: [6, 15, 8.5], years: [1, 30, 20],
+            amtEnds: "<span>₹5&nbsp;L</span><span>₹5&nbsp;Cr</span>", yrEnds: "<span>1&nbsp;yr</span><span>30&nbsp;yrs</span>",
+            amtHint: "principal borrowed" },
+    vehicle: { amount: [100000, 10000000, 50000, 960000], rate: [7, 16, 9.5], years: [1, 8, 5],
+            amtEnds: "<span>₹1&nbsp;L</span><span>₹1&nbsp;Cr</span>", yrEnds: "<span>1&nbsp;yr</span><span>8&nbsp;yrs</span>",
+            amtHint: "on-road price minus down payment" }
+  };
 
   var lastYearly = [];
 
@@ -236,20 +256,53 @@
       "Fixed " + F.formatPct(s.rate, 2) + " rate for the full tenure",
       s.extra > 0 ? "Extra " + F.formatINR(s.extra) + "/month goes straight to principal (EMI unchanged, tenure shrinks)" : "No prepayments",
       "Processing fees & insurance not included",
-      "Interest may qualify under Sec 24(b), principal under 80C (old regime)"
+      s.type === "home" ? "Interest may qualify under Sec 24(b), principal under 80C (old regime)"
+                        : "Personal-use vehicle loans carry no income-tax deduction"
     ]);
     url.write(s);
   }
 
   url.read(state);
+  if (!TYPES[state.type]) state.type = "home";
   var pA = U.bindPair("inAmount", "slAmount", function (v) { state.amount = v; render(); });
   var pR = U.bindPair("inRate", "slRate", function (v) { state.rate = v; render(); });
   var pY = U.bindPair("inYears", "slYears", function (v) { state.years = v; render(); });
   var pX = U.bindPair("inExtra", "slExtra", function (v) { state.extra = v; render(); });
-  pA.set(state.amount); pR.set(state.rate); pY.set(state.years); pX.set(state.extra);
+
+  function setBounds(numId, slId, cfg) {
+    [$(numId), $(slId)].forEach(function (el) {
+      el.min = cfg[0]; el.max = cfg[1];
+      if (cfg.length > 3) el.step = cfg[2];
+    });
+  }
+  function applyType(t, reset) {
+    var T = TYPES[t];
+    setBounds("inAmount", "slAmount", T.amount);
+    setBounds("inRate", "slRate", [T.rate[0], T.rate[1]]);
+    setBounds("inYears", "slYears", [T.years[0], T.years[1]]);
+    $("amtEnds").innerHTML = T.amtEnds;
+    $("yrEnds").innerHTML = T.yrEnds;
+    $("amtHint").textContent = T.amtHint;
+    if (reset) {
+      state.amount = T.amount[3]; state.rate = T.rate[2]; state.years = T.years[2];
+    } else {
+      state.amount = Math.min(T.amount[1], Math.max(T.amount[0], state.amount));
+      state.rate = Math.min(T.rate[1], Math.max(T.rate[0], state.rate));
+      state.years = Math.min(T.years[1], Math.max(T.years[0], state.years));
+    }
+    pA.set(state.amount); pR.set(state.rate); pY.set(state.years);
+    typeChips.sync(t);
+  }
+  var typeChips = U.bindChips("typeChips", function (v) {
+    state.type = v;
+    applyType(v, true);
+    render();
+  });
+  applyType(state.type, false);
+  pX.set(state.extra);
 
   U.csvButton("btnCsv", {
-    filename: "prospar-home-loan-schedule.csv",
+    filename: "prospar-loan-emi-schedule.csv",
     headers: function () { return ["Year", "Principal Paid", "Interest Paid", "Total Paid", "Outstanding Balance"]; },
     rows: function () {
       return lastYearly.map(function (r) {

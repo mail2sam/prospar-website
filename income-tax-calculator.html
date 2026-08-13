@@ -18,12 +18,12 @@
       <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
       <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
     </a>
-    <nav class="pc-header__nav"><a href="tools.html" aria-current="page">Calculators</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="insights.html">Insights</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="risk-profile.html">Risk Profile</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="pms-aif.html">PMS &amp; AIF</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="about.html">About</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="faq.html">FAQ</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="contact.html">Contact</a></nav>
+    <nav class="pc-header__nav"><a href="tools.html">Calculators</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="insights.html">Insights</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="risk-profile.html">Risk Profile</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="income-tax-calculator.html" aria-current="page">Tax</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="pms-aif.html">PMS &amp; AIF</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="about.html">About</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="faq.html">FAQ</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="contact.html">Contact</a></nav>
   </div>
 </header>
 
 <main class="pc-page">
-  <div class="pc-crumb"><a href="tools.html">Calculators</a> / Income Tax Calculator</div>
+  <div class="pc-crumb"><a href="index.html">Home</a> / Income Tax</div>
   <div class="pc-title">
     <h1>Income Tax Calculator</h1>
     <p>Salary, house property, capital gains and other income, computed under both regimes
@@ -49,6 +49,18 @@
           </div>
         </div>
 
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label">Which incomes apply to you?</label>
+            <span class="pc-field__hint">pick all that apply</span></div>
+          <div class="pc-chips" id="headChips">
+            <button type="button" class="pc-chip" data-head="s" aria-pressed="true">Salary</button>
+            <button type="button" class="pc-chip" data-head="h" aria-pressed="false">House property</button>
+            <button type="button" class="pc-chip" data-head="c" aria-pressed="false">Capital gains</button>
+            <button type="button" class="pc-chip" data-head="o" aria-pressed="false">Other sources</button>
+          </div>
+        </div>
+
+        <div id="secSal">
         <div class="pc-card__title" style="margin:20px 0 12px">Salary</div>
         <div class="pc-field">
           <div class="pc-field__row"><label class="pc-field__label" for="inSal">Gross annual salary</label>
@@ -67,6 +79,9 @@
           <div class="pc-range-ends"><span>0</span><span>₹5&nbsp;L</span></div>
         </div>
 
+        </div>
+
+        <div id="secHp">
         <div class="pc-card__title" style="margin:20px 0 12px">House property</div>
         <div class="pc-field">
           <div class="pc-chips" id="hpChips">
@@ -101,6 +116,9 @@
           </div>
         </div>
 
+        </div>
+
+        <div id="secCg">
         <div class="pc-card__title" style="margin:20px 0 12px">Capital gains</div>
         <div class="pc-field">
           <div class="pc-field__row"><label class="pc-field__label" for="inLtcg">Equity LTCG, held over 1 yr</label>
@@ -133,6 +151,9 @@
           <div class="pc-range-ends"><span>0</span><span>₹2&nbsp;Cr</span></div>
         </div>
 
+        </div>
+
+        <div id="secOth">
         <div class="pc-card__title" style="margin:20px 0 12px">Other sources</div>
         <div class="pc-field">
           <div class="pc-field__row"><label class="pc-field__label" for="inInt">Interest income</label>
@@ -150,6 +171,9 @@
           <div class="pc-range-ends"><span>0</span><span>₹50&nbsp;L</span></div>
         </div>
 
+        </div>
+
+        <div id="secDed">
         <div class="pc-card__title" style="margin:20px 0 12px">Deductions, old regime</div>
         <div class="pc-field">
           <div class="pc-field__row"><label class="pc-field__label" for="inC80">80C: PF, ELSS, LIC, principal</label>
@@ -188,6 +212,7 @@
             <input type="number" id="inOded" min="0" max="500000" step="1000" value="0" inputmode="numeric"></div>
           <input type="range" class="pc-slider" id="slOded" min="0" max="500000" step="1000" value="0" aria-label="Other deductions slider">
           <div class="pc-range-ends"><span>0</span><span>₹5&nbsp;L</span></div>
+        </div>
         </div>
       </div>
     </aside>
@@ -266,6 +291,7 @@
         <a href="tools.html">Calculators</a>
         <a href="insights.html">Insights</a>
         <a href="risk-profile.html">Risk Profile</a>
+        <a href="income-tax-calculator.html">Income Tax</a>
         <a href="pms-aif.html">PMS &amp; AIF</a>
         <a href="how-we-work.html">How We Work</a>
         <a href="faq.html">FAQ</a>
@@ -332,8 +358,30 @@
     d80: { p: "d80", lo: 0, hi: 100000, dflt: 25000 },
     nps: { p: "nps", lo: 0, hi: 50000, dflt: 0 },
     hra: { p: "hra", lo: 0, hi: 1200000, dflt: 0 },
-    oded: { p: "oded", lo: 0, hi: 500000, dflt: 0 }
+    oded: { p: "oded", lo: 0, hi: 500000, dflt: 0 },
+    hd: { p: "hd", str: true, dflt: "" }
   });
+
+  /* Heads of income: sections open only for what applies to the visitor. */
+  var heads = { s: true, h: false, c: false, o: false };
+  function headsToStr() {
+    return ["s", "h", "c", "o"].filter(function (k) { return heads[k]; }).join("");
+  }
+  function dedVisible() { return heads.s || heads.h || heads.o; }
+  function effState(s) {
+    var e = Object.assign({}, s);
+    if (!heads.s) { e.sal = 0; e.enps = 0; }
+    if (!heads.h) { e.hpm = "none"; }
+    if (!heads.c) { e.ltcg = 0; e.stcg = 0; e.oltg = 0; e.dbt = 0; }
+    if (!heads.o) { e.int = 0; e.div = 0; }
+    if (!dedVisible()) { e.c80 = 0; e.d80 = 0; e.nps = 0; e.hra = 0; e.oded = 0; }
+    return e;
+  }
+  function syncHeadChips() {
+    Array.prototype.forEach.call(document.querySelectorAll("#headChips [data-head]"), function (b) {
+      b.setAttribute("aria-pressed", String(!!heads[b.dataset.head]));
+    });
+  }
 
   function bandTax(taxable, bands) {
     var tax = 0, prev = 0;
@@ -473,13 +521,20 @@
 
   function render() {
     var s = state, C = U.color(), R = RULES[s.fy];
-    var both = computeBoth(s, R);
+    var e = effState(s);
+    var both = computeBoth(e, R);
     var bt = both.better, wt = both.worse;
     var saves = wt.total - bt.total;
-    var marg = marginalRate(s, R);
+    var marg = marginalRate(e, R);
 
+    $("secSal").hidden = !heads.s;
+    $("secHp").hidden = !heads.h;
+    $("secCg").hidden = !heads.c;
+    $("secOth").hidden = !heads.o;
+    $("secDed").hidden = !dedVisible();
     $("hpRentBlock").hidden = s.hpm !== "let";
     $("hpLoanBlock").hidden = s.hpm === "none";
+    s.hd = headsToStr();
 
     /* stats */
     var cards = [
@@ -491,16 +546,16 @@
       { label: "Effective vs marginal", value: F.formatPct(bt.effective, 1),
         sub: "next ₹100 of income taxed ₹" + marg.toFixed(0) }
     ];
-    if (s.sal > 0) {
-      cards.push({ label: "Monthly in-hand, approx", value: F.formatINRCompact(Math.max(0, (s.sal - bt.total) / 12)),
+    if (e.sal > 0) {
+      cards.push({ label: "Monthly in-hand, approx", value: F.formatINRCompact(Math.max(0, (e.sal - bt.total) / 12)),
         sub: "if all tax is met from salary" });
     }
     U.renderStats("statsRow", cards);
 
     /* verdict callout */
-    var be = breakevenDeductions(s, R, both);
+    var be = breakevenDeductions(e, R, both);
     var beText;
-    var dedNow = Math.min(s.c80, 150000) + Math.min(s.d80, 100000) + Math.min(s.nps, 50000) + Math.min(s.hra, s.sal) + s.oded;
+    var dedNow = Math.min(e.c80, 150000) + Math.min(e.d80, 100000) + Math.min(e.nps, 50000) + Math.min(e.hra, e.sal) + e.oded;
     if (be.alreadyOld) {
       beText = "With " + F.formatINRCompact(dedNow) + " of deductions, the <strong>old regime already wins</strong>. It stays ahead while your deductions stay high; if they fall, re-check.";
     } else if (be.unreachable) {
@@ -509,35 +564,38 @@
       beText = "The old regime starts winning only beyond <strong>" + F.formatINRCompact(dedNow + be.extra) +
         "</strong> of total deductions: you are " + F.formatINRCompact(be.extra) + " short of the flip point.";
     }
-    var ltcgRoom = Math.max(0, R.ltcgExemption - s.ltcg);
-    if (ltcgRoom > 0 && (s.ltcg > 0 || s.stcg > 0)) {
+    var ltcgRoom = Math.max(0, R.ltcgExemption - e.ltcg);
+    if (ltcgRoom > 0 && (e.ltcg > 0 || e.stcg > 0)) {
       beText += " Also: <strong>" + F.formatINRCompact(ltcgRoom) + "</strong> of this year's ₹1.25 L equity-LTCG exemption is still unused.";
     }
     U.callout("callout", beText);
 
-    /* what-if chips */
-    var defs = whatIfDefs(s);
+    /* what-if chips: only the ones relevant to the selected heads */
+    var defs = whatIfDefs(s).filter(function (d) {
+      if (d.key === "hold") return heads.c;
+      return dedVisible();
+    });
     var chipHtml = '<div class="pc-chips">';
-    defs.forEach(function (d, i) {
+    defs.forEach(function (d) {
       var label;
       if (d.active) {
         label = d.label + " · applied";
       } else {
-        var s2 = Object.assign({}, s);
+        var s2 = Object.assign({}, e);
         d.apply(s2);
         var b2 = computeBoth(s2, R);
         var delta = bt.total - Math.min(b2.oldR.total, b2.newR.total);
         label = d.label + (delta > 0 ? " · saves " + F.formatINRCompact(delta) : " · no change");
       }
-      chipHtml += '<button type="button" class="pc-chip" data-wi="' + i + '" aria-pressed="' + d.active + '"' +
+      chipHtml += '<button type="button" class="pc-chip" data-wi="' + d.key + '" aria-pressed="' + d.active + '"' +
         (d.active ? " disabled" : "") + ">" + label + "</button>";
     });
     chipHtml += "</div>";
     $("whatifRow").innerHTML = chipHtml;
     Array.prototype.forEach.call($("whatifRow").querySelectorAll("[data-wi]"), function (btn) {
       btn.addEventListener("click", function () {
-        var d = whatIfDefs(state)[+btn.dataset.wi];
-        if (d.active) return;
+        var d = whatIfDefs(state).filter(function (x) { return x.key === btn.dataset.wi; })[0];
+        if (!d || d.active) return;
         d.apply(state);
         syncInputs();
         render();
@@ -575,13 +633,13 @@
     });
 
     /* impatience card */
-    if (s.stcg > 0) {
-      var sHold = Object.assign({}, s, { ltcg: s.ltcg + s.stcg, stcg: 0 });
+    if (e.stcg > 0) {
+      var sHold = Object.assign({}, e, { ltcg: e.ltcg + e.stcg, stcg: 0 });
       var bHold = computeBoth(sHold, R);
       var heldTotal = Math.min(bHold.oldR.total, bHold.newR.total);
       var cost = bt.total - heldTotal;
       $("impatienceCard").hidden = false;
-      $("impatienceText").innerHTML = "Your " + F.formatINRCompact(s.stcg) +
+      $("impatienceText").innerHTML = "Your " + F.formatINRCompact(e.stcg) +
         " of equity gains booked within a year is taxed at " + F.formatPct(R.stcgPct, 0) +
         ". Held past twelve months, the same gains would fall under the " + F.formatPct(R.ltcgPct, 1) +
         " long-term rate with the ₹1.25 L exemption, and this year's bill would drop by <strong>" +
@@ -633,6 +691,27 @@
   if (state.fy !== "2025-26" && state.fy !== "2026-27") state.fy = "2025-26";
   if (["below", "senior", "super"].indexOf(state.age) < 0) state.age = "below";
   if (["none", "self", "let"].indexOf(state.hpm) < 0) state.hpm = "none";
+
+  /* heads: restore from the URL, or infer from any values already present */
+  if (state.hd) {
+    heads.s = state.hd.indexOf("s") > -1;
+    heads.h = state.hd.indexOf("h") > -1;
+    heads.c = state.hd.indexOf("c") > -1;
+    heads.o = state.hd.indexOf("o") > -1;
+  } else {
+    heads.s = true;
+    heads.h = state.hpm !== "none";
+    heads.c = (state.ltcg + state.stcg + state.oltg + state.dbt) > 0;
+    heads.o = (state.int + state.div) > 0;
+  }
+  syncHeadChips();
+  Array.prototype.forEach.call(document.querySelectorAll("#headChips [data-head]"), function (b) {
+    b.addEventListener("click", function () {
+      heads[b.dataset.head] = !heads[b.dataset.head];
+      syncHeadChips();
+      render();
+    });
+  });
 
   var ageChips = U.bindChips("ageChips", function (v) { state.age = v; render(); });
   var hpChips = U.bindChips("hpChips", function (v) { state.hpm = v; render(); });

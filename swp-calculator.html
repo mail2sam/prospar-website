@@ -18,7 +18,7 @@
       <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
       <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
     </a>
-    <nav class="pc-header__nav"><a href="tools.html" aria-current="page">Calculators</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="insights.html">Insights</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="risk-profile.html">Risk Profile</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="pms-aif.html">PMS &amp; AIF</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="about.html">About</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="faq.html">FAQ</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="contact.html">Contact</a></nav>
+    <nav class="pc-header__nav"><a href="tools.html" aria-current="page">Calculators</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="insights.html">Insights</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="risk-profile.html">Risk Profile</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="income-tax-calculator.html">Tax</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="pms-aif.html">PMS &amp; AIF</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="about.html">About</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="faq.html">FAQ</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="contact.html">Contact</a></nav>
   </div>
 </header>
 
@@ -81,6 +81,14 @@
             <span class="affix">% p.a.</span></div>
           <input type="range" class="pc-slider" id="slRate" min="5" max="14" step="0.5" value="9" aria-label="Expected return slider">
           <div class="pc-range-ends"><span>5%</span><span>14%</span></div>
+        </div>
+
+        <div class="pc-field">
+          <div class="pc-field__row"><label class="pc-field__label" for="inAge">Your current age</label>
+            <span class="pc-field__hint">optional: adds an age view</span></div>
+          <div class="pc-numwrap">
+            <input type="number" id="inAge" min="0" max="80" step="1" placeholder="—" inputmode="numeric">
+            <span class="affix">years</span></div>
         </div>
 
         <div class="pc-field" style="margin-bottom:6px">
@@ -156,6 +164,7 @@
         <a href="tools.html">Calculators</a>
         <a href="insights.html">Insights</a>
         <a href="risk-profile.html">Risk Profile</a>
+        <a href="income-tax-calculator.html">Income Tax</a>
         <a href="pms-aif.html">PMS &amp; AIF</a>
         <a href="how-we-work.html">How We Work</a>
         <a href="faq.html">FAQ</a>
@@ -183,13 +192,14 @@
   var F = ProFin, U = PCUI, $ = U.$;
 
   var state = { corpus: 10000000, wd: 50000, stepUp: 5, years: 25, rate: 9,
-    adjust: false, inflation: 6 };
+    age: 0, adjust: false, inflation: 6 };
   var url = U.urlState({
     corpus: { p: "c", lo: 1000000, hi: 500000000, dflt: 10000000 },
     wd: { p: "w", lo: 5000, hi: 1000000, dflt: 50000 },
     stepUp: { p: "su", lo: 0, hi: 15, dflt: 5 },
     years: { p: "y", lo: 5, hi: 40, dflt: 25 },
     rate: { p: "r", lo: 5, hi: 14, dflt: 9 },
+    age: { p: "a", lo: 0, hi: 80, dflt: 0 },
     adjust: { p: "adj", bool: true, dflt: false },
     inflation: { p: "inf", lo: 3, hi: 10, dflt: 6 }
   });
@@ -210,10 +220,14 @@
     var finalMonthly = sim.rows.length ? sim.rows[sim.rows.length - 1].monthlyWithdrawal : s.wd;
     lastRows = sim.rows;
 
+    var hasAge = s.age >= 40;
     U.renderStats("statsRow", [
       { hero: true, label: "Money lasts",
-        value: depleted ? "Runs out in year " + depYear : "Full " + s.years + " years ✓",
-        sub: "withdrawing " + F.formatINR(s.wd) + "/month to start" },
+        value: depleted
+          ? (hasAge ? "Till age " + (s.age + depYear) : "Runs out in year " + depYear)
+          : (hasAge ? "Past age " + (s.age + s.years) + " ✓" : "Full " + s.years + " years ✓"),
+        sub: (depleted && hasAge ? "runs out in year " + depYear + " · " : "") +
+             "withdrawing " + F.formatINR(s.wd) + "/month to start" },
       { label: "Total withdrawn", dot: C.gains, value: F.formatINRCompact(sim.totalWithdrawn),
         sub: (sim.totalWithdrawn / s.corpus).toFixed(1) + "× of your corpus" },
       { label: "Corpus left after " + s.years + " yrs", dot: C.invested,
@@ -290,10 +304,11 @@
     });
 
     U.buildTable("schedTable",
-      ["Year", "Monthly withdrawal", "Withdrawn in the year", "Corpus at year end"],
+      (hasAge ? ["Year", "Age"] : ["Year"]).concat(["Monthly withdrawal", "Withdrawn in the year", "Corpus at year end"]),
       lastRows.map(function (r) {
-        return [r.year, F.formatINR(r.monthlyWithdrawal), F.formatINR(r.withdrawnThisYear),
-          F.formatINR(r.closing)];
+        var row = hasAge ? [r.year, s.age + r.year] : [r.year];
+        return row.concat([F.formatINR(r.monthlyWithdrawal), F.formatINR(r.withdrawnThisYear),
+          F.formatINR(r.closing)]);
       }));
 
     U.assumptions("assumeChips", [
@@ -316,6 +331,12 @@
   var pRate = U.bindPair("inRate", "slRate", function (v) { state.rate = v; render(); });
   var pInfl = U.bindPair("inInfl", "slInfl", function (v) { state.inflation = v; render(); });
   U.bindToggle("tgInflation", function (v) { state.adjust = v; $("inflationBlock").hidden = !v; render(); });
+  $("inAge").addEventListener("input", function () {
+    var v = parseInt(this.value, 10);
+    state.age = isFinite(v) ? Math.min(80, Math.max(0, v)) : 0;
+    render();
+  });
+  if (state.age >= 40) $("inAge").value = state.age;
 
   pCorpus.set(state.corpus); pWd.set(state.wd); pStep.set(state.stepUp);
   pYears.set(state.years); pRate.set(state.rate); pInfl.set(state.inflation);
