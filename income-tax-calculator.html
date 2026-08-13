@@ -198,8 +198,9 @@
           <input type="range" class="pc-slider" id="slNps" min="0" max="50000" step="5000" value="0" aria-label="NPS 80CCD 1B slider">
           <div class="pc-range-ends"><span>0</span><span>₹50k</span></div>
         </div>
-        <div class="pc-field">
-          <div class="pc-field__row"><label class="pc-field__label" for="inHra">HRA exemption claimed</label></div>
+        <div class="pc-field" id="fldHra">
+          <div class="pc-field__row"><label class="pc-field__label" for="inHra">HRA exemption claimed</label>
+            <span class="pc-field__hint">salary income only</span></div>
           <div class="pc-numwrap"><span class="affix">₹</span>
             <input type="number" id="inHra" min="0" max="1200000" step="5000" value="0" inputmode="numeric"></div>
           <input type="range" class="pc-slider" id="slHra" min="0" max="1200000" step="5000" value="0" aria-label="HRA exemption slider">
@@ -370,7 +371,7 @@
   function dedVisible() { return heads.s || heads.h || heads.o; }
   function effState(s) {
     var e = Object.assign({}, s);
-    if (!heads.s) { e.sal = 0; e.enps = 0; }
+    if (!heads.s) { e.sal = 0; e.enps = 0; e.hra = 0; }
     if (!heads.h) { e.hpm = "none"; }
     if (!heads.c) { e.ltcg = 0; e.stcg = 0; e.oltg = 0; e.dbt = 0; }
     if (!heads.o) { e.int = 0; e.div = 0; }
@@ -532,6 +533,7 @@
     $("secCg").hidden = !heads.c;
     $("secOth").hidden = !heads.o;
     $("secDed").hidden = !dedVisible();
+    $("fldHra").hidden = !heads.s;
     $("hpRentBlock").hidden = s.hpm !== "let";
     $("hpLoanBlock").hidden = s.hpm === "none";
     s.hd = headsToStr();

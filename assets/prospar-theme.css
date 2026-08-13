@@ -1060,3 +1060,16 @@ details[open] > *:not(summary) { animation: pc-fade-up .32s ease both; }
 @media (prefers-reduced-motion: reduce) {
   .pc-btn--shine::after { animation: none; }
 }
+
+/* Calculator card icons: line icons in a soft tile, invert on hover */
+.pc-toolcard__icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: #eef3f8; color: var(--pc-navy);
+  display: flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+  margin-bottom: 2px;
+  transition: background .25s ease, color .25s ease, transform .25s ease;
+}
+.pc-toolcard__icon svg { width: 22px; height: 22px; display: block; }
+.pc-toolcard__icon .g { stroke: var(--pc-gold); }
+a.pc-toolcard:hover .pc-toolcard__icon { background: var(--pc-navy); color: #fff; transform: scale(1.06); }
