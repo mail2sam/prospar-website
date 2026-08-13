@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Investor Risk Profile | Prospar Consulting</title>
+<meta name="description" content="A 15-question self-assessment of your ability and willingness to take investment risk, with a shareable, printable report and the product ladder that fits your profile.">
+<link rel="stylesheet" href="assets/prospar-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="assets/finance-engine.js"></script>
+<script src="assets/prospar-ui.js"></script>
+<style>
+  .rp-q { margin: 0 0 22px; }
+  .rp-q__text { font-weight: 700; color: var(--pc-navy); margin: 0 0 2px; font-size: 15.5px; }
+  .rp-q__why { font-size: 13px; color: var(--pc-muted); margin: 0 0 10px; }
+  .rp-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  .rp-opt {
+    border: 1.5px solid var(--pc-line); background: #fbfcfe; border-radius: 9px;
+    padding: 10px 12px; font: inherit; font-size: 13.5px; color: var(--pc-ink-2);
+    cursor: pointer; text-align: left; line-height: 1.35;
+    transition: border-color .18s ease, background .18s ease, transform .18s ease, box-shadow .18s ease;
+  }
+  .rp-opt:hover { border-color: var(--pc-navy); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(13,34,55,.08); }
+  .rp-opt[aria-pressed="true"] {
+    border-color: var(--pc-navy); background: var(--pc-navy); color: #fff; font-weight: 600;
+  }
+  .rp-progress { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .rp-progress__track { flex: 1; min-width: 160px; height: 9px; border-radius: 999px; background: #e8edf3; overflow: hidden; }
+  .rp-progress__fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--pc-navy), var(--pc-gold)); width: 0; transition: width .3s ease; }
+  .rp-score { margin: 12px 0; }
+  .rp-score__row { display: flex; justify-content: space-between; font-size: 13.5px; color: var(--pc-ink-2); margin-bottom: 5px; }
+  .rp-score__track { height: 12px; border-radius: 999px; background: #eef1f5; overflow: hidden; }
+  .rp-score__fill { height: 100%; border-radius: 999px; background: var(--pc-navy); transition: width .5s cubic-bezier(.2,.7,.3,1); }
+  .rp-ladder { list-style: none; margin: 14px 0 0; padding: 0; }
+  .rp-ladder li {
+    border: 1px solid var(--pc-line); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+    display: flex; gap: 12px; align-items: baseline; background: #fbfcfe;
+  }
+  .rp-ladder li.on { border-color: var(--pc-gold); background: #fdf9ec; box-shadow: 0 4px 16px rgba(201,162,39,.15); }
+  .rp-ladder .rung { font-weight: 800; color: var(--pc-navy); white-space: nowrap; font-size: 13px; }
+  .rp-ladder .what { font-size: 13.5px; color: var(--pc-ink-2); line-height: 1.5; }
+  .rp-ladder li.on .here { color: var(--pc-gold-ink); font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+  /* Print: once the report exists (body.rp-done), print only the report */
+  @media print {
+    body.rp-done .rp-form-wrap, .pc-header__nav, .rp-actions-screen { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="pc-header">
+  <div class="pc-header__inner">
+    <a class="pc-logo" href="index.html">
+      <img class="pc-logo__img" src="assets/prospar-logo.svg" alt="Prospar Consulting logo">
+      <span class="pc-logo__name">Prospar<small>Consulting LLP</small></span>
+    </a>
+    <nav class="pc-header__nav"><a href="tools.html">Calculators</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="insights.html">Insights</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="risk-profile.html" aria-current="page">Risk Profile</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="pms-aif.html">PMS &amp; AIF</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="about.html">About</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="faq.html">FAQ</a><span style="opacity:.5;margin:0 10px">&middot;</span><a href="contact.html">Contact</a></nav>
+  </div>
+</header>
+
+<main class="pc-page" style="max-width:980px">
+  <div class="pc-crumb"><a href="index.html">Home</a> / Risk Profile</div>
+  <div class="pc-title">
+    <h1>Assess your risk profile</h1>
+    <p>Fifteen quick taps: your ability to take risk, your willingness to live with it, and the
+       products that genuinely fit. You get a shareable report you can print with our compliments.
+       There are no right answers, only honest ones: nothing you enter leaves your browser.</p>
+  </div>
+
+  <div class="rp-form-wrap">
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">A · Your ability to take risk</div>
+      <p style="margin:-6px 0 18px;color:var(--pc-muted);font-size:13.5px">What your finances can absorb, regardless of how brave you feel.</p>
+      <div id="secA"></div>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">B · Your willingness to take risk</div>
+      <p style="margin:-6px 0 18px;color:var(--pc-muted);font-size:13.5px">What your temperament can hold on to when markets misbehave.</p>
+      <div id="secB"></div>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">C · Knowledge &amp; experience</div>
+      <p style="margin:-6px 0 18px;color:var(--pc-muted);font-size:13.5px">Decides which products suit you; it never changes your risk category.</p>
+      <div id="secC"></div>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">D · Optional</div>
+      <div id="secD"></div>
+      <div class="pc-field" style="margin:16px 0 0;max-width:420px">
+        <div class="pc-field__row"><label class="pc-field__label" for="inName">Name on the report (optional)</label></div>
+        <div class="pc-numwrap"><input type="text" id="inName" maxlength="60" placeholder="Your name" style="text-align:left"></div>
+      </div>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:26px">
+      <div class="rp-progress">
+        <div class="rp-progress__track"><div class="rp-progress__fill" id="progFill"></div></div>
+        <span id="progText" style="font-size:13.5px;color:var(--pc-ink-2)">0 of 15 answered</span>
+        <button type="button" class="pc-btn pc-btn--gold pc-btn--shine" id="btnBuild" disabled>See my profile</button>
+      </div>
+    </div>
+  </div>
+
+  <section id="rpReport" hidden>
+    <div class="pc-card" style="background:linear-gradient(135deg,var(--pc-navy) 0%,#1d4568 100%);border:0;margin-bottom:18px">
+      <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between">
+        <div>
+          <div style="color:var(--pc-gold);font-size:12.5px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase">Your investor risk profile</div>
+          <div id="rpCategory" style="color:#fff;font-size:34px;font-weight:800;line-height:1.15;margin:6px 0 4px"></div>
+          <div id="rpFor" style="color:#b9c8d6;font-size:14px"></div>
+        </div>
+        <div id="rpGauge" style="flex:0 0 auto"></div>
+      </div>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">In this report</div>
+      <div style="font-size:13.5px;color:var(--pc-ink-2);line-height:1.7">
+        1 · Your three scores &nbsp;·&nbsp; 2 · What your category means &nbsp;·&nbsp; 3 · The product
+        ladder and your rung &nbsp;·&nbsp; 4 · Your answers, annotated &nbsp;·&nbsp; 5 · When to
+        reassess, and the fine print
+      </div>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">1 · Your three scores</div>
+      <div id="rpBars"></div>
+      <p id="rpLowerRule" style="margin:10px 0 0;color:var(--pc-ink-2);font-size:14px;line-height:1.6"></p>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">2 · What your category means</div>
+      <p id="rpMeaning" style="margin:0 0 10px;color:var(--pc-ink-2);line-height:1.65"></p>
+      <p id="rpDrawdown" style="margin:0;color:var(--pc-ink-2);line-height:1.65"></p>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">3 · The product ladder, and your rung</div>
+      <p style="margin:0 0 4px;color:var(--pc-ink-2);font-size:14px;line-height:1.6">Products are
+         not good or bad; they are matched or mismatched. Each rung assumes the ones below it are
+         already in place: emergency fund first, always.</p>
+      <ul class="rp-ladder" id="rpLadder"></ul>
+      <p id="rpNudge" style="margin:12px 0 0;color:var(--pc-ink-2);line-height:1.65"></p>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">4 · Your answers, annotated</div>
+      <div class="pc-tablescroll"><table class="pc-table" id="rpAnswers"></table></div>
+    </div>
+
+    <div class="pc-card" style="margin-bottom:18px">
+      <div class="pc-card__title">5 · When to reassess</div>
+      <p style="margin:0;color:var(--pc-ink-2);line-height:1.65">A risk profile is a photograph,
+         not a portrait in oil. Retake it after any of: marriage or a child, a job change or business
+         exit, a large inheritance or windfall, a big loan taken or repaid, retirement on the horizon,
+         or simply once a year. If your answers here surprised you, that is worth a conversation.</p>
+    </div>
+
+    <div class="pc-card rp-actions-screen" style="margin-bottom:18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+      <div style="color:var(--pc-ink-2);font-size:14px">Save this report or share it with your family:</div>
+      <div class="pc-actions" style="margin:0">
+        <button type="button" class="pc-btn" id="btnPrint">Print / save PDF</button>
+        <button type="button" class="pc-btn pc-btn--ghost" id="btnShare">Copy shareable link</button>
+        <button type="button" class="pc-btn pc-btn--ghost" id="btnReset">Start over</button>
+      </div>
+    </div>
+
+    <div class="pc-card rp-actions-screen" style="background:linear-gradient(135deg,var(--pc-navy) 0%,#1d4568 100%);border:0;display:flex;flex-wrap:wrap;align-items:center;gap:18px;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div style="color:#fff;font-size:18px;font-weight:700">A profile is a beginning, not a plan</div>
+        <div style="color:#b9c8d6;margin-top:4px">Walk through what your category means for your actual goals with your consultant.</div>
+      </div>
+      <a class="pc-btn pc-btn--wa" style="text-decoration:none" target="_blank" rel="noopener"
+         href="https://wa.me/919871001868?text=I%20completed%20the%20risk%20profile%20and%20want%20to%20discuss%20it">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 1.8a8.2 8.2 0 1 1-4.2 15.3l-.3-.2-2.9.8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8Zm-3.1 4c-.2 0-.5.1-.7.4-.2.3-.9.9-.9 2.1s.9 2.5 1 2.6c.1.2 1.8 2.9 4.4 3.9 2.2.9 2.6.7 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.1-.2 0-.4.1-.5l.6-.7c.2-.2.2-.4.1-.6L9.6 8.2c-.1-.3-.3-.4-.5-.4h-.2Z"/></svg>
+        Discuss my profile
+      </a>
+    </div>
+
+    <p class="pc-disclaimer">
+      This is an educational self-assessment of risk ability and willingness, built on the
+      standard two-dimension framework used in Indian investment advisory practice. It is not
+      investment advice, a recommendation, or an offer of any product; suitability for any
+      specific product is established only through a formal engagement. Illustrative asset mixes
+      and outcome bands describe historical patterns, not forecasts; investments are subject to
+      market risks. PMS and AIF carry SEBI-prescribed minimums (₹50 lakh / ₹1 crore) and are
+      distributed through formal tie-ups with SEBI-registered providers. Prospar Consulting LLP.
+    </p>
+  </section>
+</main>
+
+<footer class="pc-footer">
+  <div class="pc-footer__inner">
+    <div>
+      <div class="pc-footer__brand"><img src="assets/prospar-logo.svg" alt=""><span class="nm">Prospar Consulting LLP</span></div>
+      <div>Evidence-led wealth management: mutual funds to PMS &amp; AIF. Serving investors across India.</div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <div class="pc-footer__links">
+        <a href="tools.html">Calculators</a>
+        <a href="insights.html">Insights</a>
+        <a href="risk-profile.html">Risk Profile</a>
+        <a href="pms-aif.html">PMS &amp; AIF</a>
+        <a href="how-we-work.html">How We Work</a>
+        <a href="faq.html">FAQ</a>
+        <a href="downloads.html">Download Centre</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+        <a href="compliance.html">Disclosures &amp; Privacy</a>
+      </div>
+    </div>
+    <div>
+      <h4>The fine print</h4>
+      <div>Investments are subject to market risks. Content on this site is for education and
+        awareness; it is not investment advice or an offer. PMS &amp; AIF carry regulatory
+        minimums (₹50 lakh / ₹1 crore) and are distributed through formal tie-ups with
+        SEBI-registered providers.</div>
+    </div>
+  </div>
+  <div class="pc-footer__legal">© 2026 Prospar Consulting LLP · <a href="compliance.html">Disclaimers, disclosures &amp; privacy</a></div>
+</footer>
+
+
+<script>
+(function () {
+  "use strict";
+  var U = PCUI, $ = U.$;
+
+  var QUESTIONS = [
+    { id: "a1", sec: "A", text: "When will you need the bulk of this money?",
+      why: "Time is the great healer of market falls; short horizons cannot wait out a bad year.",
+      opts: ["Under 3 years", "3 to 5 years", "5 to 10 years", "10 to 15 years", "Over 15 years"] },
+    { id: "a2", sec: "A", text: "How stable is your primary income?",
+      why: "A steady income lets a portfolio ride out storms without being sold in one.",
+      opts: ["Irregular or uncertain", "Variable, business-like", "Mostly stable", "Stable salaried", "Very stable or multiple earners"] },
+    { id: "a3", sec: "A", text: "How much of your total wealth will this portfolio be?",
+      why: "Risking a slice is different from risking the whole.",
+      opts: ["Over 75%", "50 to 75%", "25 to 50%", "10 to 25%", "Under 10%"] },
+    { id: "a4", sec: "A", text: "How many people depend on your income?",
+      why: "More people leaning on it, less room for loss.",
+      opts: ["Four or more", "Three", "Two", "One", "None"] },
+    { id: "a5", sec: "A", text: "How many months of expenses sit in your emergency fund?",
+      why: "A cash buffer is what prevents selling investments at the worst moment.",
+      opts: ["Under 1 month", "1 to 3 months", "3 to 6 months", "6 to 12 months", "Over 12 months"] },
+    { id: "a6", sec: "A", text: "How much of your monthly income goes to EMIs?",
+      why: "Committed outflows shrink your shock absorber.",
+      opts: ["Over 50%", "30 to 50%", "15 to 30%", "Under 15%", "No EMIs"] },
+
+    { id: "b1", sec: "B", text: "What is the primary objective for this money?",
+      why: "Names the trade-off you are actually signing up for.",
+      opts: ["Protecting capital", "Regular income", "Balanced growth and safety", "Long-term growth", "Maximum long-term growth"] },
+    { id: "b2", sec: "B", text: "Your portfolio falls 20% in three months. You would…",
+      why: "Behaviour in a fall, not opinion in a rally, is the real test.",
+      opts: ["Sell everything", "Sell some, reduce risk", "Hold on and wait", "Invest a little more", "Invest significantly more"] },
+    { id: "b3", sec: "B", text: "Which one-year outcome band would you own comfortably?",
+      why: "Every extra percent of likely return arrives with a wider possible loss; the bands show both sides. Illustrative ranges, not forecasts.",
+      opts: ["+4% to +7%", "−2% to +11%", "−8% to +17%", "−15% to +25%", "−25% to +40%"] },
+    { id: "b4", sec: "B", text: "In March 2020 (or 2008), what did you actually do?",
+      why: "The market has already run this experiment on you once.",
+      opts: ["Exited investments", "Reduced holdings", "Held on", "Added more", "Wasn't investing then"], scores: [1, 2, 3, 4, 3] },
+    { id: "b5", sec: "B", text: "The largest temporary paper loss you could see without changing plan:",
+      why: "Sets the honest ceiling for how much equity belongs in your mix.",
+      opts: ["Around 5%", "Around 10%", "Around 20%", "Around 30%", "40% or more"] },
+    { id: "b6", sec: "B", text: "Which statement sounds most like you?",
+      why: "A self-image cross-check against your other answers.",
+      opts: ["A dip costs me sleep", "I prefer certainty, even at lower returns", "Some ups and downs are fine for better returns", "I stay invested through falls; they pass", "Volatility is the fee for long-term returns"] },
+
+    { id: "c1", sec: "C", text: "Your overall investment knowledge:",
+      why: "Complex products demand understanding, not just money.",
+      opts: ["New to investing", "Basic: FDs and a few funds", "Comfortable with mutual funds", "Understand asset classes and cycles", "Evaluate individual products independently"] },
+    { id: "c2", sec: "C", text: "Years of active investing:",
+      why: "Experience of at least one full market cycle changes how falls feel.",
+      opts: ["None yet", "Under 3 years", "3 to 7 years", "7 to 15 years", "Over 15 years"] },
+    { id: "c3", sec: "C", text: "The most advanced product you have actually used:",
+      why: "Familiarity earned with real money counts more than theory.",
+      opts: ["FDs / PPF only", "Debt or hybrid funds", "Equity funds / index funds", "Direct stocks / international", "PMS / AIF / unlisted / F&O"] },
+
+    { id: "d1", sec: "D", text: "Investable capital you are planning around (optional):",
+      why: "Used only to keep product suggestions honest: some structures carry SEBI minimums of ₹50 lakh and above.",
+      opts: ["Under ₹10 L", "₹10 L to ₹50 L", "₹50 L to ₹1 Cr", "₹1 Cr to ₹5 Cr", "Over ₹5 Cr"], optional: true }
+  ];
+
+  var CATEGORIES = [null,
+    { name: "Conservative",
+      meaning: "Return OF capital matters more to you than return ON it. Your money belongs mostly in instruments where the value does not swing: the goal is preservation with modest, dependable growth.",
+      mix: "An illustrative mix: 80 to 90% fixed income (FDs, PPF/EPF, G-Secs, high-quality debt funds), 10 to 20% large-cap or index equity.",
+      draw: "Expect roughly FD-like returns with small wobbles. Even a 5% temporary dip will feel uncomfortable, and this mix is built so you rarely meet one." },
+    { name: "Moderately Conservative",
+      meaning: "You accept modest fluctuation for somewhat better than FD outcomes, but safety still leads. A minority of the portfolio works in equity; the majority holds the fort.",
+      mix: "An illustrative mix: 65 to 75% debt, 25 to 35% equity through conservative hybrid or balanced advantage funds and large-cap funds.",
+      draw: "A temporary dip of around 10% is the price of the equity slice; history says such dips have passed for diversified portfolios, though nothing is guaranteed." },
+    { name: "Moderate",
+      meaning: "You accept market ups and downs as the price of long-term growth. Equity and debt share the work roughly equally, and time in the market does the heavy lifting.",
+      mix: "An illustrative mix: about 50:50 equity to debt (give or take 10%), via flexi-cap, large-cap and some mid-cap funds with a solid debt core.",
+      draw: "A 2018-style correction of around 20% on the equity half must be survivable without selling; at this mix that is roughly a 10 to 12% portfolio dip." },
+    { name: "Moderately Aggressive",
+      meaning: "Wealth creation is the goal and you are comfortable with meaningful volatility on the way. Equity dominates; debt exists for stability and dry powder.",
+      mix: "An illustrative mix: 70 to 80% equity including mid and small-cap funds and possibly direct equity, 20 to 30% debt. For qualified investors, PMS strategies can sit on top of a fully funded core.",
+      draw: "A COVID-2020-style fall of around 30% is the storm this mix must be able to ride out. If that number quickens your pulse, step one rung down." },
+    { name: "Aggressive",
+      meaning: "You seek maximum long-term growth and treat deep drawdowns as noise, not news. Concentration and complexity are acceptable tools, on top of an already secure foundation.",
+      mix: "An illustrative mix: 90 to 100% equity and alternatives: concentrated equity, small-caps, and for qualified investors PMS strategies, AIFs and selective unlisted exposure.",
+      draw: "Falls of 40% and more have happened (2008) and will happen again. This category is honest only if you have both the balance sheet and the stomach for them." }
+  ];
+
+  var LADDER = [
+    { rung: "Rung 1 · Foundation", what: "FDs and small savings, PPF/EPF, G-Secs, liquid and high-quality debt funds. Capital protection and liquidity." },
+    { rung: "Rung 2 · First equity", what: "Conservative hybrid and balanced advantage funds, large-cap and index funds. Equity with training wheels." },
+    { rung: "Rung 3 · Core growth", what: "Flexi-cap, multi-cap and large-cap funds with some mid-cap, around a disciplined 50:50 frame. The long-term compounding engine." },
+    { rung: "Rung 4 · Growth tilt", what: "Mid and small-cap funds, direct equity, international diversification. Sharper tools; sharper falls." },
+    { rung: "Rung 5 · Sophisticated", what: "PMS (₹50 L+) and AIF (₹1 Cr+) mandates, selective unlisted exposure. Structures built for individuals, not for the masses; access and suitability are formal processes." }
+  ];
+
+  var state = { nm: "" };
+  var schema = { nm: { p: "nm", str: true, dflt: "" } };
+  QUESTIONS.forEach(function (q) { schema[q.id] = { p: q.id, lo: 0, hi: 5, dflt: 0 }; });
+  var url = U.urlState(schema);
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* ---- build the form ---- */
+  QUESTIONS.forEach(function (q) {
+    var wrap = document.createElement("div");
+    wrap.className = "rp-q";
+    var opts = q.opts.map(function (o, i) {
+      return '<button type="button" class="rp-opt" data-q="' + q.id + '" data-i="' + (i + 1) +
+        '" aria-pressed="false">' + esc(o) + "</button>";
+    }).join("");
+    wrap.innerHTML = '<p class="rp-q__text">' + esc(q.text) + (q.optional ? ' <span style="font-weight:400;color:var(--pc-muted)">(skippable)</span>' : "") + "</p>" +
+      '<p class="rp-q__why">Why we ask: ' + esc(q.why) + "</p>" +
+      '<div class="rp-opts" role="group" aria-label="' + esc(q.text) + '">' + opts + "</div>";
+    $("sec" + q.sec).appendChild(wrap);
+  });
+
+  function answered() {
+    return QUESTIONS.filter(function (q) { return !q.optional && state[q.id] > 0; }).length;
+  }
+  function total() { return QUESTIONS.filter(function (q) { return !q.optional; }).length; }
+
+  function syncButtons() {
+    QUESTIONS.forEach(function (q) {
+      var btns = document.querySelectorAll('[data-q="' + q.id + '"]');
+      Array.prototype.forEach.call(btns, function (b) {
+        b.setAttribute("aria-pressed", String(+b.dataset.i === state[q.id]));
+      });
+    });
+    var n = answered(), t = total();
+    $("progFill").style.width = (n / t * 100) + "%";
+    $("progText").textContent = n + " of " + t + " answered";
+    $("btnBuild").disabled = n < t;
+  }
+
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".rp-opt") : null;
+    if (!b) return;
+    state[b.dataset.q] = +b.dataset.i;
+    syncButtons();
+    url.write(state);
+    if (!$("rpReport").hidden) buildReport();
+  });
+
+  $("inName").addEventListener("input", function () {
+    state.nm = this.value.slice(0, 60);
+    url.write(state);
+    if (!$("rpReport").hidden) buildReport();
+  });
+
+  /* ---- scoring ---- */
+  function scoreOf(q) {
+    var v = state[q.id];
+    if (!v) return null;
+    return q.scores ? q.scores[v - 1] : v;
+  }
+  function avg(ids) {
+    var s = 0, n = 0;
+    QUESTIONS.forEach(function (q) {
+      if (ids.indexOf(q.id[0]) < 0 || q.optional) return;
+      var v = scoreOf(q);
+      if (v !== null) { s += v; n++; }
+    });
+    return n ? s / n : 0;
+  }
+  function tier(x) {
+    if (x <= 1.8) return 1;
+    if (x <= 2.6) return 2;
+    if (x <= 3.4) return 3;
+    if (x <= 4.2) return 4;
+    return 5;
+  }
+
+  /* ---- report ---- */
+  function gaugeSvg(cat) {
+    var tints = ["#d9e1e9", "#c2cfdb", "#a8bac9", "#8da4b8", "#728fa6"];
+    var cx = 110, cy = 104, R = 86, r0 = 62;
+    var svg = "";
+    for (var i = 0; i < 5; i++) {
+      var a0 = Math.PI + i * Math.PI / 5 + 0.015, a1 = Math.PI + (i + 1) * Math.PI / 5 - 0.015;
+      function pt(rr, a) { return (cx + rr * Math.cos(a)).toFixed(1) + " " + (cy + rr * Math.sin(a)).toFixed(1); }
+      svg += '<path d="M' + pt(R, a0) + " A" + R + " " + R + " 0 0 1 " + pt(R, a1) +
+        " L" + pt(r0, a1) + " A" + r0 + " " + r0 + " 0 0 0 " + pt(r0, a0) + ' Z" fill="' +
+        (i + 1 === cat ? "#c9a227" : tints[i]) + '"/>';
+    }
+    var na = Math.PI + (cat - 0.5) * Math.PI / 5;
+    var nx = cx + 52 * Math.cos(na), ny = cy + 52 * Math.sin(na);
+    svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + nx.toFixed(1) + '" y2="' + ny.toFixed(1) +
+      '" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="6" fill="#fff"/>' +
+      '<text x="14" y="122" font-size="10.5" fill="#b9c8d6">Conservative</text>' +
+      '<text x="206" y="122" font-size="10.5" fill="#b9c8d6" text-anchor="end">Aggressive</text>';
+    return '<svg viewBox="0 0 220 128" style="width:230px;max-width:60vw" role="img" aria-label="Risk category gauge">' + svg + "</svg>";
+  }
+
+  function bar(label, value, note) {
+    return '<div class="rp-score"><div class="rp-score__row"><span><strong>' + label +
+      "</strong> · " + note + "</span><span>" + value.toFixed(1) + " / 5</span></div>" +
+      '<div class="rp-score__track"><div class="rp-score__fill" style="width:' + (value / 5 * 100).toFixed(0) + '%"></div></div></div>';
+  }
+
+  function buildReport() {
+    var cap = avg(["a"]), tol = avg(["b"]), know = avg(["c"]);
+    var tCap = tier(cap), tTol = tier(tol), tKnow = tier(know);
+    var final5 = Math.min(tCap, tTol);
+    var cat = CATEGORIES[final5];
+    var scale = state.d1 || 0;
+
+    $("rpCategory").textContent = cat.name;
+    $("rpFor").textContent = (state.nm ? "Prepared for " + state.nm + " · " : "") +
+      new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) +
+      " · consultprospar.com";
+    $("rpGauge").innerHTML = gaugeSvg(final5);
+
+    $("rpBars").innerHTML =
+      bar("Ability to take risk", cap, "what your finances can absorb") +
+      bar("Willingness to take risk", tol, "what your temperament can hold") +
+      bar("Knowledge & experience", know, "decides products, not the category");
+    $("rpLowerRule").innerHTML = "Your category is set by the <strong>lower</strong> of ability (" +
+      CATEGORIES[tCap].name.toLowerCase() + " tier) and willingness (" + CATEGORIES[tTol].name.toLowerCase() +
+      " tier): you should take only the risk you can both afford <em>and</em> live with." +
+      (tCap > tTol ? " Your finances could carry more risk than your temperament wants; that is fine, comfort keeps plans alive." : "") +
+      (tTol > tCap ? " Your appetite runs ahead of your current finances; strengthen the foundation before adding risk." : "");
+
+    $("rpMeaning").textContent = cat.meaning + " " + cat.mix;
+    $("rpDrawdown").innerHTML = "<strong>The drawdown you are signing up for:</strong> " + cat.draw;
+
+    /* ladder */
+    var rung = Math.min(final5, tKnow >= 3 ? 5 : 4);
+    rung = Math.min(rung, final5);
+    var lh = "";
+    LADDER.forEach(function (l, i) {
+      var on = (i + 1) === rung;
+      lh += '<li class="' + (on ? "on" : "") + '"><span class="rung">' + l.rung + "</span>" +
+        '<span class="what">' + l.what + "</span>" + (on ? '<span class="here">You are here</span>' : "") + "</li>";
+    });
+    $("rpLadder").innerHTML = lh;
+
+    var nudge = "";
+    if (final5 >= 4) {
+      if (tKnow >= 3 && (scale >= 3)) {
+        nudge = "A note worth your attention: your profile has the risk capacity, the temperament and the scale that <strong>mass-market products are not designed around</strong>. Beyond diversified funds, mandate-driven structures such as PMS (₹50 lakh+) and, at larger scale, AIFs (₹1 crore+) become genuinely relevant: deeper research, concentrated conviction, and access beyond the retail shelf. Read our <a href='pms-aif.html'>PMS &amp; AIF primer</a> and <a href='pms-aif.html#fee-structures'>fee-structure guide</a>, then decide with evidence.";
+      } else if (tKnow >= 3 && scale === 0) {
+        nudge = "At meaningful scale (SEBI minimums of ₹50 lakh for PMS and ₹1 crore for AIF), profiles like yours often graduate beyond mass-market products into mandate-driven structures. If that describes your situation, the <a href='pms-aif.html'>PMS &amp; AIF primer</a> is worth ten minutes.";
+      } else if (tKnow < 3) {
+        nudge = "Your risk profile could support sophisticated structures, but your familiarity score suggests earning that sophistication first: a guided route through diversified funds, reviewed with a consultant, builds the experience that complex products assume you already have.";
+      }
+    } else if (final5 === 3) {
+      nudge = "Master the core first: a disciplined 50:50 frame, funded goals and boring consistency beat premature sophistication. The rungs above remain available as your capacity, comfort and scale grow.";
+    } else {
+      nudge = "There is no prize for climbing faster than your foundation allows. Secure the emergency fund, insurance and near-term goals; the ladder will still be here when the base is solid.";
+    }
+    $("rpNudge").innerHTML = nudge;
+
+    /* answers recap */
+    var rows = "";
+    QUESTIONS.forEach(function (q) {
+      var v = state[q.id];
+      if (!v) { if (q.optional) return; }
+      rows += "<tr><td style='min-width:190px'>" + esc(q.text) + "</td><td style='min-width:140px'><strong>" +
+        (v ? esc(q.opts[v - 1]) : "—") + "</strong></td><td>" + esc(q.why) + "</td></tr>";
+    });
+    $("rpAnswers").innerHTML = "<thead><tr><th>Question</th><th>Your answer</th><th>Why it matters</th></tr></thead><tbody>" + rows + "</tbody>";
+
+    $("rpReport").hidden = false;
+    document.body.classList.add("rp-done");
+  }
+
+  $("btnBuild").addEventListener("click", function () {
+    buildReport();
+    $("rpReport").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  $("btnReset").addEventListener("click", function () {
+    QUESTIONS.forEach(function (q) { state[q.id] = 0; });
+    state.nm = "";
+    $("inName").value = "";
+    $("rpReport").hidden = true;
+    document.body.classList.remove("rp-done");
+    syncButtons();
+    url.write(state);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  U.shareButton("btnShare");
+  U.printButton("btnPrint", null);
+
+  /* init from URL (shared reports reopen fully) */
+  url.read(state);
+  $("inName").value = state.nm || "";
+  syncButtons();
+  if (answered() === total()) buildReport();
+})();
+</script>
+<a class="pc-wa-float" href="https://wa.me/919871001868?text=I%20need%20investment%20advice" target="_blank" rel="noopener" aria-label="WhatsApp Nikesh Kumar: Consult Now"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 1.8a8.2 8.2 0 1 1-4.2 15.3l-.3-.2-2.9.8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8Zm-3.1 4c-.2 0-.5.1-.7.4-.2.3-.9.9-.9 2.1s.9 2.5 1 2.6c.1.2 1.8 2.9 4.4 3.9 2.2.9 2.6.7 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.1-.2 0-.4.1-.5l.6-.7c.2-.2.2-.4.1-.6L9.6 8.2c-.1-.3-.3-.4-.5-.4h-.2Z"/></svg><span>Consult Now</span></a>
+<script src="assets/prospar-fx.js" defer></script>
+</body>
+</html>
