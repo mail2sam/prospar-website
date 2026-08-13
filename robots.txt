@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /creatives/
+
+Sitemap: https://consultprospar.com/sitemap.xml
