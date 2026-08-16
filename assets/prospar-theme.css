@@ -118,6 +118,9 @@ body {
   position: relative;
   padding-bottom: 3px;
   transition: color .2s ease;
+  /* an item never breaks mid-name; the nav wraps only between items */
+  white-space: nowrap;
+  display: inline-block;
 }
 .pc-header__nav a::after {
   content: "";
