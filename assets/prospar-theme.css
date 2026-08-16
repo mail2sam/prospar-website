@@ -1073,3 +1073,9 @@ details[open] > *:not(summary) { animation: pc-fade-up .32s ease both; }
 .pc-toolcard__icon svg { width: 22px; height: 22px; display: block; }
 .pc-toolcard__icon .g { stroke: var(--pc-gold); }
 a.pc-toolcard:hover .pc-toolcard__icon { background: var(--pc-navy); color: #fff; transform: scale(1.06); }
+
+/* 9-item nav: tighten spacing on mid-width screens so it stays on one line */
+@media (min-width: 621px) and (max-width: 1120px) {
+  .pc-header__nav { font-size: 13px; }
+  .pc-header__nav span { margin: 0 6px !important; }
+}
